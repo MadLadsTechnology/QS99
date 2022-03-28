@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.model;
+package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

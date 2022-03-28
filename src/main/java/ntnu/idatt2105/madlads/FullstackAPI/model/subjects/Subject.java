@@ -1,8 +1,9 @@
-package ntnu.idatt2105.madlads.FullstackAPI.model;
+package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
+
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.User;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Set;
 
 @Entity
 public class Subject {

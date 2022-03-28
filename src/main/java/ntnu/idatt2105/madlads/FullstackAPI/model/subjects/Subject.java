@@ -15,8 +15,6 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int year;
-    @ManyToMany(mappedBy = "subjects")
-    private Collection<User> users;
 
     public Subject(String subjectName, String subjectDescription, int mandatoryCount, int year) {
         this.subjectName = subjectName;

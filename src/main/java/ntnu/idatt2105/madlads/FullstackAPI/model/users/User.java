@@ -14,6 +14,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String emailAddress;
+    @ManyToOne
+    private Role role;
 
     public User(String firstName, String lastName, String emailAddress) {
         this.firstName = firstName;

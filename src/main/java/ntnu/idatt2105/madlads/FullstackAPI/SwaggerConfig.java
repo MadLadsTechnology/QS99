@@ -1,21 +1,19 @@
 package ntnu.idatt2105.madlads.FullstackAPI;
 
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Configuration
-@EnableSwagger2
 public class SwaggerConfig {
     /*private JwtConfig jwtConfig;
 
@@ -35,25 +33,31 @@ public class SwaggerConfig {
     }*/
 
     @Bean
-    public Docket swaggerAPIConfig() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                //.securityContexts(Arrays.asList(securityContext()))
-                //.securitySchemes(Arrays.asList(apiKey()))
-                .select()
-                .paths(PathSelectors.any())
-                .apis(RequestHandlerSelectors.any())
+    public GroupedOpenApi publicAPI() {
+        return GroupedOpenApi.builder()
+                .group("public")
+                .pathsToMatch("/public/**")
                 .build();
     }
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                "Fullstack Project",
-                "API Documentation for Fullstack project backend.",
-                "1.0",
-                "Terms of service",
-                new Contact("Eivind Strand Harboe", "www.dudensomflytta.no", "eiha0403@gmail.com"),
-                "License of API",
-                "API license URL",
-                Collections.emptyList());
+
+    @Bean
+    public GroupedOpenApi adminAPI() {
+        return GroupedOpenApi.builder()
+                .group("admin")
+                .pathsToMatch("/admin/**")
+                .build();
+    }
+
+    @Bean
+    public OpenAPI apiInfo() {
+        return new OpenAPI()
+                .info(new Info().title("QS99 backend")
+                        .description("Simple api for QS99")
+                        .version("v0.0.1")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("SpringShop Wiki Documentation")
+                        .url("https://springshop.wiki.github.org/docs"));
+
     }
 }

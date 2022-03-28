@@ -1,14 +1,11 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Role extends User {
     private String roleName;
+    @OneToMany
+    private Collection<User> users;
 }

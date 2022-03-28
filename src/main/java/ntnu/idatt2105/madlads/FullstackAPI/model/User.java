@@ -18,10 +18,13 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name="users_subject",
+        name="subject_user",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name= "subject_id", referencedColumnName = "id"))
     private Collection<Subject> subjects;
+
+    @ManyToOne
+    private Role role;
 
     public User(String firstName, String lastName, String emailAddress) {
         this.firstName = firstName;

@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @Entity
 public class Student extends User{
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="student_subject",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -15,12 +15,12 @@ public class Entry {
     private String type;
     @ManyToOne
     private Queue queue;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="entry_exercises",
             joinColumns = @JoinColumn(name = "entry_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name= "exercise_id", referencedColumnName = "id"))
-    private Collection<Subject> subjects;
+    private Collection<Exercise> exercises;
 
     public Long getId() {
         return id;

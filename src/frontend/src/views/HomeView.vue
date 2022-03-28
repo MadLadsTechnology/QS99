@@ -1,18 +1,30 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <h1>Welcome {{ user.mail }}</h1>
+
+  <h3>Here are your active subjects</h3>
+
+  <!-- ADD FOR LOOP TO LOOP THRU ALL SUBJECTS-->
+  <SubjectCard
+    subjectCode="IDATT1234"
+    subjectName="Testfag"
+    description=""
+    link="null"
+  />
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import { mapState } from "vuex";
+import SubjectCard from "@/components/SubjectCard";
 
+// @ is an alias to /src
 export default {
-  name: "HomeView",
-  components: {
-    HelloWorld,
+  computed: {
+    ...mapState({
+      isLoggedIn: "isLoggedIn",
+      user: "user",
+    }),
   },
+  name: "HomeView",
+  components: { SubjectCard },
 };
 </script>

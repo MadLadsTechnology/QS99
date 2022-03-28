@@ -17,7 +17,7 @@ jobs:
     - name: test
       uses: actions/setup-java@v2
       with:
-        java-version: '16'
+        java-version: '17'
         distribution: 'temurin'
         cache: maven
     - name: Test
@@ -33,9 +33,9 @@ jobs:
         java-version: '16'
         distribution: 'temurin'
         cache: maven
-    - name: build docs
+    - name: build artifact
       run: mvn clean package
-    - name: Deploy
+    - name: deploy site
       uses: JamesIves/github-pages-deploy-action@v4.2.5
       with:
         branch: gh-pages

@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
 import javax.persistence.*;
@@ -13,4 +14,7 @@ public class Student extends User{
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name= "subject_id", referencedColumnName = "id"))
     private Collection<Subject> subjects;
+
+    @ManyToOne
+    private Entry entry;
 }

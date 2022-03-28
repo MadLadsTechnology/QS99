@@ -1,4 +1,7 @@
 # 🧑🏼‍🏫 QS99
+
+Last build: ![example workflow](https://github.com/MadLadsTechnology/QS99/actions/workflows/maven.yml/badge.svg)
+
 Voluntary project in the subject IDATT2105 to improve our grade.
 
 ## Project description:

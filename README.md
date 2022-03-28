@@ -14,4 +14,6 @@ compatible with a mobile.
 * Spring Data JPA
 * MySQL database
 
+
+
 🦕 🦑 Heyo letsgo - //TODO: write this readme

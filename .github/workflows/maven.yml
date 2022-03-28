@@ -9,19 +9,19 @@ on:
   pull_request:
     branches: [ main ]
 
-jobs:     
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: test
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Test
-      run: mvn test
+#jobs:     
+#  test:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: test
+#      uses: actions/setup-java@v2
+#      with:
+#        java-version: '17'
+#        distribution: 'temurin'
+#        cache: maven
+#    - name: Test
+#      run: mvn test
       
   publish:
     runs-on: ubuntu-latest

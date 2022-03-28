@@ -10,6 +10,12 @@ public class Exercise {
     //TODO: Is this correct
     private boolean mandatory;
 
+    @ManyToOne
+    private Subject subject;
+
+    @ManyToOne
+    private ExerciseSubList subList;
+
     public Exercise(boolean mandatory){
         this.mandatory = mandatory;
     }

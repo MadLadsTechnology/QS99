@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.model;
+package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
 import javax.persistence.*;
 

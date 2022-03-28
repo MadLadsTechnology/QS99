@@ -1,8 +1,9 @@
-package ntnu.idatt2105.madlads.FullstackAPI.model;
+package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
+
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.User;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Set;
 
 @Entity
 public class Subject {
@@ -14,8 +15,6 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int year;
-    @ManyToMany
-    private Collection<User> users;
 
     public Subject(String subjectName, String subjectDescription, int mandatoryCount, int year) {
         this.subjectName = subjectName;

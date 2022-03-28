@@ -1,10 +1,9 @@
-package ntnu.idatt2105.madlads.FullstackAPI.model;
+package ntnu.idatt2105.madlads.FullstackAPI.model.users;
+
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 public class User {
@@ -15,13 +14,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String emailAddress;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name="users_subject",
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name= "subject_id", referencedColumnName = "id"))
-    private Collection<Subject> subjects;
+    @ManyToOne
+    private Role role;
 
     public User(String firstName, String lastName, String emailAddress) {
         this.firstName = firstName;

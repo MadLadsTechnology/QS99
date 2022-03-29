@@ -1,28 +1,37 @@
 <template>
-  <h1>Welcome {{ user.mail }}</h1>
+  <h1>Welcome {{}}</h1>
 
   <h3>Here are your active subjects</h3>
 
-  <button @click="showAll = true">Alle fag</button>
-
-  <SubjectList subjectCode="I" subjectName="yeha" link="/" />
+  <div class="cardHolder">
+    <SubjectCard
+      v-for="subject in subjects"
+      :key="subject.id"
+      :subject="subject"
+    />
+  </div>
 </template>
 <script>
-import { mapState } from "vuex";
-// @ is an alias to /src
+import SubjectCard from "../components/subject/SubjectCard";
+import { authComputed } from "@/store/helpers";
+
 export default {
+  name: "HomeView",
+  components: {
+    SubjectCard,
+  },
   data() {
     return {
-      showAll: true,
+      subjects: [
+        { id: 1, code: "IDATT1234", name: "Testfag" },
+        { id: 1, code: "IDATT1234", name: "Testfag" },
+        { id: 1, code: "IDATT1234", name: "Testfag" },
+        { id: 1, code: "IDATT1234", name: "Testfag" },
+      ],
     };
   },
   computed: {
-    ...mapState({
-      isLoggedIn: "isLoggedIn",
-      user: "user",
-    }),
+    ...authComputed,
   },
-  name: "HomeView",
-  components: {},
 };
 </script>

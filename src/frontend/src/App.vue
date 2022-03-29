@@ -1,22 +1,28 @@
 <template>
-  <LoginView v-if="isLoggedIn" />
-  <HomeView v-else />
+  <router-view />
 </template>
 <script>
-import { mapState } from "vuex";
-import LoginView from "@/views/LoginView";
-import HomeView from "@/views/HomeView";
-
+import axios from "axios";
 export default {
-  components: {
-    LoginView,
-    HomeView,
+  setup() {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      const userData = JSON.parse(userString);
+      this.$store.commit("SET_USER_DATA", userData);
+    }
+
+    axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response.status === 401) {
+          this.$store.dispatch("logout");
+        }
+        return Promise.reject(error);
+      }
+    );
   },
-  computed: {
-    ...mapState({
-      isLoggedIn: "isLoggedIn",
-    }),
-  },
+  components: {},
+  computed: {},
 };
 </script>
 

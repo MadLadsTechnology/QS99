@@ -1,24 +1,21 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
-import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
-
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String emailAddress;
     private String firstName;
     private String lastName;
-    private String emailAddress;
+    protected String password;
 
-    public User(String firstName, String lastName, String emailAddress) {
+    public User(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
+        this.password = password;
     }
 
     protected User(){}
@@ -34,4 +31,6 @@ public class User {
     public String getEmailAddress() {
         return emailAddress;
     }
+
+    public String getPassword(){ return password; }
 }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.User;
+import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
+@RequestMapping("/user")
 public class UserController {
     public static String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
     Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -34,11 +38,11 @@ public class UserController {
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
     public String generateToken(@RequestParam("email") final String email,
-                                @RequestParam("password") final String password) {
+                                @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         User foundUser = userRepository.findByEmailAddress(email);
         if(foundUser != null){
-            if (email.equals(foundUser.getEmailAddress()) && password.equals(foundUser.getPassword())) {
+            if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
                 logger.info("Logged in successfully");
                 return generateToken(email);
             }
@@ -77,8 +81,9 @@ public class UserController {
                                            @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
         try {
+            String hashedPassword = PasswordHashing.generatePasswordHash(password);
             User user = userRepository
-                    .save(new User(firstname, lastname, email, password));
+                    .save(new User(firstname, lastname, email, hashedPassword));
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

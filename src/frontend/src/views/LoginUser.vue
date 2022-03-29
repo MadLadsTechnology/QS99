@@ -25,7 +25,6 @@
 <script>
 import { useField, useForm } from "vee-validate";
 import { object, string } from "yup";
-import axios from "axios";
 import { ref } from "vue";
 
 export default {
@@ -51,12 +50,20 @@ export default {
     const { value: email } = useField("email");
     const { value: password } = useField("password");
 
+    var error = "";
+
     const submit = handleSubmit(() => {
-      sending.value = true;
-      axios
-        .post()
-        .then(() => {})
-        .catch(() => {});
+      this.$store
+        .dispatch("login", {
+          email: email,
+          password: password,
+        })
+        .then(() => {
+          this.$router.push({ name: "HomeView" });
+        })
+        .catch((err) => {
+          error = err;
+        });
     });
 
     return {
@@ -64,6 +71,7 @@ export default {
       password,
       submit,
       errors,
+      error,
       submitted,
       sending,
     };

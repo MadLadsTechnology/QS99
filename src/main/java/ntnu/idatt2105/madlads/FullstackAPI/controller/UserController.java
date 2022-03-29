@@ -89,4 +89,21 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @DeleteMapping("/delete")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<User> deleteUser(@RequestParam("email") final String email){
+        User foundUser = userRepository.findByEmailAddress(email);
+        if(foundUser != null){
+            if(email.equals(foundUser.getEmailAddress())){
+                userRepository.delete(foundUser);
+                logger.info("User " + email + " removed");
+                return new ResponseEntity<>(foundUser, HttpStatus.OK);
+            } else {
+                logger.info("User not removed");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        logger.info("No user with the given email");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

@@ -36,8 +36,7 @@ jobs:
         cache: maven
     - uses: actions/setup-node@v2
       with:
-       node-version: '12'
-    - run: npm install
+       node-version: '16.14.2'
     - name: build artifact
       run: mvn clean package
     - name: deploy site

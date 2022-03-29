@@ -7,14 +7,17 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-public class Student extends User{
+public class Student extends QSUser {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name="student_subject",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "emailAddress"),
-            inverseJoinColumns = @JoinColumn(name= "subject_id", referencedColumnName = "id"))
+            name="StudentSubject",
+            joinColumns = @JoinColumn(name = "emailAddress", referencedColumnName = "emailAddress"),
+            inverseJoinColumns = @JoinColumn(name= "subjectId", referencedColumnName = "id"))
     private Collection<Subject> subjects;
 
     @ManyToOne
     private Entry entry;
+
+    public Student() {
+    }
 }

@@ -32,6 +32,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        architecture: arm
         cache: maven
     - name: build artifact
       run: mvn clean package

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>{{}}</h1>
+    <h1>{{ subject.code }}</h1>
+
     <div id="nav">
       <router-link :to="{ name: 'SubjectDetails' }">Details</router-link>
       |

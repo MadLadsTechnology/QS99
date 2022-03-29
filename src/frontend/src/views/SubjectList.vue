@@ -1,5 +1,5 @@
 <template>
-  <h1>Welcome {{ this.$store.state.user.firstname }}</h1>
+  <h1>Welcome "{{ this.$store.state.user.firstname }}"</h1>
 
   <h3>Here are your active subjects</h3>
 
@@ -38,10 +38,11 @@ export default {
 
 <style>
 .cardHolder {
+  margin-top: 40px;
   width: 100%;
   flex-wrap: wrap;
   display: flex;
-  justify-content: space-evenly;
-  gap: 20px;
+  justify-content: center;
+  gap: 30px;
 }
 </style>

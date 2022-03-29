@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h1>Welcome to QS 99</h1>
-    <img src="../assets/logo.png" alt="Logo" width="200" />
     <form class="loginForm" @submit.prevent="submit()">
       <h1>Log in</h1>
 

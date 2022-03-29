@@ -11,4 +11,6 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     @Query("SELECT s.id, s.subjectName FROM Subject s, StudentSubject ss WHERE ss.id.emailAddress = :foundEmailAddress AND ss.id.id = s.id")
     Collection<Subject> findfindAllSubjectsByStudent(@Param("foundEmailAddress") String foundEmailAddress);
+
+    Subject findById(int id);
 }

@@ -20,9 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,21 +36,20 @@ public class UserController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<String> generateToken(@RequestParam("email") final String email,
-                                @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public ResponseEntity<Map<String,String>> generateToken(@RequestParam("email") final String email,
+                                                            @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         QSUser foundUser = userRepository.findByEmailAddress(email);
 
         if (foundUser != null) {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
-                String jsonUser = "{" +
-                        "'email' : "+ foundUser.getEmailAddress() +
-                        "'firstname' : "+ foundUser.getFirstName() +
-                        "'lastname' : "+ foundUser.getFirstName() +
-                        "'token' : " + generateToken(email) +
-                        "}";
+                HashMap<String,String> returnMap = new HashMap<>();
+                returnMap.put("email",foundUser.getEmailAddress());
+                returnMap.put("firstname",foundUser.getFirstName());
+                returnMap.put("lastname",foundUser.getLastName());
+                returnMap.put("token",generateToken(email));
                 logger.info("Logged in successfully");
-                return new ResponseEntity<>(jsonUser, HttpStatus.OK);
+                return new ResponseEntity<>(returnMap, HttpStatus.OK);
             }
             logger.info("Wrong password");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -89,13 +86,21 @@ public class UserController {
                                              @RequestParam("email") final String email,
                                              @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
-        try {
-            String hashedPassword = PasswordHashing.generatePasswordHash(password);
-            QSUser QSUser = userRepository
-                    .save(new QSUser(firstname, lastname, email, hashedPassword));
-            return new ResponseEntity<>(QSUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+
+        if (userRepository.findByEmailAddress(email) == null){
+            try {
+                String hashedPassword = PasswordHashing.generatePasswordHash(password);
+                QSUser QSUser = userRepository
+                        .save(new QSUser(firstname, lastname, email, hashedPassword));
+                logger.info("Saved new user: " + QSUser.getEmailAddress());
+                return new ResponseEntity<>(QSUser, HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
     @DeleteMapping("/delete")

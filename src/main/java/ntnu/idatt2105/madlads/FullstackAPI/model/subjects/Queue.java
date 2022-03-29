@@ -6,11 +6,20 @@ import java.util.Collection;
 @Entity
 public class Queue {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne
     private Subject subject;
     private boolean isActive;
+
+    public Queue(Subject subject, boolean isActive) {
+        this.subject = subject;
+        this.isActive = isActive;
+    }
+
+    protected Queue() {
+
+    }
 
     public Long getId() {
         return id;

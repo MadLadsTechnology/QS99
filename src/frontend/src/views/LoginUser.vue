@@ -64,7 +64,7 @@ export default {
           password: values.password,
         })
         .then(() => {
-          this.$router.push({ name: "HomeView" });
+          this.$router.push({ name: "subjects" });
         })
         .catch((err) => {
           error = err;

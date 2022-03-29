@@ -7,8 +7,8 @@ export default {
   setup() {
     const userString = localStorage.getItem("user");
     if (userString) {
-      const userData = JSON.parse(userString);
-      this.$store.commit("SET_USER_DATA", userData);
+      //const userData = JSON.parse(userString);
+      //this.$store.commit("SET_USER_DATA", userData);
     }
 
     axios.interceptors.response.use(

@@ -34,6 +34,10 @@ jobs:
         distribution: 'temurin'
         architecture: arm
         cache: maven
+    - uses: actions/setup-node@v2
+      with:
+       node-version: '12'
+    - run: npm install
     - name: build artifact
       run: mvn clean package
     - name: deploy site

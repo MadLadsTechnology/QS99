@@ -16,16 +16,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // token endpoint is not protected
-        http
-                .csrf().disable()
-                .cors().and()
-                .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/register").permitAll()
-                .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/v3/**").permitAll()
-                .anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/h2-ui/**").permitAll()
+            .and().csrf().ignoringAntMatchers("/h2-ui/**")
+            .and().headers().frameOptions().sameOrigin();
 
+        http
+            .csrf().disable()
+            .cors().and()
+            .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .authorizeRequests()
+            .antMatchers(HttpMethod.POST, "/user/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+            .antMatchers(HttpMethod.GET,"/v3/**").permitAll()
+            .anyRequest().authenticated();
     }
 }

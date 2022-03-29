@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import Subjects from "../views/SubjectList.vue";
 import SubjectLayout from "../views/subject/LayoutView.vue";
 import SubjectDetails from "../views/subject/DetailsView.vue";
 import SubjectQueue from "../views/subject/QueueView.vue";
@@ -11,8 +11,8 @@ import LoginUser from "../views/LoginUser.vue";
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "subjects",
+    component: Subjects,
     meta: {
       requiresAuth: true,
     },
@@ -62,7 +62,7 @@ router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem("user");
 
   if (to.matched.some((record) => record.meta.requiresAuth) && !loggedIn) {
-    next("/");
+    next("/login");
   } else {
     next();
   }

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
     public static String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
@@ -41,10 +42,17 @@ public class UserController {
                                 @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         QSUser foundUser = userRepository.findByEmailAddress(email);
+
         if (foundUser != null) {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
+                String jsonUser = "{" +
+                        "'email' : "+ foundUser.getEmailAddress() +
+                        "'firstname' : "+ foundUser.getFirstName() +
+                        "'lastname' : "+ foundUser.getFirstName() +
+                        "'token' : " + generateToken(email) +
+                        "}";
                 logger.info("Logged in successfully");
-                return new ResponseEntity<>(generateToken(email), HttpStatus.OK);
+                return new ResponseEntity<>(jsonUser, HttpStatus.OK);
             }
             logger.info("Wrong password");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

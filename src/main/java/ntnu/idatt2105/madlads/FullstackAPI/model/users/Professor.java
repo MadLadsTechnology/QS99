@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-public class Professor extends User{
+public class Professor extends QSUser {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="professor_subject",

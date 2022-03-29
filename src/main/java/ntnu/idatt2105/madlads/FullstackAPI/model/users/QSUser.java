@@ -3,7 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 import javax.persistence.*;
 
 @Entity
-public class User {
+public class QSUser {
 
     @Id
     private String emailAddress;
@@ -11,14 +11,14 @@ public class User {
     private String lastName;
     protected String password;
 
-    public User(String firstName, String lastName, String emailAddress, String password) {
+    public QSUser(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.password = password;
     }
 
-    protected User(){}
+    protected QSUser(){}
 
     public String getFirstName() {
         return firstName;

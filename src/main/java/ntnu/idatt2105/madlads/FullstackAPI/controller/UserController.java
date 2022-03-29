@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.users.User;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class UserController {
     public String generateToken(@RequestParam("email") final String email,
                                 @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-        User foundUser = userRepository.findByEmailAddress(email);
+        QSUser foundUser = userRepository.findByEmailAddress(email);
         if(foundUser != null){
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
                 logger.info("Logged in successfully");
@@ -75,16 +75,16 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<User> createUser(@RequestParam("firstname") final String firstname,
-                                           @RequestParam("lastname") final String lastname,
-                                           @RequestParam("email") final String email,
-                                           @RequestParam("password") final String password) {
+    public ResponseEntity<QSUser> createUser(@RequestParam("firstname") final String firstname,
+                                             @RequestParam("lastname") final String lastname,
+                                             @RequestParam("email") final String email,
+                                             @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
         try {
             String hashedPassword = PasswordHashing.generatePasswordHash(password);
-            User user = userRepository
-                    .save(new User(firstname, lastname, email, hashedPassword));
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            QSUser QSUser = userRepository
+                    .save(new QSUser(firstname, lastname, email, hashedPassword));
+            return new ResponseEntity<>(QSUser, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

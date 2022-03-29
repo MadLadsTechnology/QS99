@@ -1,26 +1,23 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
-import ntnu.idatt2105.madlads.FullstackAPI.model.users.User;
-
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
     private String subjectName;
     private String subjectDescription;
     private int mandatoryCount;
-    private int year;
+    private int subjectYear;
 
-    public Subject(String subjectName, String subjectDescription, int mandatoryCount, int year) {
+    public Subject(String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
         this.subjectName = subjectName;
         this.subjectDescription = subjectDescription;
         this.mandatoryCount = mandatoryCount;
-        this.year = year;
+        this.subjectYear = subjectYear;
     }
 
     protected Subject() {}
@@ -37,7 +34,7 @@ public class Subject {
         return mandatoryCount;
     }
 
-    public int getYear() {
-        return year;
+    public int getSubjectYear() {
+        return subjectYear;
     }
 }

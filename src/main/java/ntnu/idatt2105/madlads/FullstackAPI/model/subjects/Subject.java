@@ -22,6 +22,10 @@ public class Subject {
 
     protected Subject() {}
 
+    public int getId() {
+        return id;
+    }
+
     public String getSubjectName() {
         return subjectName;
     }

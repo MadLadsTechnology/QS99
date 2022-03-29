@@ -26,8 +26,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
+            .antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
             .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/queue/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/subject/**").permitAll()
             .antMatchers(HttpMethod.GET,"/v3/**").permitAll()
             .anyRequest().authenticated();
     }

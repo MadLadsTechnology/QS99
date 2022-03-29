@@ -12,7 +12,7 @@ export default createStore({
   },
   mutations: {
     SET_USER_DATA(state, user) {
-      state.user = user;
+      state.user = user.data;
       localStorage.setItem("user", JSON.stringify(user));
       axios.defaults.headers.common["authorization"] = "Bearer ${user.token}";
     },
@@ -23,8 +23,6 @@ export default createStore({
   },
   actions: {
     login({ commit }, credentials) {
-      console.log(credentials);
-
       return axios
         .post("http://localhost:8001/user/login", null, {
           params: {
@@ -32,7 +30,7 @@ export default createStore({
             password: credentials.password,
           },
         })
-        .then((response) => {
+        .then(({ response }) => {
           commit("SET_USER_DATA", response);
         });
     },

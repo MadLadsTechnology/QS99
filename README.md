@@ -12,7 +12,7 @@ compatible with a mobile.
 ## 🛠️ Technologies & Languages
 * Vue 3 
 * Spring Data JPA
-* MySQL database
+* H2 database
 
 
 

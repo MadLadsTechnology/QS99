@@ -1,9 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
-import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
-
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 public class User {

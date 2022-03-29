@@ -15,7 +15,7 @@
 	<description>BackendServer</description>
 	<properties>
 		<java.version>17</java.version>
-		<node.version>v12.22.5</node.version>
+		<node.version>v16.14.2</node.version>
 		<yarn.version>v1.22.17</yarn.version>
 	</properties>
 	<dependencies>
@@ -92,6 +92,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<downloadRoot>https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-armv7l.tar.xz</downloadRoot>
 					<nodeVersion>${node.version}</nodeVersion>
 					<workingDirectory>src/frontend</workingDirectory>
 				</configuration>

@@ -54,7 +54,7 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.7.6</version>
+				<version>1.12.1</version>
 
 				<executions>
 					<execution>
@@ -92,7 +92,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<nodeDownloadRoot>https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-armv7l.tar.xz</nodeDownloadRoot>
 					<nodeVersion>${node.version}</nodeVersion>
 					<workingDirectory>src/frontend</workingDirectory>
 				</configuration>

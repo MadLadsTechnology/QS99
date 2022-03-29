@@ -16,8 +16,9 @@
         v-model="password"
         :error="errors.password"
       />
-
-      <button :disabled="!isValid" type="submit">Log in</button>
+      <button :disabled="!isValid" type="submit" @click="handleSubmit">
+        Log in
+      </button>
     </form>
   </div>
 </template>
@@ -26,6 +27,7 @@
 import { useField, useForm } from "vee-validate";
 import { object, string } from "yup";
 import { ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
   data() {
@@ -50,13 +52,17 @@ export default {
     const { value: email } = useField("email");
     const { value: password } = useField("password");
 
+    const store = useStore();
     var error = "";
 
     const submit = handleSubmit(() => {
-      this.$store
+      console.log("hei");
+      store
         .dispatch("login", {
-          email: email,
-          password: password,
+          credentials: {
+            email: email,
+            password: password,
+          },
         })
         .then(() => {
           this.$router.push({ name: "HomeView" });

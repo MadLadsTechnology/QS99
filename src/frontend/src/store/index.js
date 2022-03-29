@@ -22,15 +22,25 @@ export default createStore({
     },
   },
   actions: {
-    register({ commit }, credentials) {
-      return axios.post("link", credentials).then((response) => {
-        commit("SET_USER_DATA", response);
-      });
-    },
     login({ commit }, credentials) {
-      return axios.post("link", credentials).then((response) => {
-        commit("SET_USER_DATA", response);
-      });
+      console.log("hei igjen");
+      return axios
+        .post("localhost:8001/user/login", null, {
+          params: {
+            email: credentials.email,
+            password: credentials.password,
+          },
+        })
+        .then((response) => {
+          commit("SET_USER_DATA", response);
+        });
+    },
+    register({ commit }, credentials) {
+      return axios
+        .post("localhost:8001/user/register", credentials)
+        .then((response) => {
+          commit("SET_USER_DATA", response);
+        });
     },
     logout({ commit }) {
       commit("CLEAR_USER_DATA");

@@ -1,5 +1,5 @@
 <template>
-  <LoginView v-if="!isLoggedIn" />
+  <LoginView v-if="isLoggedIn" />
   <HomeView v-else />
 </template>
 <script>

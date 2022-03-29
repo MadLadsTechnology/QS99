@@ -27,7 +27,6 @@ import { useField, useForm } from "vee-validate";
 import { object, string } from "yup";
 import axios from "axios";
 import { ref } from "vue";
-import { useStore } from "vuex";
 
 export default {
   data() {
@@ -39,8 +38,6 @@ export default {
   setup() {
     var submitted = ref(false);
     var sending = ref(false);
-    const store = useStore();
-    store.commit("SET_IsFormSent", false);
 
     const validationSchema = object({
       email: string().email("Invalid email format").required(),

@@ -14,9 +14,11 @@
 <script>
 export default {
   props: {
-    subjectCode: String,
-    subjectName: String,
-    link: String,
+    subject: {
+      subjectCode: String,
+      subjectName: String,
+      link: String,
+    },
   },
 };
 </script>

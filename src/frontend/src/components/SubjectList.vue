@@ -1,6 +1,8 @@
 <template>
   <div>
     <button>Øvinger</button> <button>kø</button>
+
+    v-f
     <div class="container">
       <h3>{{ subjectCode }}</h3>
       {{ subjectName }}

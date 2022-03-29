@@ -37,19 +37,20 @@ public class UserController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String generateToken(@RequestParam("email") final String email,
+    public ResponseEntity<String> generateToken(@RequestParam("email") final String email,
                                 @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         QSUser foundUser = userRepository.findByEmailAddress(email);
-        if(foundUser != null){
+        if (foundUser != null) {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
                 logger.info("Logged in successfully");
-                return generateToken(email);
+                return new ResponseEntity<>(generateToken(email), HttpStatus.OK);
             }
             logger.info("Wrong password");
-            return "Wrong password";
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return "Access denied, wrong credentials....";
+        logger.info("Access denied, wrong credentials....");
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     public String generateToken(String userId) {

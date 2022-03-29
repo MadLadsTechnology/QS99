@@ -35,3 +35,13 @@ export default {
   },
 };
 </script>
+
+<style>
+.cardHolder {
+  width: 100%;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+</style>

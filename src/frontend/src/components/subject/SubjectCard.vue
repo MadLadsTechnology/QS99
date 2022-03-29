@@ -1,6 +1,6 @@
 <template>
   <router-link :to="{ name: 'SubjectDetails', params: { id: subject.id } }">
-    <div>
+    <div class="card">
       <h1>{{ subject.code }}</h1>
       <h3>{{ subject.name }}</h3>
     </div>
@@ -18,4 +18,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.card {
+  border: solid 1px;
+  padding: 20px;
+  border-radius: 10px;
+}
+</style>

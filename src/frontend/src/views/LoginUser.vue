@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Welcome to QS 99</h1>
-    <form class="loginForm" @submit.prevent="submit">
+    <form class="loginForm" @submit.prevent="submit()">
       <h1>Log in</h1>
 
       <BaseInput
@@ -16,9 +16,9 @@
         v-model="password"
         :error="errors.password"
       />
-      <button :disabled="!isValid" type="submit" @click="handleSubmit">
-        Log in
-      </button>
+      <button :disabled="!isValid" type="submit">Log in</button>
+
+      <p v-if="error">{{ error }}</p>
     </form>
   </div>
 </template>
@@ -26,59 +26,49 @@
 <script>
 import { useField, useForm } from "vee-validate";
 import { object, string } from "yup";
-import { ref } from "vue";
-import { useStore } from "vuex";
 
 export default {
   data() {
     return {
-      user: ["email", "password"],
+      error: null,
     };
   },
 
-  setup() {
-    var submitted = ref(false);
-    var sending = ref(false);
+  methods: {
+    //Method for submitting form
+    submit() {
+      console.log(this.email);
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          password: this.password,
+        })
+        .then(() => {
+          this.$router.push({ name: "subjects" });
+        })
+        .catch((err) => {
+          this.error = err.response;
+        });
+    },
+  },
 
+  setup() {
+    //Setting up form validation
     const validationSchema = object({
       email: string().email("Invalid email format").required(),
       password: string().required(),
     });
-
-    const { handleSubmit, errors } = useForm({
+    const { errors } = useForm({
       validationSchema,
     });
 
     const { value: email } = useField("email");
     const { value: password } = useField("password");
 
-    const store = useStore();
-    var error = "";
-
-    const submit = handleSubmit((values) => {
-      console.log(values);
-
-      store
-        .dispatch("login", {
-          email: values.email,
-          password: values.password,
-        })
-        .then(() => {
-          this.$router.push({ name: "subjects" });
-        })
-        .catch((err) => {
-          error = err;
-        });
-    });
-
     return {
       email,
       password,
-      submit,
       errors,
-      error,
-      submitted,
-      sending,
     };
   },
   computed: {

@@ -13,8 +13,8 @@ jobs:
   testAndPublish:
     runs-on: self-hosted
     steps:
-    - name: delete database
-      run: rm ~/data/test.mv.db ~/data/test.trace.db 
+    #- name: delete database
+     # run: rm ~/data/test.mv.db ~/data/test.trace.db 
     - uses: actions/checkout@v2
     - name: setup java
       uses: actions/setup-java@v2

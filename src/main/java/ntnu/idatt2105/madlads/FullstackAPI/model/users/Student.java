@@ -11,7 +11,7 @@ public class Student extends User{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="student_subject",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "emailAddress"),
             inverseJoinColumns = @JoinColumn(name= "subject_id", referencedColumnName = "id"))
     private Collection<Subject> subjects;
 

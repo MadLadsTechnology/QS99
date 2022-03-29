@@ -35,14 +35,14 @@ const routes = [
     component: SubjectLayout,
     children: [
       {
-        path: "",
-        name: "SubjectDetails",
-        component: SubjectDetails,
-      },
-      {
-        path: "register",
+        path: "queue",
         name: "SubjectQueue",
         component: SubjectQueue,
+      },
+      {
+        path: "details",
+        name: "SubjectDetails",
+        component: SubjectDetails,
       },
       {
         path: "assignments",

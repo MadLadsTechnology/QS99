@@ -8,10 +8,9 @@ public class Queue {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-
     @OneToOne
     private Subject subject;
-
+    private boolean isActive;
 
     public Long getId() {
         return id;

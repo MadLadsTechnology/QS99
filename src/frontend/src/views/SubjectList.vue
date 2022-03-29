@@ -20,6 +20,9 @@ export default {
   components: {
     SubjectCard,
   },
+  created() {
+    document.title = "QS99 - Subjects";
+  },
   data() {
     return {
       subjects: [

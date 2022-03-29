@@ -35,6 +35,10 @@ export default {
     };
   },
 
+  created() {
+    document.title = "QS99 - Login";
+  },
+
   methods: {
     //Method for submitting form
     submit() {

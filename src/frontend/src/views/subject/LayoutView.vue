@@ -17,6 +17,9 @@
 <script>
 export default {
   props: ["id"],
+  created() {
+    document.title = "QS99 - " + this.subject.code;
+  },
   data() {
     return {
       subject: {

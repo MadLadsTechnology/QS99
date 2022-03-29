@@ -1,10 +1,14 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.repositories;
 
-import ntnu.idatt2105.madlads.FullstackAPI.model.users.User;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface UserRepository extends JpaRepository<QSUser, Long> {
+    QSUser findByEmailAddress(String email);
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmailAddress(String email);
+    /*@Modifying
+    @Query("")
+    void changeRoleOfUserToAdmin(User user);*/
+    //TODO: Add query for updating the users role
+
 }

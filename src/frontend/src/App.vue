@@ -11,6 +11,7 @@ export default {
       const userData = JSON.parse(userString);
       this.$store.commit("SET_USER_DATA", userData);
     }
+    document.title = "QS99";
   },
   components: { NavigationMenu },
   computed: {},

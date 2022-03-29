@@ -92,7 +92,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<downloadRoot>https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-armv7l.tar.xz</downloadRoot>
+					<nodeDownloadRoot>https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-armv7l.tar.xz</>
 					<nodeVersion>${node.version}</nodeVersion>
 					<workingDirectory>src/frontend</workingDirectory>
 				</configuration>

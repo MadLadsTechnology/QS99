@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
     public static String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";

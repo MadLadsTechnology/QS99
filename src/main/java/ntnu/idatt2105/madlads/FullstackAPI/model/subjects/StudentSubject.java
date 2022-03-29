@@ -7,8 +7,6 @@ public class StudentSubject {
 
     @EmbeddedId
     StudentSubjectId id;
-    private String emailAddress;
-    private int subjectId;
 
     public StudentSubject() {
     }

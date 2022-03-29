@@ -89,7 +89,7 @@ export default {
 
 <style>
 .loginForm {
-  width: 50%;
+  width: 250px;
   margin: auto;
 }
 </style>

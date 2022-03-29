@@ -1,5 +1,5 @@
 <template>
-  <h1>Welcome {{}}</h1>
+  <h1>Welcome {{ this.$store.state.user.firstname }}</h1>
 
   <h3>Here are your active subjects</h3>
 

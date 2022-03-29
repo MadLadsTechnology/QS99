@@ -44,10 +44,11 @@ export default {
           password: this.password,
         })
         .then(() => {
-          this.$router.push({ name: "subjects" });
+          console.log("yep i live");
+          this.$router.push("/");
         })
         .catch((err) => {
-          this.error = err.response;
+          console.log(err);
         });
     },
   },

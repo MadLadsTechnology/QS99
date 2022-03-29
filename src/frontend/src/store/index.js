@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    user: null,
+    user: {},
   },
   getters: {
     loggedIn(state) {
@@ -30,7 +30,8 @@ export default createStore({
             password: credentials.password,
           },
         })
-        .then(({ response }) => {
+        .then((response) => {
+          console.log(response);
           commit("SET_USER_DATA", response);
         });
     },

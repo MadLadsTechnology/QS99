@@ -2,22 +2,7 @@
   <router-view />
 </template>
 <script>
-import axios from "axios";
 export default {
-  created() {
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      const userData = JSON.parse(userString);
-      this.$store.commit("SET_USER_DATA", userData);
-    }
-
-    axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        console.log(error);
-      }
-    );
-  },
   components: {},
   computed: {},
 };

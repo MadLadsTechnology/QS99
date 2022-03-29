@@ -1,7 +1,10 @@
 <template>
+  <NavigationMenu />
+
   <router-view />
 </template>
 <script>
+import NavigationMenu from "@/components/NavigationMenu";
 export default {
   created() {
     const userString = localStorage.getItem("user");
@@ -10,7 +13,7 @@ export default {
       this.$store.commit("SET_USER_DATA", userData);
     }
   },
-  components: {},
+  components: { NavigationMenu },
   computed: {},
 };
 </script>

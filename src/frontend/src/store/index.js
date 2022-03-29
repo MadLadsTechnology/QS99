@@ -23,9 +23,10 @@ export default createStore({
   },
   actions: {
     login({ commit }, credentials) {
-      console.log("hei igjen");
+      console.log(credentials);
+
       return axios
-        .post("localhost:8001/user/login", null, {
+        .post("http://localhost:8001/user/login", null, {
           params: {
             email: credentials.email,
             password: credentials.password,
@@ -37,7 +38,7 @@ export default createStore({
     },
     register({ commit }, credentials) {
       return axios
-        .post("localhost:8001/user/register", credentials)
+        .post("http://localhost:8001/user/register", credentials)
         .then((response) => {
           commit("SET_USER_DATA", response);
         });

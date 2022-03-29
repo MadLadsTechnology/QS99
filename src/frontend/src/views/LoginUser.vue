@@ -55,14 +55,13 @@ export default {
     const store = useStore();
     var error = "";
 
-    const submit = handleSubmit(() => {
-      console.log("hei");
+    const submit = handleSubmit((values) => {
+      console.log(values);
+
       store
         .dispatch("login", {
-          credentials: {
-            email: email,
-            password: password,
-          },
+          email: values.email,
+          password: values.password,
         })
         .then(() => {
           this.$router.push({ name: "HomeView" });

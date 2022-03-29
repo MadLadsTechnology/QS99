@@ -9,11 +9,9 @@ import java.util.Collection;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String emailAddress;
     private String firstName;
     private String lastName;
-    private String emailAddress;
     protected String password;
 
     public User(String firstName, String lastName, String emailAddress, String password) {

@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, "/subject/**").authenticated()
             .antMatchers(HttpMethod.GET,"/v3/**").authenticated()
             .antMatchers(HttpMethod.GET,"/queue/**").authenticated()
-            .antMatchers(HttpMethod.GET, "/subject/**").authenticated();
+            .antMatchers(HttpMethod.POST, "/subject/**").permitAll();
 
         http
             .csrf().disable()

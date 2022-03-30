@@ -25,7 +25,7 @@ import java.util.List;
 @EnableAutoConfiguration
 @RequestMapping("/subject")
 public class SubjectController {
-    Logger logger = LoggerFactory.getLogger(UserController.class);
+    Logger logger = LoggerFactory.getLogger(SubjectController.class);
 
     @Autowired
     SubjectRepository subjectRepository;
@@ -56,20 +56,21 @@ public class SubjectController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudents(@RequestParam("subjectName") final String subjectName,
                                                @RequestParam("year") final int subjectYear,
-                                               @RequestParam("students") final List<String> students
+                                               @RequestParam("email") final String email
     ) {
         Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
         if(subject == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             logger.info("Adding students to subject: " + subjectName);
-            for(String email: students){
-                subject.addStudent(studentRepository.findByEmailAddress(email));
-            }
+
+            Student student = studentRepository.findByEmailAddress(email);
+            subject.addStudent(studentRepository.findByEmailAddress(email));
+            logger.info(subject.toString());
+            subjectRepository.save(subject);
+
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
-
-
     }
 
     @GetMapping("/getByUser")
@@ -81,8 +82,8 @@ public class SubjectController {
             if (userRepository.findByEmailAddress(email) == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                ArrayList<Subject> subjects = (ArrayList<Subject>) subjectRepository.findAllSubjectsByStudent(email);
-                return new ResponseEntity<>(subjects, HttpStatus.OK);
+                //ArrayList<Subject> subjects = (ArrayList<Subject>) subjectRepository.findAllSubjectsByStudent(email);
+                return new ResponseEntity<>(null, HttpStatus.OK);
             }
         }
         else{

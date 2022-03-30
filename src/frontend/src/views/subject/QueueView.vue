@@ -12,8 +12,20 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
-  props: ["event"],
+  props: ["subject"],
+
+  created() {
+    axios.get("http://localhost:8001/queue", null, {
+      params: {
+        id: this.subject.id,
+      },
+    });
+  },
+
+  methods: {},
 
   data() {
     return {

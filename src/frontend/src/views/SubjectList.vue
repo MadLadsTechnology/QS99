@@ -3,8 +3,8 @@
 
   <div class="cardHolder">
     <SubjectCardActiveQueue
-      v-for="subject in activeSubjects"
-      :key="subject.id"
+      v-for="subject in subjects.active"
+      :key="parseInt(subject.id)"
       :subject="subject"
     />
   </div>
@@ -12,8 +12,8 @@
 
   <div class="cardHolder">
     <SubjectCard
-      v-for="subject in subjects"
-      :key="subject.id"
+      v-for="subject in subjects.isActive"
+      :key="parseInt(subject.id)"
       :subject="subject"
     />
   </div>
@@ -35,29 +35,35 @@ export default {
 
     //getting subjects of the user
     axios.get("http://localhost:8001/subject/getByUser").then((response) => {
-      this.subjects = response;
+      this.allSubjects = response.data;
+      console.log(this.allSubjects);
     });
   },
   data() {
     return {
-      activeSubjects: [
-        { id: 1, code: "IDATT1234", name: "Testfag" },
-        {
-          id: 1,
-          code: "IDATT1234",
-          name: "Matematiske metoder 2",
-        },
-      ],
-      subjects: [
-        { id: 1, code: "IDATT2101", name: "Programmering 1" },
-        { id: 1, code: "IDATT2124", name: "Systemutvikling" },
-        { id: 1, code: "IDATT9012", name: "Fysikk data" },
-        { id: 1, code: "IDATT1011", name: "Operativsystmer" },
-      ],
+      allSubjects: [],
     };
   },
+
   computed: {
     ...authComputed,
+
+    subjects: function () {
+      const active = [];
+      const isActive = [];
+      for (const subject in this.allSubjects) {
+        if (subject.isQueueActive) {
+          active.push(subject);
+        } else {
+          console.log(subject);
+          isActive.push(subject);
+        }
+      }
+      return {
+        active,
+        isActive,
+      };
+    },
   },
 };
 </script>

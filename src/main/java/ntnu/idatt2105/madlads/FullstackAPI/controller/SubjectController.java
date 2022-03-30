@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @EnableAutoConfiguration
@@ -37,6 +34,11 @@ public class SubjectController {
     @Autowired
     ProfessorRepository professorRepository;
 
+    @Autowired
+    QueueRepository queueRepository;
+
+    QueueController queueController = new QueueController();
+
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
@@ -49,8 +51,10 @@ public class SubjectController {
         try {
             Subject newSubject = subjectRepository
                     .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
+            queueController.createQueue(newSubject.getId(), false, subjectRepository, queueRepository);
             return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
         } catch (Exception e) {
+            logger.info(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -92,7 +96,7 @@ public class SubjectController {
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<Map<String, HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             logger.info("Trying to get subjects for " + email);
@@ -101,9 +105,10 @@ public class SubjectController {
             } else {
                 Student student = studentRepository.findByEmailAddress(email);
                 ArrayList<Integer> subjectIds = student.getStudentSubjects();
-                ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
+                Map<String, HashMap<String,String>> subjects = new HashMap<String, HashMap<String, String>>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
+                    Queue queue = queueRepository.findBySubject(subject);
                     HashMap<String,String> returnMap;
                     returnMap = new HashMap<>();
                     returnMap.put("id", String.valueOf(subject.getId()));
@@ -111,7 +116,8 @@ public class SubjectController {
                     returnMap.put("subjectName",subject.getSubjectName());
                     returnMap.put("subjectDescription",subject.getSubjectDescription());
                     returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
-                    subjects.add(returnMap);
+                    returnMap.put("isQueueActive", String.valueOf(queue.getStatus()));
+                    subjects.put("subject" + String.valueOf(subject.getId()), returnMap);
                 }
 
                 return new ResponseEntity<>(subjects, HttpStatus.OK);

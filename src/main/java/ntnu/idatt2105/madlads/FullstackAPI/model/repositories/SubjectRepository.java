@@ -13,4 +13,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Collection<Subject> findAllSubjectsByStudent(@Param("foundEmailAddress") String foundEmailAddress);
 
     Subject findById(int id);
+    Subject findBySubjectNameAndSubjectYear(String subjectName, int subjectYear);
 }

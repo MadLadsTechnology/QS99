@@ -10,6 +10,7 @@ public class QSUser {
     private String firstName;
     private String lastName;
     protected String password;
+    protected String role;
 
     public QSUser(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;

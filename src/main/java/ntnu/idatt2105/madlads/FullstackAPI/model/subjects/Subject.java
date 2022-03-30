@@ -1,6 +1,10 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Subject {
@@ -12,6 +16,8 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int subjectYear;
+    @ManyToMany( mappedBy = "studentSubjects")
+    private List<Student> students = new ArrayList<>();
 
     public Subject(String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
         this.subjectName = subjectName;
@@ -21,6 +27,10 @@ public class Subject {
     }
 
     protected Subject() {}
+
+    public void addStudent(Student student){
+        students.add(student);
+    }
 
     public int getId() {
         return id;

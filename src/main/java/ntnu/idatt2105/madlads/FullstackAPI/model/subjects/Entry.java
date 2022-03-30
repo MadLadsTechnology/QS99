@@ -13,6 +13,8 @@ public class Entry {
     private String room;
     private String status;
     private String type;
+    private String building;
+    private String table;
     @ManyToOne
     private Queue queue;
     @ManyToMany(fetch = FetchType.LAZY)

@@ -51,7 +51,7 @@ public class SubjectController {
         try {
             Subject newSubject = subjectRepository
                     .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
-            queueController.createQueue(newSubject.getId(), false, subjectRepository, queueRepository);
+            queueController.createQueue(newSubject.getId(), true, subjectRepository, queueRepository);
             return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.info(e.getMessage());
@@ -96,7 +96,7 @@ public class SubjectController {
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Map<String, HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<ArrayList<HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             logger.info("Trying to get subjects for " + email);
@@ -105,7 +105,7 @@ public class SubjectController {
             } else {
                 Student student = studentRepository.findByEmailAddress(email);
                 ArrayList<Integer> subjectIds = student.getStudentSubjects();
-                Map<String, HashMap<String,String>> subjects = new HashMap<String, HashMap<String, String>>();
+                ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
                     Queue queue = queueRepository.findBySubject(subject);
@@ -117,7 +117,7 @@ public class SubjectController {
                     returnMap.put("subjectDescription",subject.getSubjectDescription());
                     returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
                     returnMap.put("isQueueActive", String.valueOf(queue.getStatus()));
-                    subjects.put("subject" + String.valueOf(subject.getId()), returnMap);
+                    subjects.add(returnMap);
                 }
 
                 return new ResponseEntity<>(subjects, HttpStatus.OK);

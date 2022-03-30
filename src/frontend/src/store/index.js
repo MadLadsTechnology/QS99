@@ -4,7 +4,7 @@ import axios from "axios";
 const store = createStore({
   state: {
     user: null,
-    role: "user",
+    role: "",
   },
   getters: {
     loggedIn(state) {

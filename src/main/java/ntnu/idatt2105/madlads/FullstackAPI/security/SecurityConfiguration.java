@@ -1,5 +1,7 @@
 package ntnu.idatt2105.madlads.FullstackAPI.security;
 
+import ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization.JWTAuthorizationAdminFilter;
+import ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization.JWTAuthorizationUserFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -23,14 +25,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .cors().and()
-            .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(new JWTAuthorizationUserFilter(), UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/user/**").permitAll()
-            .antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
-            .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/queue/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/subject/**").permitAll()
-            .antMatchers(HttpMethod.GET,"/v3/**").permitAll()
-            .anyRequest().authenticated();
+            .antMatchers(HttpMethod.POST, "/user/**").authenticated()
+            .antMatchers(HttpMethod.DELETE, "/user/**").authenticated()
+            .antMatchers(HttpMethod.GET, "/swagger-ui/**").authenticated()
+            .antMatchers(HttpMethod.POST, "/subject/**").authenticated()
+            .antMatchers(HttpMethod.GET,"/v3/**").authenticated()
+            .antMatchers(HttpMethod.GET,"/queue/**").authenticated();
+
+        http
+            .csrf().disable()
+            .cors().and()
+            .addFilterAfter(new JWTAuthorizationAdminFilter(), UsernamePasswordAuthenticationFilter.class)
+            .authorizeRequests()
+                .antMatchers("/admin/**").authenticated();
     }
 }

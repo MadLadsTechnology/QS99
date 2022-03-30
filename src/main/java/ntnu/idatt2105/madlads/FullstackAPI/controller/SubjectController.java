@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @EnableAutoConfiguration
@@ -99,7 +96,7 @@ public class SubjectController {
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<Map<String, HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             logger.info("Trying to get subjects for " + email);
@@ -108,7 +105,7 @@ public class SubjectController {
             } else {
                 Student student = studentRepository.findByEmailAddress(email);
                 ArrayList<Integer> subjectIds = student.getStudentSubjects();
-                ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
+                Map<String, HashMap<String,String>> subjects = new HashMap<String, HashMap<String, String>>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
                     Queue queue = queueRepository.findBySubject(subject);
@@ -120,7 +117,7 @@ public class SubjectController {
                     returnMap.put("subjectDescription",subject.getSubjectDescription());
                     returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
                     returnMap.put("isQueueActive", String.valueOf(queue.getStatus()));
-                    subjects.add(returnMap);
+                    subjects.put("subject" + String.valueOf(subject.getId()), returnMap);
                 }
 
                 return new ResponseEntity<>(subjects, HttpStatus.OK);

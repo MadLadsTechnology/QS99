@@ -29,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user/**").permitAll()
             .antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
-            .antMatchers(HttpMethod.GET, "/swagger-ui/**").authenticated()
+            .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
             .antMatchers(HttpMethod.POST, "/subject/**").authenticated()
             .antMatchers(HttpMethod.GET,"/v3/**").authenticated()
             .antMatchers(HttpMethod.GET,"/queue/**").authenticated()

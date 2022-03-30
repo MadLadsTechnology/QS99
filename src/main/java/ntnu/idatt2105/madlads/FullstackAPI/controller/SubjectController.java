@@ -1,9 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.QueueRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
@@ -36,6 +33,9 @@ public class SubjectController {
     @Autowired
     StudentRepository studentRepository;
 
+    @Autowired
+    ProfessorRepository professorRepository;
+
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
@@ -63,12 +63,27 @@ public class SubjectController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             logger.info("Adding students to subject: " + subjectName);
-
-            Student student = studentRepository.findByEmailAddress(email);
             subject.addStudent(studentRepository.findByEmailAddress(email));
             logger.info(subject.toString());
             subjectRepository.save(subject);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+    }
 
+    @PostMapping("/addProfessor")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> addProfessor(@RequestParam("subjectName") final String subjectName,
+                                               @RequestParam("year") final int subjectYear,
+                                               @RequestParam("email") final String email
+    ) {
+        Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+        if(subject == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            logger.info("Adding students to subject: " + subjectName);
+            subject.addProfessor(professorRepository.findByEmailAddress(email));
+            logger.info(subject.toString());
+            subjectRepository.save(subject);
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
     }

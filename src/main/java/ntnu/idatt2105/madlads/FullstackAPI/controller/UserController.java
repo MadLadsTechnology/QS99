@@ -3,8 +3,10 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    StudentRepository studentRepository;
+
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Map<String,String>> generateToken(@RequestParam("email") final String email,
@@ -47,6 +52,7 @@ public class UserController {
                 returnMap.put("email",foundUser.getEmailAddress());
                 returnMap.put("firstname",foundUser.getFirstName());
                 returnMap.put("lastname",foundUser.getLastName());
+                returnMap.put("role",foundUser.getRole());
                 returnMap.put("token",generateToken(email));
                 logger.info("Logged in successfully");
                 return new ResponseEntity<>(returnMap, HttpStatus.OK);
@@ -97,6 +103,34 @@ public class UserController {
                 logger.info("Saved new user: " + QSUser.getEmailAddress());
                 return new ResponseEntity<>(QSUser, HttpStatus.CREATED);
             } catch (Exception e) {
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+    @PostMapping("/registerStudent")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
+                                              @RequestParam("lastname") final String lastname,
+                                              @RequestParam("email") final String email,
+                                              @RequestParam("password") final String password) {
+        logger.info("email: " + email + " password: " + password);
+
+
+
+        if (userRepository.findByEmailAddress(email) == null){
+            try {
+                logger.info("trying to register student");
+                String hashedPassword = PasswordHashing.generatePasswordHash(password);
+                QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
+                logger.info(user.getDtype());
+                Student student = userRepository
+                        .save(new Student(user));
+                logger.info("Saved new user: " + student.getEmailAddress());
+                return new ResponseEntity<>(student, HttpStatus.CREATED);
+            } catch (Exception e) {
+                logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }else{

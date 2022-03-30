@@ -17,11 +17,13 @@
       />
       <button :disabled="!isValid" type="submit">Log in</button>
 
-      <p v-if="error">{{ error }}</p>
+      <br />
+      <router-link to="register">Dont have a user? Register here!</router-link>
+
+      <p v-if="error">{{ errors }}</p>
     </form>
   </div>
 </template>
-
 <script>
 import { useField, useForm } from "vee-validate";
 import { object, string } from "yup";
@@ -51,7 +53,7 @@ export default {
           this.$router.push("/");
         })
         .catch((err) => {
-          console.log(err);
+          this.error = err;
         });
     },
   },

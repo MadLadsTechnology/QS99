@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -90,7 +91,7 @@ public class SubjectController {
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<Integer>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<ArrayList<HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             logger.info("Trying to get subjects for " + email);
@@ -98,7 +99,20 @@ public class SubjectController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
                 Student student = studentRepository.findByEmailAddress(email);
-                ArrayList<Integer> subjects = student.getStudentSubjects();
+                ArrayList<Integer> subjectIds = student.getStudentSubjects();
+                ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
+                for(int id: subjectIds){
+                    Subject subject = subjectRepository.findById(id);
+                    HashMap<String,String> returnMap;
+                    returnMap = new HashMap<>();
+                    returnMap.put("id", String.valueOf(subject.getId()));
+                    returnMap.put("subjectCode",subject.getSubjectCode());
+                    returnMap.put("subjectName",subject.getSubjectName());
+                    returnMap.put("subjectDescription",subject.getSubjectDescription());
+                    returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
+                    subjects.add(returnMap);
+                }
+
                 return new ResponseEntity<>(subjects, HttpStatus.OK);
             }
         }

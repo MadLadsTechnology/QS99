@@ -16,6 +16,7 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String subjectName;
+    private String subjectCode;
     private String subjectDescription;
     private int mandatoryCount;
     private int subjectYear;
@@ -74,5 +75,9 @@ public class Subject {
 
     public Set<Student> getStudents() {
         return students;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
     }
 }

@@ -3,7 +3,7 @@
 
   <div class="cardHolder">
     <SubjectCardActiveQueue
-      v-for="subject in activeSubjects"
+      v-for="subject in subjects.active"
       :key="subject.id"
       :subject="subject"
     />
@@ -12,7 +12,7 @@
 
   <div class="cardHolder">
     <SubjectCard
-      v-for="subject in subjects"
+      v-for="subject in subjects.inActive"
       :key="subject.id"
       :subject="subject"
     />
@@ -40,24 +40,28 @@ export default {
   },
   data() {
     return {
-      activeSubjects: [
-        { id: 1, code: "IDATT1234", name: "Testfag" },
-        {
-          id: 1,
-          code: "IDATT1234",
-          name: "Matematiske metoder 2",
-        },
-      ],
-      subjects: [
-        { id: 1, code: "IDATT2101", name: "Programmering 1" },
-        { id: 1, code: "IDATT2124", name: "Systemutvikling" },
-        { id: 1, code: "IDATT9012", name: "Fysikk data" },
-        { id: 1, code: "IDATT1011", name: "Operativsystmer" },
-      ],
+      allSubjects: null,
     };
   },
   computed: {
     ...authComputed,
+
+    subjects: function () {
+      const active = [];
+      const inActive = [];
+
+      for (let subject in this.allSubjects) {
+        if (subject.activeQueue) {
+          active.add(subject);
+        } else {
+          inActive.add(subject);
+        }
+      }
+      return {
+        active,
+        inActive,
+      };
+    },
   },
 };
 </script>

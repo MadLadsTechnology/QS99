@@ -1,6 +1,8 @@
 <template>
   <h1>Queue</h1>
 
+  <button>Join queue</button>
+
   <div v-for="(entry, index) in queue" :key="entry.lastname" class="entry">
     <label>{{ index + 1 }}</label>
 

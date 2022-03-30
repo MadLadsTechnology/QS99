@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <img src="../assets/logo.png" alt="Logo" />
-    <router-link class="routerLink" v-if="loggedIn" to="/">
+    <router-link class="routerLink" v-if="loggedIn" to="/subjects">
       <h3>Subjects</h3></router-link
     >
 
     <div v-if="loggedIn" class="userInformation">
-      <h3>{{ this.$store.state.user.firstname }}</h3>
+      <h3>{{ this.$store.state.user.email }}</h3>
       <button class="logOutBtn" @click="logOut()">Log out</button>
     </div>
   </div>
@@ -18,6 +18,7 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch("logout");
+      this.$router.push("/login");
     },
   },
   computed: {

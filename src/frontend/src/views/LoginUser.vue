@@ -50,7 +50,7 @@ export default {
         })
         .then(() => {
           console.log("yep i live");
-          this.$router.push("/");
+          this.$router.push("/subjects");
         })
         .catch((err) => {
           this.error = err;

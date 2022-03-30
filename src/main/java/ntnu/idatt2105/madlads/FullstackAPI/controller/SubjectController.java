@@ -37,6 +37,9 @@ public class SubjectController {
     @Autowired
     ProfessorRepository professorRepository;
 
+    @Autowired
+    QueueRepository queueRepository;
+
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
@@ -104,6 +107,7 @@ public class SubjectController {
                 ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
+                    Queue queue = queueRepository.findBySubject(subject);
                     HashMap<String,String> returnMap;
                     returnMap = new HashMap<>();
                     returnMap.put("id", String.valueOf(subject.getId()));
@@ -111,6 +115,7 @@ public class SubjectController {
                     returnMap.put("subjectName",subject.getSubjectName());
                     returnMap.put("subjectDescription",subject.getSubjectDescription());
                     returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
+                    returnMap.put("isQueueActive", String.valueOf(queue.getStatus()));
                     subjects.add(returnMap);
                 }
 

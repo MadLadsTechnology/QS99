@@ -1,9 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.QueueRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
@@ -19,13 +16,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/subject")
 public class SubjectController {
-    Logger logger = LoggerFactory.getLogger(UserController.class);
+    Logger logger = LoggerFactory.getLogger(SubjectController.class);
 
     @Autowired
     SubjectRepository subjectRepository;
@@ -35,6 +33,9 @@ public class SubjectController {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    ProfessorRepository professorRepository;
 
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -56,32 +57,62 @@ public class SubjectController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudents(@RequestParam("subjectName") final String subjectName,
                                                @RequestParam("year") final int subjectYear,
-                                               @RequestParam("students") final List<String> students
+                                               @RequestParam("email") final String email
     ) {
         Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
         if(subject == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             logger.info("Adding students to subject: " + subjectName);
-            for(String email: students){
-                subject.addStudent(studentRepository.findByEmailAddress(email));
-            }
+            subject.addStudent(studentRepository.findByEmailAddress(email));
+            logger.info(subject.toString());
+            subjectRepository.save(subject);
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
+    }
 
-
+    @PostMapping("/addProfessor")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> addProfessor(@RequestParam("subjectName") final String subjectName,
+                                               @RequestParam("year") final int subjectYear,
+                                               @RequestParam("email") final String email
+    ) {
+        Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+        if(subject == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            logger.info("Adding students to subject: " + subjectName);
+            subject.addProfessor(professorRepository.findByEmailAddress(email));
+            logger.info(subject.toString());
+            subjectRepository.save(subject);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<Subject>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<ArrayList<HashMap<String,String>>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             logger.info("Trying to get subjects for " + email);
             if (userRepository.findByEmailAddress(email) == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                ArrayList<Subject> subjects = (ArrayList<Subject>) subjectRepository.findAllSubjectsByStudent(email);
+                Student student = studentRepository.findByEmailAddress(email);
+                ArrayList<Integer> subjectIds = student.getStudentSubjects();
+                ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
+                for(int id: subjectIds){
+                    Subject subject = subjectRepository.findById(id);
+                    HashMap<String,String> returnMap;
+                    returnMap = new HashMap<>();
+                    returnMap.put("id", String.valueOf(subject.getId()));
+                    returnMap.put("subjectCode",subject.getSubjectCode());
+                    returnMap.put("subjectName",subject.getSubjectName());
+                    returnMap.put("subjectDescription",subject.getSubjectDescription());
+                    returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
+                    subjects.add(returnMap);
+                }
+
                 return new ResponseEntity<>(subjects, HttpStatus.OK);
             }
         }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
@@ -132,6 +133,37 @@ public class UserController {
                 QSUser user2 = userRepository.getDistinctByEmailAddress(student.getEmailAddress());
                 logger.info(user2.getDtype());
                 return new ResponseEntity<>(student, HttpStatus.CREATED);
+            } catch (Exception e) {
+                logger.info(e.getMessage());
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @PostMapping("/registerProfessor")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
+                                                 @RequestParam("lastname") final String lastname,
+                                                 @RequestParam("email") final String email,
+                                                 @RequestParam("password") final String password) {
+        logger.info("email: " + email + " password: " + password);
+
+
+
+        if (userRepository.findByEmailAddress(email) == null){
+            try {
+                logger.info("trying to register professor");
+                String hashedPassword = PasswordHashing.generatePasswordHash(password);
+                QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
+                Professor professor = userRepository
+                        .save(new Professor(user));
+                logger.info(professor.getDtype());
+                logger.info("Saved new user: " + professor.getEmailAddress());
+                QSUser user2 = userRepository.getDistinctByEmailAddress(professor.getEmailAddress());
+                logger.info(user2.getDtype());
+                return new ResponseEntity<>(professor, HttpStatus.CREATED);
             } catch (Exception e) {
                 logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -4,18 +4,12 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Student extends QSUser {
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name="StudentSubject",
-            joinColumns = @JoinColumn(name = "emailAddress", referencedColumnName = "emailAddress"),
-            inverseJoinColumns = @JoinColumn(name= "subjectId", referencedColumnName = "id"))
-    private List<Subject> studentSubjects = new ArrayList<>();
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Subject> studentSubjects = new HashSet<>();
 
     @ManyToOne
     private Entry entry;
@@ -28,7 +22,13 @@ public class Student extends QSUser {
     public Student() {
 
     }
-
+    public ArrayList<Integer> getStudentSubjects(){
+        ArrayList<Integer> subjects = new ArrayList<>();
+        for(Subject subject: studentSubjects){
+            subjects.add(subject.getId());
+        }
+        return subjects;
+    }
     public void addSubject(Subject subject){
         studentSubjects.add(subject);
     }

@@ -25,5 +25,9 @@ public class Queue {
         return id;
     }
 
+    public boolean getStatus(){
+        return isActive;
+    }
+
 
 }

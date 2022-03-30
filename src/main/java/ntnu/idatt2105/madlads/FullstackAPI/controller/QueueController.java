@@ -29,7 +29,7 @@ public class QueueController {
 
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Queue> createUser(@RequestParam("subject") final int subjectId,
+    public ResponseEntity<Queue> createQueue(@RequestParam("subject") final int subjectId,
                                              @RequestParam("isActive") final boolean isActive) {
         logger.info("subjectId: " + subjectId + " isActive: " + isActive);
         logger.info("heisannm");

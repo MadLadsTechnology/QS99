@@ -37,17 +37,21 @@ public class SubjectController {
     @Autowired
     ProfessorRepository professorRepository;
 
+    @Autowired
+    QueueRepository queueRepository;
+
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
                                             @RequestParam("subjectDescription") final String description,
                                             @RequestParam("mandatoryCount") final int mandatoryCount,
-                                            @RequestParam("year") final int year
+                                            @RequestParam("year") final int year,
+                                              @RequestParam("subjectCode") final String subjectCode
                                             ) {
-        logger.info("subject: " + subjectName + " "+ year);
+        logger.info("subject: " + subjectCode + subjectName + " "+ year);
         try {
             Subject newSubject = subjectRepository
-                    .save(new Subject(subjectName, description, mandatoryCount, year));
+                    .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
             return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -103,6 +107,7 @@ public class SubjectController {
                 ArrayList<HashMap<String,String>> subjects = new ArrayList<>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
+                    Queue queue = queueRepository.findBySubject(subject);
                     HashMap<String,String> returnMap;
                     returnMap = new HashMap<>();
                     returnMap.put("id", String.valueOf(subject.getId()));
@@ -110,6 +115,7 @@ public class SubjectController {
                     returnMap.put("subjectName",subject.getSubjectName());
                     returnMap.put("subjectDescription",subject.getSubjectDescription());
                     returnMap.put("subjectYear", String.valueOf(subject.getSubjectYear()));
+                    returnMap.put("isQueueActive", String.valueOf(queue.getStatus()));
                     subjects.add(returnMap);
                 }
 

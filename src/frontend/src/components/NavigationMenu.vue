@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <img src="../assets/logo.png" alt="Logo" />
+    <router-link to="/">
+      <img src="../assets/logo.png" alt="Logo"
+    /></router-link>
     <router-link class="routerLink" v-if="loggedIn" to="/subjects">
       <h3>Subjects</h3></router-link
     >

@@ -20,8 +20,13 @@ public class Student extends QSUser {
     @ManyToOne
     private Entry entry;
 
-    public Student() {
+    public Student(QSUser user) {
+        super(user.getFirstName(), user.getLastName(), user.getEmailAddress(), user.getPassword());
         role = "Student";
+    }
+
+    public Student() {
+
     }
 
     public void addSubject(Subject subject){

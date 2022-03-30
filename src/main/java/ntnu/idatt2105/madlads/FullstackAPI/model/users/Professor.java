@@ -16,7 +16,7 @@ public class Professor extends QSUser {
 
     private Professor(QSUser user) {
         super(user.getFirstName(), user.getLastName(), user.getEmailAddress(), user.getPassword());
-        role = "Professor";
+        dtype = "Professor";
     }
 
     public Professor() {

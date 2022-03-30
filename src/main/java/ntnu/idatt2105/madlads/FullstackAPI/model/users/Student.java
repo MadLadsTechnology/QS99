@@ -22,7 +22,7 @@ public class Student extends QSUser {
 
     public Student(QSUser user) {
         super(user.getFirstName(), user.getLastName(), user.getEmailAddress(), user.getPassword());
-        role = "Student";
+        dtype="Student";
     }
 
     public Student() {

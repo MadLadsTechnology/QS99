@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'SubjectDetails', params: { id: subject.id } }">
+  <router-link :to="{ name: 'SubjectQueue', params: { id: subject.id } }">
     <div class="card">
       <h1>{{ subject.code }}</h1>
       {{ subject.name }}
@@ -27,8 +27,9 @@ export default {
   background-color: #ddd1c7;
   color: #4b4a67;
   border: solid 1px;
-  padding: 20px;
   width: 200px;
+  text-align: left;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 5px 10px darkgray;
 }

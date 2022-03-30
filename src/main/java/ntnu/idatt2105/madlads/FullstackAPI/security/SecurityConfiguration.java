@@ -32,13 +32,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/swagger-ui/**").authenticated()
             .antMatchers(HttpMethod.POST, "/subject/**").authenticated()
             .antMatchers(HttpMethod.GET,"/v3/**").authenticated()
-            .antMatchers(HttpMethod.GET,"/queue/**").authenticated();
+            .antMatchers(HttpMethod.GET,"/queue/**").authenticated()
+            .antMatchers(HttpMethod.GET, "/subject/**").authenticated();
 
         http
             .csrf().disable()
             .cors().and()
             .addFilterAfter(new JWTAuthorizationAdminFilter(), UsernamePasswordAuthenticationFilter.class)
-            .authorizeRequests()
-                .antMatchers("/admin/**").authenticated();
+            .authorizeRequests() .antMatchers("/admin/**").authenticated();
     }
 }

@@ -3,9 +3,9 @@
     <h1>{{ subject.code }}</h1>
 
     <div id="nav">
-      <router-link :to="{ name: 'SubjectDetails' }">Details</router-link>
-      |
       <router-link :to="{ name: 'SubjectQueue' }">Queue</router-link>
+      |
+      <router-link :to="{ name: 'SubjectDetails' }">Details</router-link>
       |
       <router-link :to="{ name: 'SubjectAssignments' }"
         >Assignments</router-link

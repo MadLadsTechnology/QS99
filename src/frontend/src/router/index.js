@@ -35,14 +35,14 @@ const routes = [
     component: SubjectLayout,
     children: [
       {
-        path: "",
-        name: "SubjectDetails",
-        component: SubjectDetails,
-      },
-      {
-        path: "register",
+        path: "queue",
         name: "SubjectQueue",
         component: SubjectQueue,
+      },
+      {
+        path: "details",
+        name: "SubjectDetails",
+        component: SubjectDetails,
       },
       {
         path: "assignments",
@@ -59,7 +59,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ["/login"];
+  const publicPages = ["/login", "/register"];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem("user");
 

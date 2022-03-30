@@ -1,12 +1,13 @@
-package ntnu.idatt2105.madlads.FullstackAPI.security;
+package ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.controller.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,12 +19,13 @@ import java.security.Key;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    private final String HEADER = "Authorization";
+public class JWTAuthorizationFilter {
+    private final static String HEADER = "Authorization";
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+
+    public static void doFiltering(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String role) throws IOException {
+        Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
         try {
             Key key = Keys.hmacShaKeyFor(UserController.keyStr.getBytes(StandardCharsets.UTF_8));
 
@@ -35,26 +37,31 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX)){
                 SecurityContextHolder.clearContext();
             } else {
+
                 // get token and claims
                 String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
                 Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwtToken);
-
-                // perform necessary checks
-                if (claims.getBody().get("authorities") != null) {
-                    // setup Spring authentication
-                    List<String> authorities = (List) claims.getBody().get("authorities");
-                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getBody().getSubject(), null,
-                            authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                } else {
-                    SecurityContextHolder.clearContext();
+                String gottenRole = claims.getBody().get("authorities").toString().replace("[","").replace("]","");
+                if(gottenRole.equals(role)){
+                    logger.info("Authenticated with Role User");
+                    if (claims.getBody().get("authorities") != null) {
+                        // setup Spring authentication
+                        List<String> authorities = (List) claims.getBody().get("authorities");
+                        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getBody().getSubject(), null,
+                                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                        SecurityContextHolder.getContext().setAuthentication(auth);
+                    } else {
+                        SecurityContextHolder.clearContext();
+                    }
                 }
+                // perform necessary checks
             }
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-            return;
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
         }
     }
 }

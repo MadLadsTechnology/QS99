@@ -1,13 +1,17 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-export default createStore({
+const store = createStore({
   state: {
     user: null,
+    role: "user",
   },
   getters: {
     loggedIn(state) {
       return !!state.user;
+    },
+    role(state) {
+      return state.role;
     },
   },
   mutations: {
@@ -55,3 +59,5 @@ export default createStore({
 
   modules: {},
 });
+
+export default store;

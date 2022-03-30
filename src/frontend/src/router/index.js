@@ -8,9 +8,17 @@ import SubjectAssignments from "../views/subject/AssignmentsView.vue";
 import RegisterUser from "../views/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
 
+import AdminDashboard from "../views/admin/DashboardView.vue";
+import AllStudents from "../views/admin/AllStudents";
+import AllSubjects from "../views/admin/AllSubjects";
+
 const routes = [
   {
     path: "/",
+    redirect: "/subjects",
+  },
+  {
+    path: "/subjects",
     name: "subjects",
     component: Subjects,
     meta: {
@@ -18,21 +26,13 @@ const routes = [
     },
   },
   {
-    path: "/login",
-    name: "login",
-    component: LoginUser,
-  },
-  {
-    path: "/register",
-    name: "register",
-    component: RegisterUser,
-  },
-
-  {
-    path: "/subject/:id",
+    path: "/subjects/:id",
     name: "SubjectLayout",
     props: true,
     component: SubjectLayout,
+    meta: {
+      requiresAuth: true,
+    },
     children: [
       {
         path: "queue",
@@ -51,24 +51,74 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/login",
+    name: "login",
+    component: LoginUser,
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: RegisterUser,
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    props: true,
+    component: AdminDashboard,
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: "students",
+        name: "students",
+        component: AllStudents,
+      },
+      {
+        path: "allsubjects",
+        name: "allsubjects",
+        component: AllSubjects,
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
+import store from "../store";
 
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login", "/register"];
-  const authRequired = !publicPages.includes(to.path);
+  const publicPage = publicPages.includes(to.path);
+  const adminPages = ["/admin"];
+  const adminPage = adminPages.includes(to.path);
+  const userPages = ["/subjects"];
+  const userPage = userPages.includes(to.path);
   const loggedIn = localStorage.getItem("user");
+  const isAdmin = store.getters.role === "ADMIN";
 
-  if (authRequired && !loggedIn) {
+  if ((adminPage && !loggedIn) || (userPage && !loggedIn)) {
     return next("/login");
-  } else if (loggedIn && !authRequired) {
-    return next("/");
   }
-  next();
+
+  if (publicPage && loggedIn && !isAdmin) {
+    return next("/subjects");
+  }
+
+  if (adminPage && !isAdmin && loggedIn) {
+    return next("/subjects");
+  }
+  if (
+    (userPage && isAdmin && loggedIn) ||
+    (publicPage && isAdmin && loggedIn)
+  ) {
+    return next("/admin");
+  }
+
+  return next();
 });
 
 export default router;

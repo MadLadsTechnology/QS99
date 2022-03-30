@@ -22,6 +22,7 @@
 import SubjectCard from "../components/subject/SubjectCard";
 import SubjectCardActiveQueue from "../components/subject/SubjectCardActiveQueue";
 import { authComputed } from "@/store/helpers";
+import axios from "axios";
 
 export default {
   name: "HomeView",
@@ -31,6 +32,11 @@ export default {
   },
   created() {
     document.title = "QS99 - Subjects";
+
+    //getting subjects of the user
+    axios.get("http://localhost:8001/subject/getByUser").then((response) => {
+      this.subjects = response;
+    });
   },
   data() {
     return {

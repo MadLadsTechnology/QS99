@@ -40,6 +40,8 @@ public class SubjectController {
     @Autowired
     QueueRepository queueRepository;
 
+    QueueController queueController = new QueueController();
+
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
@@ -52,8 +54,10 @@ public class SubjectController {
         try {
             Subject newSubject = subjectRepository
                     .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
+            queueController.createQueue(newSubject.getId(), false, subjectRepository, queueRepository);
             return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
         } catch (Exception e) {
+            logger.info(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

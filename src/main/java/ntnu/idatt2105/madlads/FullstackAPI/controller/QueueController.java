@@ -30,21 +30,23 @@ public class QueueController {
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Queue> createQueue(@RequestParam("subject") final int subjectId,
-                                             @RequestParam("isActive") final boolean isActive) {
+                                             @RequestParam("isActive") final boolean isActive,
+                                             SubjectRepository subjectRepository_,
+                                             QueueRepository queueRepository_) {
         logger.info("subjectId: " + subjectId + " isActive: " + isActive);
-        logger.info("heisannm");
-        Subject subject = subjectRepository.findById(subjectId);
+        Subject subject = subjectRepository_.findById(subjectId);
         if(subject == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        else if(queueRepository.findBySubject(subject) != null ){
+        else if(queueRepository_.findBySubject(subject) != null ){
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }else{
             try {
-            Queue queue = queueRepository
+            Queue queue = queueRepository_
                     .save(new Queue(subject, isActive));
             return new ResponseEntity<>(queue, HttpStatus.CREATED);
             } catch (Exception e) {
+                logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }

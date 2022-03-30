@@ -22,7 +22,13 @@ public class Student extends QSUser {
     public Student() {
 
     }
-
+    public ArrayList<Integer> getStudentSubjects(){
+        ArrayList<Integer> subjects = new ArrayList<>();
+        for(Subject subject: studentSubjects){
+            subjects.add(subject.getId());
+        }
+        return subjects;
+    }
     public void addSubject(Subject subject){
         studentSubjects.add(subject);
     }

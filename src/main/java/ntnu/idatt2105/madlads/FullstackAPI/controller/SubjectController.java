@@ -63,8 +63,6 @@ public class SubjectController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             logger.info("Adding students to subject: " + subjectName);
-
-            Student student = studentRepository.findByEmailAddress(email);
             subject.addStudent(studentRepository.findByEmailAddress(email));
             logger.info(subject.toString());
             subjectRepository.save(subject);
@@ -75,15 +73,16 @@ public class SubjectController {
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<Subject>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<ArrayList<Integer>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
             logger.info("Trying to get subjects for " + email);
             if (userRepository.findByEmailAddress(email) == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                //ArrayList<Subject> subjects = (ArrayList<Subject>) subjectRepository.findAllSubjectsByStudent(email);
-                return new ResponseEntity<>(null, HttpStatus.OK);
+                Student student = studentRepository.findByEmailAddress(email);
+                ArrayList<Integer> subjects = student.getStudentSubjects();
+                return new ResponseEntity<>(subjects, HttpStatus.OK);
             }
         }
         else{

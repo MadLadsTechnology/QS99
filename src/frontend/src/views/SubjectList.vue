@@ -4,7 +4,7 @@
   <div class="cardHolder">
     <SubjectCardActiveQueue
       v-for="subject in subjects.active"
-      :key="subject.id"
+      :key="parseInt(subject.id)"
       :subject="subject"
     />
   </div>
@@ -12,8 +12,8 @@
 
   <div class="cardHolder">
     <SubjectCard
-      v-for="subject in subjects.inActive"
-      :key="subject.id"
+      v-for="subject in subjects.isActive"
+      :key="parseInt(subject.id)"
       :subject="subject"
     />
   </div>
@@ -35,31 +35,33 @@ export default {
 
     //getting subjects of the user
     axios.get("http://localhost:8001/subject/getByUser").then((response) => {
-      this.subjects = response;
+      this.allSubjects = response.data;
+      console.log(this.allSubjects);
     });
   },
   data() {
     return {
-      allSubjects: null,
+      allSubjects: [],
     };
   },
+
   computed: {
     ...authComputed,
 
     subjects: function () {
       const active = [];
-      const inActive = [];
-
-      for (let subject in this.allSubjects) {
-        if (subject.activeQueue) {
-          active.add(subject);
+      const isActive = [];
+      for (const subject in this.allSubjects) {
+        if (subject.isQueueActive) {
+          active.push(subject);
         } else {
-          inActive.add(subject);
+          console.log(subject);
+          isActive.push(subject);
         }
       }
       return {
         active,
-        inActive,
+        isActive,
       };
     },
   },

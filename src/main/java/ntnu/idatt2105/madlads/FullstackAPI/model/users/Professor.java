@@ -13,4 +13,13 @@ public class Professor extends QSUser {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "emailAddress"),
             inverseJoinColumns = @JoinColumn(name= "subject_id", referencedColumnName = "id"))
     private Collection<Subject> subjects;
+
+    private Professor(QSUser user) {
+        super(user.getFirstName(), user.getLastName(), user.getEmailAddress(), user.getPassword());
+        dtype = "Professor";
+    }
+
+    public Professor() {
+
+    }
 }

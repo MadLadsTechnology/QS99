@@ -11,6 +11,8 @@ public class QSUser {
     private String lastName;
     protected String password;
 
+    @Column(insertable = false, updatable = false) protected String dtype;
+
     public QSUser(String firstName, String lastName, String emailAddress, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,4 +35,21 @@ public class QSUser {
     }
 
     public String getPassword(){ return password; }
+
+    public String getDtype() {
+        return dtype;
+    }
+
+    public void setDtype(String dtype) {
+        this.dtype = dtype;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("emailAddress").append(emailAddress).append("firstName").append(firstName)
+                .append("lastName"+ lastName)
+                .append("password"+ password)
+                .append("dtype"+ dtype)
+                .toString();
+    }
 }

@@ -4,7 +4,9 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Subject {
@@ -16,8 +18,13 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int subjectYear;
-    @ManyToMany( mappedBy = "studentSubjects")
-    private List<Student> students = new ArrayList<>();
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "Student_Subject",
+            joinColumns = {@JoinColumn(name = "subject_id")},
+            inverseJoinColumns = {@JoinColumn(name = "student_id")}
+    )
+    private Set<Student> students = new HashSet<>();
 
     public Subject(String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
         this.subjectName = subjectName;
@@ -50,5 +57,9 @@ public class Subject {
 
     public int getSubjectYear() {
         return subjectYear;
+    }
+
+    public Set<Student> getStudents() {
+        return students;
     }
 }

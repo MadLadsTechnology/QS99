@@ -9,12 +9,15 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
+import ntnu.idatt2105.madlads.FullstackAPI.service.CustomEmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -196,4 +199,58 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @PostMapping("/registerMultipleUsers")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers){
+        String[] listOfAllUsers = allUsers.split("\n");
+        ArrayList<String[]> listSplitProperly = new ArrayList<>();
+
+        for (String listOfAllUser : listOfAllUsers) {
+            String[] temp = listOfAllUser.split(" ");
+
+            listSplitProperly.add(temp);
+        }
+        CustomEmailService emailService = new CustomEmailService();
+
+        for (String[] strings: listSplitProperly){
+            String email =strings[2];
+            String firstname = strings[0];
+            String lastname =strings[1];
+            if (userRepository.findByEmailAddress(strings[2]) == null){
+                if (userRepository.findByEmailAddress(email) == null){
+                    try {
+                        logger.info("trying to register student");
+                        String hashedPassword = PasswordHashing.generatePasswordHash("Test");
+                        QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
+                        Student student = userRepository
+                                .save(new Student(user));
+                        sendEmail(email);
+                    } catch (Exception e) {
+                        logger.info(e.getMessage());
+                    }
+                }else{
+                    return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
+
+    }
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    public void sendEmail(String email){
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setSubject("You have been added ass a user in QS99!");
+        msg.setText("Plz update your password immediately");
+        msg.setTo(email);
+        javaMailSender.send(msg);
+    }
+
+
+
 }

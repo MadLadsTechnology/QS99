@@ -14,7 +14,7 @@ public class Entry {
     private String status;
     private String type;
     private String building;
-    private String table;
+    private int tableNumber;
     @ManyToOne
     private Queue queue;
     @ManyToMany(fetch = FetchType.LAZY)

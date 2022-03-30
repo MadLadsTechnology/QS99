@@ -36,7 +36,8 @@ public class Subject {
     )
     private Set<Professor> professors = new HashSet<>();
 
-    public Subject(String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
+    public Subject(String subjectCode,String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
+        this.subjectCode = subjectCode;
         this.subjectName = subjectName;
         this.subjectDescription = subjectDescription;
         this.mandatoryCount = mandatoryCount;

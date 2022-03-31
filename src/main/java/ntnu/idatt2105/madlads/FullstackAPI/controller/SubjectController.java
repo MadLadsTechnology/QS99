@@ -8,17 +8,27 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
+import ntnu.idatt2105.madlads.FullstackAPI.service.SubjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
+import static ntnu.idatt2105.madlads.FullstackAPI.service.SubjectService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
+
+/**
+ * Controller for api calls related to subjects
+ */
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/subject")
@@ -43,6 +53,16 @@ public class SubjectController {
 
     QueueController queueController = new QueueController();
 
+    /**
+     * Creates a subject. Can be called by a professor.
+     * @param subjectName
+     * @param description
+     * @param mandatoryCount
+     * @param year
+     * @param subjectCode
+     * @param authentication
+     * @return HTTP status and the subject if it was created.
+     */
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
@@ -67,28 +87,50 @@ public class SubjectController {
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
-    @PostMapping("/addStudent")
+
+    /**
+     * Method for adding a student to a subject.
+     * @param subjectName
+     * @param subjectYear
+     * @param email
+     * @param authentication
+     * @return
+     */
+    @PostMapping("/addUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") final String subjectCode,
+    public ResponseEntity<Boolean> addUser(@RequestParam("subjectCode") final String subjectCode,
                                                @RequestParam("year") final int subjectYear,
                                                @RequestParam("email") final String email,
                                                Authentication authentication
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
+                QSUser user = userRepository.findByEmailAddress(email);
                 Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Trying to add students to subject: " + subjectCode);
-                    boolean response = subject.addStudent(studentRepository.findByEmailAddress(email));
-                    if(response){
-                        logger.info(subject.toString());
-                        subjectRepository.save(subject);
-                        return new ResponseEntity<>(true, HttpStatus.OK);
-                    } else {
-                        logger.info("Student already registered");
-                        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                    logger.info("Trying to add user to subject: " + subjectCode);
+                    if (user instanceof Student){
+                        boolean response = subject.addStudent(studentRepository.findByEmailAddress(email));
+                        if(response){
+                            logger.info(subject.toString());
+                            subjectRepository.save(subject);
+                            return new ResponseEntity<>(true, HttpStatus.OK);
+                        } else {
+                            return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                        }
+                    }
+                    else if(user instanceof Professor){
+                        boolean response = subject.addProfessor(professorRepository.findByEmailAddress(email));
+                        if(response){
+                            logger.info(subject.toString());
+                            subjectRepository.save(subject);
+                            return new ResponseEntity<>(true, HttpStatus.OK);
+                        } else {
+                            logger.info("Professor already registered");
+                            return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                        }
                     }
                 }
             }
@@ -96,6 +138,14 @@ public class SubjectController {
        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for adding a student assistant to a subject
+     * @param subjectName
+     * @param subjectYear
+     * @param email
+     * @param authentication
+     * @return
+     */
     @PostMapping("/addStudentAssistant")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectCode") final String subjectCode,
@@ -126,35 +176,72 @@ public class SubjectController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @PostMapping("/addProfessor")
+    /**
+     * Method for adding a professor to a subject
+     * @param subjectName
+     * @param subjectYear
+     * @param email
+     * @param authentication
+     * @return
+     */
+    @PostMapping("/addUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addProfessor(@RequestParam("subjectCode") final String subjectCode,
-                                               @RequestParam("year") final int subjectYear,
-                                               @RequestParam("email") final String email,
-                                                Authentication authentication
-    ) {
-        if (authentication!=null){
+    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") String subjectCode, @RequestParam("year") int year, @RequestBody String payload, Authentication authentication) {
+        if (authentication != null) {
             if (authentication.isAuthenticated()){
-                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
-                if(subject == null){
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }else{
-                    logger.info("Adding students to subject: " + subjectCode);
-                    boolean response = subject.addProfessor(professorRepository.findByEmailAddress(email));
-                    if(response){
-                        logger.info(subject.toString());
-                        subjectRepository.save(subject);
-                        return new ResponseEntity<>(true, HttpStatus.OK);
-                    } else {
-                        logger.info("Professor already registered");
-                        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                String[] list = payload.split("\n");
+                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, year);
+                ArrayList<String[]> listSplitProperly = new ArrayList<>();
+                Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+
+                for (String string: list){
+                    listSplitProperly.add(string.split(" "));
+                }
+
+                for (String[] strings: listSplitProperly){
+                    String firstName = strings[0];
+                    String lastName = strings[1];
+                    String email = strings[2].trim();
+                    QSUser user = userRepository.getDistinctByEmailAddress(email);
+
+                    if (!pattern.matcher(email).matches()){
+                        return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
+                    }
+
+                    if (user == null){
+                        String password = generateCommonLangPassword();
+                        user = new Student(new QSUser(firstName, lastName, email, password));
+                        studentRepository.save((Student) user);
+                        logger.info("Sent email to:" +email);
+                        sendEmail(email,"Test Your password is:"+ password);
+                    }
+                    logger.info("user: " + user.toString());
+                    if (user instanceof Student){
+                        if (!subject.getStudents().contains(user)){
+                            subject.addStudent((Student) user);
+                        }
+                        else{
+                            Student newStudent = new Student();
+                        }
+                    }
+                    else if (user instanceof Professor){
+                        if(!subject.getProfessors().contains(user)){
+                            subject.addProfessor((Professor) user);
+                        }
                     }
                 }
+                subjectRepository.save(subject);
+                return new ResponseEntity<>(true, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for getting all subjects a user is related to.
+     * @param authentication
+     * @return a list of HashMaps where each HashMap contains details of a subject.
+     */
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetSubjectsDTO>> getSubjectsByUser(Authentication authentication) {
@@ -192,6 +279,12 @@ public class SubjectController {
         }
     }
 
+    /**
+     * Method for getting a subject by its ID.
+     * @param subjectId
+     * @param authentication
+     * @return
+     */
     @GetMapping("/getSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<SubjectDTO> getSubject (@RequestParam("subjectId") int subjectId, Authentication authentication){
@@ -207,6 +300,11 @@ public class SubjectController {
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for the admin to get all subjects registered in the database.
+     * @param authentication
+     * @return a list of the subjects.
+     */
     @GetMapping("/getAllSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetSubjectsDTO>> getAllSubject (Authentication authentication){

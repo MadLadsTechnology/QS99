@@ -39,7 +39,7 @@ public class Student extends QSUser {
     }
 
     public void addAssistantSubject(Subject subject){
-        studentSubjects.add(subject);
+        assitantSubjects.add(subject);
     }
 
 

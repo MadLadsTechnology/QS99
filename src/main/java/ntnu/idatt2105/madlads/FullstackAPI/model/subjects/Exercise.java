@@ -1,6 +1,10 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Exercise {
@@ -14,6 +18,15 @@ public class Exercise {
 
     @ManyToOne
     private ExerciseSubList subList;
+
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "Student_Exercises",
+            joinColumns = {@JoinColumn(name = "exercise_id")},
+            inverseJoinColumns = {@JoinColumn(name = "student_id")}
+
+    )
+    private Set<Student> students = new HashSet<>();
 
     public Exercise(boolean mandatory, Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList){
         this.mandatory = mandatory;
@@ -30,5 +43,22 @@ public class Exercise {
 
     public boolean isMandatory() {
         return mandatory;
+    }
+
+    public boolean addStudent(Student student){
+        if(!students.contains(student)){
+            students.add(student);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int getExerciseNumber() {
+        return exerciseNumber;
+    }
+
+    public Set<Student> getStudents() {
+        return students;
     }
 }

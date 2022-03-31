@@ -36,7 +36,7 @@ public class Subject {
 
     @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "Subject_Assistants",
+            name = "Assistants_Subject",
             joinColumns = {@JoinColumn(name = "subject_id")},
             inverseJoinColumns = {@JoinColumn(name = "student_id")}
     )
@@ -108,5 +108,9 @@ public class Subject {
 
     public String getSubjectCode() {
         return subjectCode;
+    }
+
+    public Set<Professor> getProfessors() {
+        return professors;
     }
 }

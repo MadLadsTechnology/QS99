@@ -8,9 +8,7 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
-import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
-import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -132,7 +129,7 @@ public class QueueController {
                     Student student = studentRepository.findByEmailAddress(authentication.getName());
                     logger.info(student.getFirstName());
                     Queue queue = queueRepository.findBySubject(subject);
-                    Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises"); //Splits the string of exercise IDs on newlines
+                    Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises");
                     ArrayList<Exercise> exercises = new ArrayList<>();
                     for(int exerciseNumber: exerciseIds){
                         if(exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
@@ -176,5 +173,21 @@ public class QueueController {
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
+    @GetMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<Entry>> getEntriesBySubject(Authentication authentication,
+                                                                        @RequestParam("subjectId") final int subjectId){
+        if (authentication != null && authentication.isAuthenticated()) {
+            Subject subject;
+            if(subjectRepository.findById(subjectId) != null ){
+                subject = subjectRepository.findById(subjectId);
+                Queue queue = queueRepository.findBySubject(subject);
+                ArrayList<Entry> entries = (ArrayList<Entry>) entryRepository.findDistinctByQueue(queue);
+                return new ResponseEntity<>(entries, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

@@ -47,5 +47,35 @@ public class Entry {
         return id;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
 
+    public String getRoom() {
+        return room;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getBuilding() {
+        return building;
+    }
+
+    public int getTableNumber() {
+        return tableNumber;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public Queue getQueue() {
+        return queue;
+    }
+
+    public Collection<Exercise> getExercises() {
+        return exercises;
+    }
 }

@@ -69,18 +69,18 @@ public class SubjectController {
     }
     @PostMapping("/addStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectName") final String subjectName,
+    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") final String subjectCode,
                                                @RequestParam("year") final int subjectYear,
                                                @RequestParam("email") final String email,
                                                Authentication authentication
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
-                Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Trying to add students to subject: " + subjectName);
+                    logger.info("Trying to add students to subject: " + subjectCode);
                     boolean response = subject.addStudent(studentRepository.findByEmailAddress(email));
                     if(response){
                         logger.info(subject.toString());
@@ -98,7 +98,7 @@ public class SubjectController {
 
     @PostMapping("/addStudentAssistant")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectName") final String subjectName,
+    public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectCode") final String subjectCode,
                                                        @RequestParam("year") final int subjectYear,
                                                        @RequestParam("email") final String email,
                                                        Authentication authentication
@@ -106,11 +106,11 @@ public class SubjectController {
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()) {
-                Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Adding studentassistant to subject: " + subjectName);
+                    logger.info("Adding studentassistant to subject: " + subjectCode);
                     boolean response = subject.addAssistant(studentRepository.findByEmailAddress(email));
                     if(response){
                         logger.info(subject.toString());
@@ -128,18 +128,18 @@ public class SubjectController {
 
     @PostMapping("/addProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addProfessor(@RequestParam("subjectName") final String subjectName,
+    public ResponseEntity<Boolean> addProfessor(@RequestParam("subjectCode") final String subjectCode,
                                                @RequestParam("year") final int subjectYear,
                                                @RequestParam("email") final String email,
                                                 Authentication authentication
     ) {
         if (authentication!=null){
             if (authentication.isAuthenticated()){
-                Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Adding students to subject: " + subjectName);
+                    logger.info("Adding students to subject: " + subjectCode);
                     boolean response = subject.addProfessor(professorRepository.findByEmailAddress(email));
                     if(response){
                         logger.info(subject.toString());

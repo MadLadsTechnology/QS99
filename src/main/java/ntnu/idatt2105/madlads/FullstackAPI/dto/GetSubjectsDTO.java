@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
-import java.util.ArrayList;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

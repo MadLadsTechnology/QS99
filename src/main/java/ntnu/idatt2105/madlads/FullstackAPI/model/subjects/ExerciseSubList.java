@@ -1,7 +1,8 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
-import javax.persistence.*;
-import java.util.Collection;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class ExerciseSubList {

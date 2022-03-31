@@ -1,7 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 public class Queue {

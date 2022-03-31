@@ -2,7 +2,6 @@ package ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import ntnu.idatt2105.madlads.FullstackAPI.controller.UserController;
 import ntnu.idatt2105.madlads.FullstackAPI.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

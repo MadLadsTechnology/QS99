@@ -1,8 +1,5 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.StudentDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserLoginDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
@@ -20,16 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import static ntnu.idatt2105.madlads.FullstackAPI.service.UserService.generateToken;
 

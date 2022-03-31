@@ -2,11 +2,8 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.QueueRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
-import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
-import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

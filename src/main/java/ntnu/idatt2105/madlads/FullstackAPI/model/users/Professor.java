@@ -2,9 +2,11 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 

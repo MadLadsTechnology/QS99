@@ -2,9 +2,6 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.repositories;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<QSUser, Long> {
     QSUser findByEmailAddress(String email);

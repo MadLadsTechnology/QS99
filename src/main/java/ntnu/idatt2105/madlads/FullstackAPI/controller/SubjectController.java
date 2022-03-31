@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+/**
+ * Controller for api calls related to subjects
+ */
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/subject")
@@ -43,6 +46,16 @@ public class SubjectController {
 
     QueueController queueController = new QueueController();
 
+    /**
+     * Creates a subject. Can be called by a professor.
+     * @param subjectName
+     * @param description
+     * @param mandatoryCount
+     * @param year
+     * @param subjectCode
+     * @param authentication
+     * @return HTTP status and the subject if it was created.
+     */
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
@@ -67,6 +80,15 @@ public class SubjectController {
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    /**
+     * Method for adding a student to a subject.
+     * @param subjectName
+     * @param subjectYear
+     * @param email
+     * @param authentication
+     * @return
+     */
     @PostMapping("/addStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudents(@RequestParam("subjectName") final String subjectName,
@@ -96,6 +118,14 @@ public class SubjectController {
        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for adding a student assistant to a subject
+     * @param subjectName
+     * @param subjectYear
+     * @param email
+     * @param authentication
+     * @return
+     */
     @PostMapping("/addStudentAssistant")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectName") final String subjectName,
@@ -126,6 +156,14 @@ public class SubjectController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for adding a professor to a subject
+     * @param subjectName
+     * @param subjectYear
+     * @param email
+     * @param authentication
+     * @return
+     */
     @PostMapping("/addProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addProfessor(@RequestParam("subjectName") final String subjectName,
@@ -155,6 +193,11 @@ public class SubjectController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * Method for getting all subjects a user is related to.
+     * @param authentication
+     * @return a list of HashMaps where each HashMap contains details of a subject.
+     */
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetSubjectsDTO>> getSubjectsByUser(Authentication authentication) {
@@ -192,6 +235,12 @@ public class SubjectController {
         }
     }
 
+    /**
+     * Method for getting a subject by its ID.
+     * @param subjectId
+     * @param authentication
+     * @return
+     */
     @GetMapping("/getSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<SubjectDTO> getSubject (@RequestParam("subjectId") int subjectId, Authentication authentication){
@@ -207,6 +256,11 @@ public class SubjectController {
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for the admin to get all subjects registered in the database.
+     * @param authentication
+     * @return a list of the subjects.
+     */
     @GetMapping("/getAllSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetSubjectsDTO>> getAllSubject (Authentication authentication){

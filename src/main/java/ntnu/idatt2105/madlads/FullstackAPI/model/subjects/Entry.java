@@ -1,5 +1,7 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.Date;
 public class Entry {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date startTime;
     private String room;
@@ -15,6 +18,8 @@ public class Entry {
     private String type;
     private String building;
     private int tableNumber;
+    @ManyToOne
+    private Student student;
     @ManyToOne
     private Queue queue;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -24,7 +29,23 @@ public class Entry {
             inverseJoinColumns = @JoinColumn(name= "exercise_id", referencedColumnName = "id"))
     private Collection<Exercise> exercises;
 
+    public Entry(Date startTime, String room,  String building, int tableNumber, String type, Student student, Queue queue, Collection<Exercise> exercises) {
+        this.startTime = startTime;
+        this.room = room;
+        this.type = type;
+        this.building = building;
+        this.tableNumber = tableNumber;
+        this.queue = queue;
+        this.exercises = exercises;
+        this.student = student;
+    }
+
+    public Entry() {
+    }
+
     public Long getId() {
         return id;
     }
+
+
 }

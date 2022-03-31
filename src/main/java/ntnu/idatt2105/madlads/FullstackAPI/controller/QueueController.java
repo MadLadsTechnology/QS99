@@ -1,9 +1,16 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.QueueRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
+import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +20,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * Controller for api calls related to the queue
+ */
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/queue")
@@ -25,6 +40,23 @@ public class QueueController {
     @Autowired
     SubjectRepository subjectRepository;
 
+    @Autowired
+    StudentRepository studentRepository;
+
+    @Autowired
+    EntryRepository entryRepository;
+
+    @Autowired
+    ExerciseRepository exerciseRepository;
+
+    /**
+     * Create a queue, is always called when a subject is created
+     * @param subjectId
+     * @param isActive
+     * @param subjectRepository_
+     * @param queueRepository_
+     * @return the http response depending on if the queue was successfully created, and the queue as an object
+     */
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Queue> createQueue(@RequestParam("subject") final int subjectId,
@@ -50,6 +82,13 @@ public class QueueController {
         }
     }
 
+    /**
+     * Sets the queue status to active or inactive (isActive to true or false)
+     * @param isActive
+     * @param id
+     * @param authentication
+     * @return the http response and a boolean depending on if the status was changed or not
+     */
     @PostMapping("/setQueueStatus")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> setQueueStatus (@RequestParam("isActive") boolean isActive, @RequestParam("subjectId") int id, Authentication authentication){
@@ -63,5 +102,65 @@ public class QueueController {
             }
         }
         return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Method for adding an entry to a queue
+     * @param authentication
+     * @param payload data needed for creating an entry, including the subject,
+     *               the user, the exercises and where you are
+     * @return the http response depending on if the entry was created or not, and the entry as an object
+     */
+    @PostMapping("/addEntry")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Entry> addEntryToQueue(Authentication authentication,
+                                                 @RequestBody Map<String, Object> payload){
+        if(authentication!=null){
+            if(authentication.isAuthenticated()){
+                if(subjectRepository.findById((Long) payload.get("subjectId")).isPresent() &&
+                        studentRepository.findByEmailAddress(authentication.getName()) != null){
+
+                    Subject subject = subjectRepository.getById((Long) payload.get("subjectId"));
+                    Student student = studentRepository.findByEmailAddress(authentication.getName());
+                    Queue queue = queueRepository.findBySubject(subject);
+                    Collection<Long> exerciseIds = (Collection<Long>) payload.get("exercises");
+                    ArrayList<Exercise> exercises = new ArrayList<>();
+                    for(Long id: exerciseIds){
+                        exercises.add(exerciseRepository.findExerciseById(id));
+                    }
+                    Entry entry = new Entry(
+                            (Date) payload.get("startTime"), (String) payload.get("room"),
+                            (String) payload.get("building"), Integer.parseInt((String) payload.get("tableNumber")),
+                            (String) payload.get("type"), student, queue, exercises
+                    );
+                    return new ResponseEntity<>(entry, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete an entry. Can be called by a student assistant
+     * @param authentication
+     * @param id
+     * @return the http response and a boolean depending on if the entry was deleted
+     */
+    @DeleteMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
+                                               @RequestParam("entryId") final Long id){
+        if(authentication!=null){
+            if(authentication.isAuthenticated()){
+                if(entryRepository.findEntryById(id) != null){
+                    entryRepository.delete(entryRepository.findEntryById(id));
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 }

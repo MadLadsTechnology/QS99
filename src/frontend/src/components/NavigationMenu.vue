@@ -3,12 +3,21 @@
     <router-link to="/">
       <img src="../assets/logo.png" alt="Logo"
     /></router-link>
-    <router-link class="routerLink" v-if="loggedIn" to="/subjects">
-      <h3>Subjects</h3></router-link
-    >
+    <div v-if="loggedIn">
+      <router-link
+        class="routerLink"
+        v-if="this.$store.getters.isAdmin"
+        to="/subjects"
+      >
+        <h3>Dashboard</h3></router-link
+      >
+      <router-link class="routerLink" v-else to="/subjects">
+        <h3>Subjects</h3></router-link
+      >
+    </div>
 
     <div v-if="loggedIn" class="userInformation">
-      <h3>{{ this.$store.state.user.email }}</h3>
+      <h3>{{ this.$store.state.user.emailAddress }}</h3>
       <button class="logOutBtn" @click="logOut()">Log out</button>
     </div>
   </div>

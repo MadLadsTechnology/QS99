@@ -1,0 +1,100 @@
+<template>
+  <div class="window">
+    <button @click="closeWindow()">Close</button>
+    <form class="loginForm" @submit.prevent="submit()">
+      <h1>Add user to {{ subject.code }}</h1>
+
+      <BaseInput
+        label="Email"
+        type="email"
+        v-model.lazy="email"
+        :error="errors.email"
+      />
+      <button :disabled="!isValid" type="submit">Submit</button>
+    </form>
+  </div>
+</template>
+<script>
+import { useField, useForm } from "vee-validate";
+import { object, string } from "yup";
+import axios from "axios";
+
+export default {
+  props: {
+    subject: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      error: null,
+    };
+  },
+
+  created() {
+    document.title = "QS99 - Login";
+  },
+
+  methods: {
+    //Method for submitting form
+    submit() {
+      axios
+        .post("http://localhost:8001/subject/addStudent", null, {
+          params: {
+            subjectCode: this.subject.code,
+            year: this.subject.year,
+            email: this.email,
+          },
+        })
+        .then(() => {
+          this.closeWindow();
+        })
+        .catch((err) => {
+          alert(err);
+        });
+    },
+
+    closeWindow() {
+      this.$emit("closeWindow");
+    },
+  },
+
+  setup() {
+    //Setting up form validation
+    const validationSchema = object({
+      email: string().email("Invalid email format").required(),
+    });
+    const { errors } = useForm({
+      validationSchema,
+    });
+
+    const { value: email } = useField("email");
+
+    return {
+      email,
+      errors,
+    };
+  },
+  computed: {
+    isValid() {
+      if (this.errors.email) {
+        return false;
+      } else {
+        return this.email;
+      }
+    },
+  },
+};
+</script>
+
+<style>
+.window {
+  position: absolute;
+  background-color: antiquewhite;
+  border: solid;
+  border-radius: 3px;
+  padding: 50px;
+  top: 123px;
+}
+</style>

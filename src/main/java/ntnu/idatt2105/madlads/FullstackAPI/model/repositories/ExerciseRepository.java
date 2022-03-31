@@ -15,6 +15,8 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 
     List<Exercise> findExerciseBySubject(Subject subject);
 
+    Exercise findDistinctBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);
+
     Exercise findExerciseBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);
 
     void deleteBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);

@@ -109,4 +109,8 @@ public class Subject {
     public String getSubjectCode() {
         return subjectCode;
     }
+
+    public Set<Professor> getProfessors() {
+        return professors;
+    }
 }

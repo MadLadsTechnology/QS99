@@ -3,6 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +21,13 @@ public class Professor extends QSUser {
     public Professor() {
 
     }
-
+    public ArrayList<Integer> getProfessorSubjects(){
+        ArrayList<Integer> subjects = new ArrayList<>();
+        for(Subject subject: professorSubjects){
+            subjects.add(subject.getId());
+        }
+        return subjects;
+    }
     public void addSubject(Subject subject){
         professorSubjects.add(subject);
     }

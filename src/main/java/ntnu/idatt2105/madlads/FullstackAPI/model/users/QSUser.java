@@ -52,4 +52,12 @@ public class QSUser {
                 .append("dtype"+ dtype)
                 .toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof QSUser)) return false;
+        Student student = (Student) o;
+        return getEmailAddress().equals(student.getEmailAddress());
+    }
 }

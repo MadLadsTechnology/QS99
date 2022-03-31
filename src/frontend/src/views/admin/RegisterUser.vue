@@ -38,6 +38,7 @@
 <script>
 import { useField, useForm } from "vee-validate";
 import { object, string } from "yup";
+import axios from "axios";
 
 export default {
   data() {
@@ -53,12 +54,14 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
-      this.$store
-        .dispatch("register", {
-          lastname: this.lastname,
-          firstname: this.firstname,
-          email: this.email,
-          password: this.password,
+      axios
+        .post("http://localhost:8001/user/registerAdmin", null, {
+          params: {
+            lastname: this.lastname,
+            firstname: this.firstname,
+            email: this.email,
+            password: this.password,
+          },
         })
         .then(() => {
           this.$router.push("/subjects");

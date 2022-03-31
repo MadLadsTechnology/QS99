@@ -5,7 +5,7 @@ import SubjectDetails from "../views/subject/DetailsView.vue";
 import SubjectQueue from "../views/subject/QueueView.vue";
 import SubjectAssignments from "../views/subject/AssignmentsView.vue";
 
-import RegisterUser from "../views/RegisterUser.vue";
+import RegisterUser from "../views/admin/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
 
 import AdminDashboard from "../views/admin/DashboardView.vue";

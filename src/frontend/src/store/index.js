@@ -40,20 +40,7 @@ const store = createStore({
           commit("SET_USER_DATA", response.data);
         });
     },
-    register({ commit }, credentials) {
-      return axios
-        .post("http://localhost:8001/user/registerAdmin", null, {
-          params: {
-            lastname: credentials.lastname,
-            firstname: credentials.firstname,
-            email: credentials.email,
-            password: credentials.password,
-          },
-        })
-        .then(() => {
-          commit("SET_USER_DATA", credentials);
-        });
-    },
+
     logout({ commit }) {
       commit("CLEAR_USER_DATA");
     },

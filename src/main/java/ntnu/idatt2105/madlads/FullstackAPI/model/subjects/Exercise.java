@@ -7,17 +7,19 @@ public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //TODO: Is this correct
     private boolean mandatory;
-
+    private int exerciseNumber;
     @ManyToOne
     private Subject subject;
 
     @ManyToOne
     private ExerciseSubList subList;
 
-    public Exercise(boolean mandatory){
+    public Exercise(boolean mandatory, Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList){
         this.mandatory = mandatory;
+        this.subject = subject;
+        this.exerciseNumber = exerciseNumber;
+        this.subList = ExerciseSubList;
     }
 
     protected Exercise() {}

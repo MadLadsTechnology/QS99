@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
 import static ntnu.idatt2105.madlads.FullstackAPI.service.UserService.generateToken;
 
 @RestController
@@ -76,9 +77,6 @@ public class UserController {
                                              @RequestParam("email") final String email,
                                              @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
-
-
-
         if (userRepository.findByEmailAddress(email) == null){
             try {
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
@@ -195,7 +193,7 @@ public class UserController {
                                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                                 Student student = userRepository
                                         .save(new Student(user));
-                                sendEmail(email);
+                                sendEmail(email, "Test");
                             } catch (Exception e) {
                                 logger.info(e.getMessage());
                             }
@@ -228,18 +226,5 @@ public class UserController {
             }
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-
-
-
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    public void sendEmail(String email){
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setSubject("You have been added ass a user in QS99!");
-        msg.setText("Plz update your password immediately");
-        msg.setTo(email);
-        javaMailSender.send(msg);
     }
 }

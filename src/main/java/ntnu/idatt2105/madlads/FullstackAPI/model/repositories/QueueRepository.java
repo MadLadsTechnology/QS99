@@ -12,8 +12,8 @@ public interface QueueRepository extends JpaRepository<Queue, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Queue q SET q.isActive = :status WHERE q.id=:id")
-    void changeQueue(boolean status, Long id);
+    @Query("UPDATE Queue q SET q.isActive = :status WHERE q.subject.id=:id")
+    void changeQueue(boolean status, int id);
 
 
 }

@@ -36,6 +36,14 @@ public class Subject {
     )
     private Set<Professor> professors = new HashSet<>();
 
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "Subject_Assistants",
+            joinColumns = {@JoinColumn(name = "subject_id")},
+            inverseJoinColumns = {@JoinColumn(name = "student_id")}
+    )
+    private Set<Student> assitants = new HashSet<>();
+
     public Subject(String subjectCode,String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
         this.subjectCode = subjectCode;
         this.subjectName = subjectName;
@@ -52,6 +60,10 @@ public class Subject {
 
     public void addProfessor(Professor professor){
         professors.add(professor);
+    }
+
+    public void addAssistant(Student student){
+        assitants.add(student);
     }
 
     public int getId() {

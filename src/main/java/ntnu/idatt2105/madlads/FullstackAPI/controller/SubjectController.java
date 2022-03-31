@@ -96,7 +96,6 @@ public class SubjectController {
      * @param authentication
      * @return
      */
-    @PostMapping("/addStudent")
     @PostMapping("/addUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addUser(@RequestParam("subjectCode") final String subjectCode,

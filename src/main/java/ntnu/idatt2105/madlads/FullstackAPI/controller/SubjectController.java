@@ -43,38 +43,74 @@ public class SubjectController {
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
-                                            @RequestParam("subjectDescription") final String description,
-                                            @RequestParam("mandatoryCount") final int mandatoryCount,
-                                            @RequestParam("year") final int year,
-                                              @RequestParam("subjectCode") final String subjectCode
-                                            ) {
-        logger.info("subject: " + subjectCode + subjectName + " "+ year);
-        try {
-            Subject newSubject = subjectRepository
-                    .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
-            queueController.createQueue( newSubject.getId(), true, subjectRepository, queueRepository);
-            return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
-        } catch (Exception e) {
-            logger.info(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                                              @RequestParam("subjectDescription") final String description,
+                                              @RequestParam("mandatoryCount") final int mandatoryCount,
+                                              @RequestParam("year") final int year,
+                                              @RequestParam("subjectCode") final String subjectCode,
+                                              Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()){
+                logger.info("subject: " + subjectCode + subjectName + " "+ year);
+                try {
+                    Subject newSubject = subjectRepository
+                            .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
+                    queueController.createQueue( newSubject.getId(), true, subjectRepository, queueRepository);
+                    return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
+                } catch (Exception e) {
+                    logger.info(e.getMessage());
+                    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
         }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
     @PostMapping("/addStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudents(@RequestParam("subjectName") final String subjectName,
                                                @RequestParam("year") final int subjectYear,
-                                               @RequestParam("email") final String email
+                                               @RequestParam("email") final String email,
+                                               Authentication authentication
     ) {
-        Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
-        if(subject == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
-            logger.info("Adding students to subject: " + subjectName);
-            subject.addStudent(studentRepository.findByEmailAddress(email));
-            logger.info(subject.toString());
-            subjectRepository.save(subject);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+        if (authentication != null) {
+            if (authentication.isAuthenticated()){
+                Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+                if(subject == null){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }else{
+                    logger.info("Adding students to subject: " + subjectName);
+                    subject.addStudent(studentRepository.findByEmailAddress(email));
+                    logger.info(subject.toString());
+                    subjectRepository.save(subject);
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+            }
         }
+       return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @PostMapping("/addStudentAssistant")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectName") final String subjectName,
+                                                       @RequestParam("year") final int subjectYear,
+                                                       @RequestParam("email") final String email,
+                                                       Authentication authentication
+
+    ) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
+                Subject subject = subjectRepository.findBySubjectNameAndSubjectYear(subjectName, subjectYear);
+                if(subject == null){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }else{
+                    logger.info("Adding studentassistant to subject: " + subjectName);
+                    subject.addAssistant(studentRepository.findByEmailAddress(email));
+                    logger.info(subject.toString());
+                    subjectRepository.save(subject);
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @PostMapping("/addProfessor")

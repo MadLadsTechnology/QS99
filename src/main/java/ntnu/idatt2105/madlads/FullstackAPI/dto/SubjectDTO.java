@@ -17,6 +17,7 @@ public class SubjectDTO {
     private int subjectYear;
 
     public SubjectDTO(Subject subject) {
+        this.id = subject.getId();
         this.subjectCode = subject.getSubjectCode();
         this.subjectName = subject.getSubjectName();
         this.subjectDescription = subject.getSubjectDescription();

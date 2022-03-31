@@ -8,6 +8,7 @@
       :subject="subject"
     />
   </div>
+
   <h3>Other subjects</h3>
 
   <div class="cardHolder">
@@ -35,7 +36,7 @@ export default {
     await axios
       .get("http://localhost:8001/subject/getByUser")
       .then((response) => {
-        this.allSubjects = JSON.parse(JSON.stringify(response.data));
+        this.allSubjects = response.data;
       });
   },
   data() {
@@ -51,7 +52,8 @@ export default {
       const active = [];
       const inActive = [];
       for (let i = 0; i < this.allSubjects.length; i++) {
-        if (this.allSubjects[i].isQueueActive === "true") {
+        console.log(this.allSubjects[i]);
+        if (this.allSubjects[i].queueActive === true) {
           active.push(this.allSubjects[i]);
         } else {
           inActive.push(this.allSubjects[i]);

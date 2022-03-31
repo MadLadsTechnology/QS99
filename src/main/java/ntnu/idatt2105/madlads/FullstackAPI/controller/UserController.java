@@ -1,6 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
-import ntnu.idatt2105.madlads.FullstackAPI.dto.StudentDTO;
+import ntnu.idatt2105.madlads.FullstackAPI.dto.UserDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserLoginDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
@@ -213,18 +213,18 @@ public class UserController {
     }
 
 
-    @GetMapping("/getAllStudents")
+    @GetMapping("/getAllUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<StudentDTO>> getAllStudents(Authentication authentication){
+    public ResponseEntity<ArrayList<UserDTO>> getAllStudents(Authentication authentication){
         if(authentication!=null){
             if(authentication.isAuthenticated()){
-                ArrayList<Student> students = (ArrayList<Student>) studentRepository.findAll();
-                ArrayList<StudentDTO> studentsDto = new ArrayList<>();
-                for(Student student : students){
-                    StudentDTO studentDTO = new StudentDTO(student);
-                    studentsDto.add(studentDTO);
+                ArrayList<QSUser> users = (ArrayList<QSUser>) userRepository.findAll();
+                ArrayList<UserDTO> userDto = new ArrayList<>();
+                for(QSUser user : users){
+                    UserDTO studentDTO = new UserDTO(user);
+                    userDto.add(studentDTO);
                 }
-                return new ResponseEntity<>(studentsDto, HttpStatus.OK);
+                return new ResponseEntity<>(userDto, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

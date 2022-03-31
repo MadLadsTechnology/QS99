@@ -1,8 +1,7 @@
 <template>
-  <h3>All students</h3>
+  <h3>All users</h3>
 
-  <button>Register professor</button>
-  <button>Register student</button>
+  <router-link to="/register">Register user</router-link>
   <div v-for="student in students" :key="student">
     {{ student }}
   </div>

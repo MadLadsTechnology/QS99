@@ -38,7 +38,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/user/login").permitAll()
                 .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated()
-                .antMatchers(HttpMethod.POST,"/queue/addEntry").authenticated();
+                .antMatchers(HttpMethod.POST,"/queue/addEntry").authenticated()
+                .antMatchers(HttpMethod.POST,"/user/registerAdmin").permitAll()
+                .antMatchers(HttpMethod.GET,"/queue/**").authenticated();
 
         //PROFESSOR
         http
@@ -47,6 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JWTAuthorizationProfessorFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/user/registerStudent").authenticated()
+                .antMatchers(HttpMethod.POST,"/user/registerStudentOLD").authenticated()
                 .antMatchers(HttpMethod.POST,"/user/registerMultipleUsers").authenticated()
                 .antMatchers(HttpMethod.POST,"/subject/create").authenticated()
                 .antMatchers(HttpMethod.POST,"/subject/addStudent").authenticated()
@@ -57,7 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/queue/create").authenticated()
                 .antMatchers(HttpMethod.POST,"/exercise/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/user/login").authenticated()
-                .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated();
+                .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated()
+                .antMatchers(HttpMethod.GET,"/queue/**").authenticated();
 
         //ADMIN
         http

@@ -129,22 +129,27 @@ public class QueueController {
                     Student student = studentRepository.findByEmailAddress(authentication.getName());
                     logger.info(student.getFirstName());
                     Queue queue = queueRepository.findBySubject(subject);
-                    Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises");
-                    ArrayList<Exercise> exercises = new ArrayList<>();
-                    for(int exerciseNumber: exerciseIds){
-                        if(exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
-                            logger.info("Couldn't find the exercise");
-                        } else {
+                    if(queue.getStatus() && subject.getStudents().contains(student)){
+                        Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises");
+                        ArrayList<Exercise> exercises = new ArrayList<>();
+                        for(int exerciseNumber: exerciseIds){
+                            if(exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
+                                logger.info("Couldn't find the exercise");
+                            } else {
 
-                            Exercise exercise = exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber);
-                            exercises.add(exercise);
-                            logger.info("Exercise number: " + exercise.getId());
+                                Exercise exercise = exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber);
+                                exercises.add(exercise);
+                                logger.info("Exercise number: " + exercise.getId());
+                            }
                         }
-                    }
-                    Entry entry = entryRepository.save(new Entry( now, room, building, tableNumber, type, student, queue, exercises ));
-                    logger.info("entryid: " + entry.getId());
+                        Entry entry = entryRepository.save(new Entry( now, room, building, tableNumber, type, student, queue, exercises ));
+                        logger.info("entryid: " + entry.getId());
 
-                    return new ResponseEntity<>(entry, HttpStatus.OK);
+                        return new ResponseEntity<>(entry, HttpStatus.OK);
+                    } else {
+                        logger.info("Queue not active, or student is not in this subject");
+                        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+                    }
                 }
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }

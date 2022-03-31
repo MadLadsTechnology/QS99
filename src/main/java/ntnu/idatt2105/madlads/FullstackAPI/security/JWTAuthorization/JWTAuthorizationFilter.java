@@ -3,6 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.controller.UserController;
+import ntnu.idatt2105.madlads.FullstackAPI.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,7 @@ public class JWTAuthorizationFilter {
     public static void doFiltering(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String role) throws IOException {
         Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
         try {
-            Key key = Keys.hmacShaKeyFor(UserController.keyStr.getBytes(StandardCharsets.UTF_8));
+            Key key = Keys.hmacShaKeyFor(UserService.keyStr.getBytes(StandardCharsets.UTF_8));
 
             // expects JWT in the header
             String authenticationHeader = request.getHeader(HEADER);

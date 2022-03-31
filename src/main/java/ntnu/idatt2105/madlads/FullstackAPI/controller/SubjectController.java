@@ -5,6 +5,8 @@ import ntnu.idatt2105.madlads.FullstackAPI.dto.SubjectDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,7 @@ public class SubjectController {
 
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
+    public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
                                               @RequestParam("subjectDescription") final String description,
                                               @RequestParam("mandatoryCount") final int mandatoryCount,
                                               @RequestParam("year") final int year,
@@ -77,11 +79,16 @@ public class SubjectController {
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Adding students to subject: " + subjectName);
-                    subject.addStudent(studentRepository.findByEmailAddress(email));
-                    logger.info(subject.toString());
-                    subjectRepository.save(subject);
-                    return new ResponseEntity<>(true, HttpStatus.OK);
+                    logger.info("Trying to add students to subject: " + subjectName);
+                    boolean response = subject.addStudent(studentRepository.findByEmailAddress(email));
+                    if(response){
+                        logger.info(subject.toString());
+                        subjectRepository.save(subject);
+                        return new ResponseEntity<>(true, HttpStatus.OK);
+                    } else {
+                        logger.info("Student already registered");
+                        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                    }
                 }
             }
         }
@@ -103,10 +110,15 @@ public class SubjectController {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
                     logger.info("Adding studentassistant to subject: " + subjectName);
-                    subject.addAssistant(studentRepository.findByEmailAddress(email));
-                    logger.info(subject.toString());
-                    subjectRepository.save(subject);
-                    return new ResponseEntity<>(true, HttpStatus.OK);
+                    boolean response = subject.addAssistant(studentRepository.findByEmailAddress(email));
+                    if(response){
+                        logger.info(subject.toString());
+                        subjectRepository.save(subject);
+                        return new ResponseEntity<>(true, HttpStatus.OK);
+                    } else {
+                        logger.info("Assistant already registered");
+                        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                    }
                 }
             }
         }
@@ -127,10 +139,15 @@ public class SubjectController {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
                     logger.info("Adding students to subject: " + subjectName);
-                    subject.addProfessor(professorRepository.findByEmailAddress(email));
-                    logger.info(subject.toString());
-                    subjectRepository.save(subject);
-                    return new ResponseEntity<>(true, HttpStatus.OK);
+                    boolean response = subject.addProfessor(professorRepository.findByEmailAddress(email));
+                    if(response){
+                        logger.info(subject.toString());
+                        subjectRepository.save(subject);
+                        return new ResponseEntity<>(true, HttpStatus.OK);
+                    } else {
+                        logger.info("Professor already registered");
+                        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+                    }
                 }
             }
         }
@@ -142,12 +159,22 @@ public class SubjectController {
     public ResponseEntity<ArrayList<GetSubjectsDTO>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
+
             logger.info("Trying to get subjects for " + email);
             if (userRepository.findByEmailAddress(email) == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                Student student = studentRepository.findByEmailAddress(email);
-                ArrayList<Integer> subjectIds = student.getStudentSubjects();
+                QSUser user = userRepository.findByEmailAddress(email);
+                ArrayList<Integer> subjectIds;
+                if(user instanceof Student){
+                    Student student = studentRepository.findByEmailAddress(email);
+                    subjectIds = student.getStudentSubjects();
+                } else if (user instanceof Professor) {
+                    Professor professor = professorRepository.findByEmailAddress(email);
+                    subjectIds = professor.getProfessorSubjects();
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+                }
                 ArrayList<GetSubjectsDTO> subjects = new ArrayList<>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
@@ -155,6 +182,7 @@ public class SubjectController {
                     GetSubjectsDTO getSubjectsDTO = new GetSubjectsDTO(subject,queue);
                     subjects.add(getSubjectsDTO);
                 }
+                logger.info("Sending all subjects related to " + email);
                 return new ResponseEntity<>(subjects, HttpStatus.OK);
             }
         }
@@ -176,5 +204,22 @@ public class SubjectController {
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @GetMapping("/getAllSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<GetSubjectsDTO>> getAllSubject (Authentication authentication){
+        if (authentication != null) {
+            if (authentication.isAuthenticated()){
+                ArrayList<Subject> subjects = (ArrayList<Subject>) subjectRepository.findAll();
+                ArrayList<GetSubjectsDTO> getSubjectsDTO = new ArrayList<>();
+
+                for (Subject subject: subjects){
+                    getSubjectsDTO.add(new GetSubjectsDTO(subject, queueRepository.findBySubject(subject)));
+                }
+                return new ResponseEntity<>(getSubjectsDTO, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

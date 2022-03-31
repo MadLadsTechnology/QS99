@@ -3,6 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import ntnu.idatt2105.madlads.FullstackAPI.dto.StudentDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
@@ -198,43 +199,67 @@ public class UserController {
 
     @PostMapping("/registerMultipleUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers){
-        String[] listOfAllUsers = allUsers.split("\n");
-        ArrayList<String[]> listSplitProperly = new ArrayList<>();
+    public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers, Authentication authentication){
+        if (authentication!=null){
+            if (authentication.isAuthenticated()){
+                String[] listOfAllUsers = allUsers.split("\n");
+                ArrayList<String[]> listSplitProperly = new ArrayList<>();
 
-        for (String listOfAllUser : listOfAllUsers) {
-            String[] temp = listOfAllUser.split(" ");
+                for (String listOfAllUser : listOfAllUsers) {
+                    String[] temp = listOfAllUser.split(" ");
 
-            listSplitProperly.add(temp);
-        }
-        CustomEmailService emailService = new CustomEmailService();
-
-        for (String[] strings: listSplitProperly){
-            String email =strings[2];
-            String firstname = strings[0];
-            String lastname =strings[1];
-            if (userRepository.findByEmailAddress(strings[2]) == null){
-                if (userRepository.findByEmailAddress(email) == null){
-                    try {
-                        logger.info("trying to register student");
-                        String hashedPassword = PasswordHashing.generatePasswordHash("Test");
-                        QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
-                        Student student = userRepository
-                                .save(new Student(user));
-                        sendEmail(email);
-                    } catch (Exception e) {
-                        logger.info(e.getMessage());
-                    }
-                }else{
-                    return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+                    listSplitProperly.add(temp);
                 }
-            }else{
-                return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+                CustomEmailService emailService = new CustomEmailService();
+
+                for (String[] strings: listSplitProperly){
+                    String email =strings[2];
+                    String firstname = strings[0];
+                    String lastname =strings[1];
+                    if (userRepository.findByEmailAddress(strings[2]) == null){
+                        if (userRepository.findByEmailAddress(email) == null){
+                            try {
+                                logger.info("trying to register student");
+                                String hashedPassword = PasswordHashing.generatePasswordHash("Test");
+                                QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
+                                Student student = userRepository
+                                        .save(new Student(user));
+                                sendEmail(email);
+                            } catch (Exception e) {
+                                logger.info(e.getMessage());
+                            }
+                        }else{
+                            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+                        }
+                    }else{
+                        return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+                    }
+                }
+                return new ResponseEntity<>(true, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
-
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+
+    @GetMapping("/getAllStudents")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<StudentDTO>> getAllStudents(Authentication authentication){
+        if(authentication!=null){
+            if(authentication.isAuthenticated()){
+                ArrayList<Student> students = (ArrayList<Student>) studentRepository.findAll();
+                ArrayList<StudentDTO> studentsDto = new ArrayList<>();
+                for(Student student : students){
+                    StudentDTO studentDTO = new StudentDTO(student);
+                    studentsDto.add(studentDTO);
+                }
+                return new ResponseEntity<>(studentsDto, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+
 
     @Autowired
     private JavaMailSender javaMailSender;

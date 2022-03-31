@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import static ntnu.idatt2105.madlads.FullstackAPI.service.SubjectService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
 import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
 
 /**
@@ -90,7 +90,6 @@ public class SubjectController {
 
     /**
      * Method for adding a student to a subject.
-     * @param subjectName
      * @param subjectYear
      * @param email
      * @param authentication
@@ -140,7 +139,6 @@ public class SubjectController {
 
     /**
      * Method for adding a student assistant to a subject
-     * @param subjectName
      * @param subjectYear
      * @param email
      * @param authentication
@@ -178,9 +176,6 @@ public class SubjectController {
 
     /**
      * Method for adding a professor to a subject
-     * @param subjectName
-     * @param subjectYear
-     * @param email
      * @param authentication
      * @return
      */

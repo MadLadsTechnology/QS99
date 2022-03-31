@@ -31,12 +31,14 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ntnu.idatt2105.madlads.FullstackAPI.service.UserService.generateToken;
+
 @RestController
 @EnableAutoConfiguration
 @CrossOrigin
 @RequestMapping("/user")
 public class UserController {
-    public static String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
+
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
@@ -59,6 +61,8 @@ public class UserController {
                     role="ROLE_USER";
                 }else if (userRepository.getDistinctByEmailAddress(email) instanceof Professor){
                     role="ROLE_PROFESSOR";
+                }else{
+                    role="ROLE_ADMIN";
                 }
                 HashMap<String,String> returnMap = new HashMap<>();
                 returnMap.put("email",foundUser.getEmailAddress());
@@ -76,28 +80,9 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-    public String generateToken(String userId, String role) {
-        Key key = Keys.hmacShaKeyFor(keyStr.getBytes(StandardCharsets.UTF_8));
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(role);
 
-        Claims claims = Jwts.claims().setSubject(userId);
-        claims.put("userId", userId);
-        claims.put("authorities", grantedAuthorities
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
 
-        return Jwts.builder()
-                .setId(UUID.randomUUID().toString())
-                .setSubject(userId)
-                .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000000))
-                .signWith(key)
-                .compact();
-    }
-
-    @PostMapping("/registerOLD")
+    @PostMapping("/registerAdmin")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<QSUser> createUser(@RequestParam("firstname") final String firstname,
                                              @RequestParam("lastname") final String lastname,
@@ -210,7 +195,6 @@ public class UserController {
 
                     listSplitProperly.add(temp);
                 }
-                CustomEmailService emailService = new CustomEmailService();
 
                 for (String[] strings: listSplitProperly){
                     String email =strings[2];

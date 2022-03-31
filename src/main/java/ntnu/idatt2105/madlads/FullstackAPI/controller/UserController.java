@@ -46,19 +46,25 @@ public class UserController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Map<String,String>> generateToken(@RequestParam("email") final String email,
+    public ResponseEntity<Map<String,String>> login(@RequestParam("email") final String email,
                                                             @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         QSUser foundUser = userRepository.findByEmailAddress(email);
 
         if (foundUser != null) {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
+                String role = "";
+                if (userRepository.getDistinctByEmailAddress(email) instanceof Student){
+                    role="ROLE_USER";
+                }else if (userRepository.getDistinctByEmailAddress(email) instanceof Professor){
+                    role="ROLE_PROFESSOR";
+                }
                 HashMap<String,String> returnMap = new HashMap<>();
                 returnMap.put("email",foundUser.getEmailAddress());
                 returnMap.put("firstname",foundUser.getFirstName());
                 returnMap.put("lastname",foundUser.getLastName());
                 returnMap.put("role",foundUser.getDtype());
-                returnMap.put("token",generateToken(email));
+                returnMap.put("token",generateToken(email, role));
                 logger.info("Logged in successfully");
                 return new ResponseEntity<>(returnMap, HttpStatus.OK);
             }
@@ -69,9 +75,9 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-    public String generateToken(String userId) {
+    public String generateToken(String userId, String role) {
         Key key = Keys.hmacShaKeyFor(keyStr.getBytes(StandardCharsets.UTF_8));
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(role);
 
         Claims claims = Jwts.claims().setSubject(userId);
         claims.put("userId", userId);
@@ -90,7 +96,7 @@ public class UserController {
                 .compact();
     }
 
-    @PostMapping("/register")
+    @PostMapping("/registerOLD")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<QSUser> createUser(@RequestParam("firstname") final String firstname,
                                              @RequestParam("lastname") final String lastname,
@@ -122,15 +128,12 @@ public class UserController {
                                               @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
 
-
-
         if (userRepository.findByEmailAddress(email) == null){
             try {
                 logger.info("trying to register student");
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
-                Student student = userRepository
-                        .save(new Student(user));
+                Student student = userRepository.save(new Student(user));
                 logger.info(student.getDtype());
                 logger.info("Saved new user: " + student.getEmailAddress());
                 QSUser user2 = userRepository.getDistinctByEmailAddress(student.getEmailAddress());
@@ -153,19 +156,13 @@ public class UserController {
                                                  @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
 
-
-
         if (userRepository.findByEmailAddress(email) == null){
             try {
-                logger.info("trying to register professor");
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                 Professor professor = userRepository
                         .save(new Professor(user));
-                logger.info(professor.getDtype());
-                logger.info("Saved new user: " + professor.getEmailAddress());
                 QSUser user2 = userRepository.getDistinctByEmailAddress(professor.getEmailAddress());
-                logger.info(user2.getDtype());
                 return new ResponseEntity<>(professor, HttpStatus.CREATED);
             } catch (Exception e) {
                 logger.info(e.getMessage());
@@ -193,7 +190,6 @@ public class UserController {
                         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                     }
                 }
-                logger.info("No user with the given email");
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
@@ -250,7 +246,4 @@ public class UserController {
         msg.setTo(email);
         javaMailSender.send(msg);
     }
-
-
-
 }

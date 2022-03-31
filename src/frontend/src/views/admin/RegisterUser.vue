@@ -1,13 +1,13 @@
 <template>
   <div>
     <form class="loginForm" @submit.prevent="submit()">
-      <h1>Register</h1>
+      <h1>Register a new user</h1>
 
       <BaseInput
         label="Last name"
         type="lastname"
         v-model.lazy="lastname"
-        :error="errors.email"
+        :error="errors.lastname"
       />
       <BaseInput
         label="First name"
@@ -21,12 +21,20 @@
         v-model.lazy="email"
         :error="errors.email"
       />
-      <BaseInput
-        label="Password"
-        type="password"
-        v-model="password"
-        :error="errors.password"
-      />
+
+      <div v-if="this.$store.getters.isAdmin">
+        <input
+          type="radio"
+          id="one"
+          value="Professor"
+          checked="checked"
+          v-model="userType"
+        />
+        <label for="one">Professor</label>
+        <br />
+        <input type="radio" id="two" value="Student" v-model="userType" />
+        <label for="two">Student</label>
+      </div>
 
       <button :disabled="!isValid" type="submit">Submit</button>
 
@@ -44,6 +52,7 @@ export default {
   data() {
     return {
       error: null,
+      userType: "",
     };
   },
 
@@ -54,17 +63,20 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
+      let url = "http://localhost:8001/user/registerStudent";
+      if (this.userType === "Professor") {
+        url = "http://localhost:8001/user/registerProfessor";
+      }
       axios
-        .post("http://localhost:8001/user/registerAdmin", null, {
+        .post(url, null, {
           params: {
             lastname: this.lastname,
             firstname: this.firstname,
             email: this.email,
-            password: this.password,
           },
         })
         .then(() => {
-          this.$router.push("/subjects");
+          this.$router.push("/admin/users");
         })
         .catch((err) => {
           console.log(err);
@@ -78,7 +90,6 @@ export default {
       lastname: string().required(),
       firstname: string().required(),
       email: string().email("Invalid email format").required(),
-      password: string().required(),
     });
     const { errors } = useForm({
       validationSchema,
@@ -87,27 +98,20 @@ export default {
     const { value: lastname } = useField("lastname");
     const { value: firstname } = useField("firstname");
     const { value: email } = useField("email");
-    const { value: password } = useField("password");
 
     return {
       lastname,
       firstname,
       email,
-      password,
       errors,
     };
   },
   computed: {
     isValid() {
-      if (
-        this.errors.email ||
-        this.errors.password ||
-        this.errors.lastname ||
-        this.errors.firstname
-      ) {
+      if (this.errors.email || this.errors.lastname || this.errors.firstname) {
         return false;
       } else {
-        return this.email && this.password;
+        return this.email && this.lastname && this.firstname;
       }
     },
   },

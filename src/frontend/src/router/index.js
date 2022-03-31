@@ -9,8 +9,9 @@ import RegisterUser from "../views/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
-import AllStudents from "../views/admin/AllStudents";
+import AllStudents from "../views/admin/AllUser";
 import AllSubjects from "../views/admin/AllSubjects";
+import CreateSubject from "../views/admin/CreateSubject";
 
 const routes = [
   {
@@ -76,11 +77,16 @@ const routes = [
         component: AllStudents,
       },
       {
-        path: "allsubjects",
-        name: "allsubjects",
+        path: "subjects",
+        name: "subjects",
         component: AllSubjects,
       },
     ],
+  },
+  {
+    path: "/createSubject",
+    name: "createSubject",
+    component: CreateSubject,
   },
 ];
 

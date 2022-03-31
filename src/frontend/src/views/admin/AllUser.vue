@@ -1,6 +1,8 @@
 <template>
   <h3>All students</h3>
-  hello
+  <div v-for="student in students" :key="student">
+    {{ student }}
+  </div>
 </template>
 <script>
 import { authComputed } from "@/store/helpers";
@@ -12,7 +14,7 @@ export default {
     document.title = "QS99 - Students";
     //getting subjects of the user
     axios.get("http://localhost:8001/admin/getUsers").then((response) => {
-      this.students = response;
+      this.students = response.data;
     });
   },
   data() {

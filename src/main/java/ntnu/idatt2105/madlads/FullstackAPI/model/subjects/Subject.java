@@ -54,16 +54,34 @@ public class Subject {
 
     protected Subject() {}
 
-    public void addStudent(Student student){
-        students.add(student);
+    public boolean addStudent(Student student){
+        if(!((students.contains(student)) || assitants.contains(student))){
+            students.add(student);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
-    public void addProfessor(Professor professor){
-        professors.add(professor);
+    public boolean addProfessor(Professor professor){
+        if (!professors.contains(professor)){
+            professors.add(professor);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void addAssistant(Student student){
-        assitants.add(student);
+    public boolean addAssistant(Student student){
+        if(!((students.contains(student)) || assitants.contains(student))){
+            assitants.add(student);
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 
     public int getId() {

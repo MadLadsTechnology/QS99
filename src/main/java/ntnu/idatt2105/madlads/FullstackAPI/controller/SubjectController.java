@@ -69,10 +69,15 @@ public class SubjectController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             logger.info("Adding students to subject: " + subjectName);
-            subject.addStudent(studentRepository.findByEmailAddress(email));
-            logger.info(subject.toString());
-            subjectRepository.save(subject);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            boolean response = subject.addStudent(studentRepository.findByEmailAddress(email));
+            if(response){
+                logger.info(subject.toString());
+                subjectRepository.save(subject);
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            } else {
+                logger.info("Student already registered");
+                return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+            }
         }
     }
 
@@ -87,10 +92,15 @@ public class SubjectController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             logger.info("Adding students to subject: " + subjectName);
-            subject.addProfessor(professorRepository.findByEmailAddress(email));
-            logger.info(subject.toString());
-            subjectRepository.save(subject);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            boolean response = subject.addProfessor(professorRepository.findByEmailAddress(email));
+            if(response){
+                logger.info(subject.toString());
+                subjectRepository.save(subject);
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            } else {
+                logger.info("Professor already registered");
+                return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+            }
         }
     }
 

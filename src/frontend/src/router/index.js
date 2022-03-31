@@ -104,7 +104,10 @@ router.beforeEach((to, from, next) => {
   const userPages = ["/subjects"];
   const userPage = userPages.includes(to.path);
   const loggedIn = localStorage.getItem("user");
-  const isAdmin = store.getters.isAdmin;
+  let isAdmin = false;
+  if (loggedIn) {
+    isAdmin = store.getters.isAdmin;
+  }
 
   if ((adminPage && !loggedIn) || (userPage && !loggedIn)) {
     return next("/login");

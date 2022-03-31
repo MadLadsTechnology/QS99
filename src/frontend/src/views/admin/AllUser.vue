@@ -1,5 +1,8 @@
 <template>
   <h3>All students</h3>
+
+  <button>Register professor</button>
+  <button>Register student</button>
   <div v-for="student in students" :key="student">
     {{ student }}
   </div>
@@ -13,7 +16,7 @@ export default {
   created() {
     document.title = "QS99 - Students";
     //getting subjects of the user
-    axios.get("http://localhost:8001/admin/getUsers").then((response) => {
+    axios.get("http://localhost:8001/user/getAllUsers").then((response) => {
       this.students = response.data;
     });
   },

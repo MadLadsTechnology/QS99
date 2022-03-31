@@ -1,6 +1,10 @@
 <template>
   <h3>Active queues</h3>
 
+  <div class="teacherToolbar" v-if="this.$store.getters.isProfessor">
+    <button></button>
+  </div>
+
   <div class="cardHolder">
     <SubjectCard
       v-for="subject in subjects.active"

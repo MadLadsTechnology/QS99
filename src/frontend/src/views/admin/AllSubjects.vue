@@ -1,4 +1,15 @@
 <template>
+  <AddUserToSubject
+    v-if="addSingleUser"
+    v-on:closeWindow="closeWindow"
+    v-bind:subject="currentSubject"
+  />
+  <AddMultipleUsersToSubject
+    v-if="addMultipleUsers"
+    v-on:closeWindowMultipleUsers="closeWindow"
+    v-bind:subject="currentSubject"
+  />
+
   <h3>All Subjects</h3>
 
   <router-link to="/createSubject"
@@ -10,19 +21,55 @@
       <p>{{ object.subjectName }}</p>
       <p>{{ object.subjectDescription }}</p>
       <p>{{ object.subjectYear }}</p>
+
+      <button
+        @click="showSingleUserWindow(object.subjectCode, object.subjectYear)"
+      >
+        Add user
+      </button>
+      <button
+        @click="showMultipleUserWindow(object.subjectCode, object.subjectYear)"
+      >
+        Add multiple users
+      </button>
     </div>
   </div>
 </template>
 <script>
+import AddUserToSubject from "@/components/AddUserToSubject";
+import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
 import { authComputed } from "@/store/helpers";
 import axios from "axios";
 export default {
   name: "HomeView",
-  components: {},
-  created() {
+  components: {
+    AddUserToSubject,
+    AddMultipleUsersToSubject,
+  },
+  methods: {
+    setCurrentSubject(subjectCode, year) {
+      this.currentSubject = {
+        code: subjectCode,
+        year: year,
+      };
+    },
+    showSingleUserWindow(subjectCode, year) {
+      this.setCurrentSubject(subjectCode, year);
+      this.addSingleUser = true;
+    },
+    showMultipleUserWindow(subjectCode, year) {
+      this.setCurrentSubject(subjectCode, year);
+      this.addMultipleUsers = true;
+    },
+    closeWindow() {
+      this.addSingleUser = false;
+      this.addMultipleUsers = false;
+    },
+  },
+  async created() {
     document.title = "QS99 - Students";
     //getting subjects of the user
-    axios
+    await axios
       .get("http://localhost:8001/subject/getAllSubject")
       .then((response) => {
         this.subjects = response.data;
@@ -31,6 +78,12 @@ export default {
   data() {
     return {
       subjects: null,
+      addSingleUser: false,
+      addMultipleUsers: false,
+      currentSubject: {
+        code: null,
+        year: null,
+      },
     };
   },
   computed: {

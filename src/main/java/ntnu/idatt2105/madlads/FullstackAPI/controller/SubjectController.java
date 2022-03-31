@@ -177,4 +177,21 @@ public class SubjectController {
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @GetMapping("/getAllSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<GetSubjectsDTO>> getAllSubject (Authentication authentication){
+        if (authentication != null) {
+            if (authentication.isAuthenticated()){
+                ArrayList<Subject> subjects = (ArrayList<Subject>) subjectRepository.findAll();
+                ArrayList<GetSubjectsDTO> getSubjectsDTO = new ArrayList<>();
+
+                for (Subject subject: subjects){
+                    getSubjectsDTO.add(new GetSubjectsDTO(subject, queueRepository.findBySubject(subject)));
+                }
+                return new ResponseEntity<>(getSubjectsDTO, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }

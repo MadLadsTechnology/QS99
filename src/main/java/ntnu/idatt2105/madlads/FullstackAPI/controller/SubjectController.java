@@ -22,6 +22,7 @@ import java.util.ArrayList;
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/subject")
+@CrossOrigin
 public class SubjectController {
     Logger logger = LoggerFactory.getLogger(SubjectController.class);
 

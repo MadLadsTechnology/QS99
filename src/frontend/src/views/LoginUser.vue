@@ -42,14 +42,12 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
-      console.log(this.email);
       this.$store
         .dispatch("login", {
           email: this.email,
           password: this.password,
         })
         .then(() => {
-          console.log("yep i live");
           this.$router.push("/subjects");
         })
         .catch((err) => {

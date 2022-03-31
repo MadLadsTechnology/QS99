@@ -9,8 +9,9 @@ import RegisterUser from "../views/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
-import AllStudents from "../views/admin/AllStudents";
+import AllStudents from "../views/admin/AllUser";
 import AllSubjects from "../views/admin/AllSubjects";
+import CreateSubject from "../views/admin/CreateSubject";
 
 const routes = [
   {
@@ -76,11 +77,16 @@ const routes = [
         component: AllStudents,
       },
       {
-        path: "allsubjects",
-        name: "allsubjects",
+        path: "subjects",
+        name: "allSubjects",
         component: AllSubjects,
       },
     ],
+  },
+  {
+    path: "/createSubject",
+    name: "createSubject",
+    component: CreateSubject,
   },
 ];
 
@@ -98,7 +104,7 @@ router.beforeEach((to, from, next) => {
   const userPages = ["/subjects"];
   const userPage = userPages.includes(to.path);
   const loggedIn = localStorage.getItem("user");
-  const isAdmin = store.getters.role === "ADMIN";
+  const isAdmin = store.getters.isAdmin;
 
   if ((adminPage && !loggedIn) || (userPage && !loggedIn)) {
     return next("/login");
@@ -111,6 +117,7 @@ router.beforeEach((to, from, next) => {
   if (adminPage && !isAdmin && loggedIn) {
     return next("/subjects");
   }
+
   if (
     (userPage && isAdmin && loggedIn) ||
     (publicPage && isAdmin && loggedIn)

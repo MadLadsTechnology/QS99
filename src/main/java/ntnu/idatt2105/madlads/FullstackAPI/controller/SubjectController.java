@@ -44,7 +44,7 @@ public class SubjectController {
 
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Subject> createUser(@RequestParam("subjectName") final String subjectName,
+    public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
                                               @RequestParam("subjectDescription") final String description,
                                               @RequestParam("mandatoryCount") final int mandatoryCount,
                                               @RequestParam("year") final int year,

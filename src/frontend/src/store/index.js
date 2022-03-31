@@ -4,14 +4,16 @@ import axios from "axios";
 const store = createStore({
   state: {
     user: null,
-    role: "ADMIN",
   },
   getters: {
     loggedIn(state) {
       return !!state.user;
     },
-    role(state) {
-      return state.role;
+    isProfessor(state) {
+      return state.user.role === "PROFESSOR";
+    },
+    isAdmin(state) {
+      return state.user.role === "ADMIN";
     },
   },
   mutations: {

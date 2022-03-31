@@ -78,7 +78,7 @@ const routes = [
       },
       {
         path: "subjects",
-        name: "subjects",
+        name: "allSubjects",
         component: AllSubjects,
       },
     ],
@@ -104,7 +104,7 @@ router.beforeEach((to, from, next) => {
   const userPages = ["/subjects"];
   const userPage = userPages.includes(to.path);
   const loggedIn = localStorage.getItem("user");
-  const isAdmin = store.getters.role === "ADMIN";
+  const isAdmin = store.getters.isAdmin;
 
   if ((adminPage && !loggedIn) || (userPage && !loggedIn)) {
     return next("/login");
@@ -117,6 +117,7 @@ router.beforeEach((to, from, next) => {
   if (adminPage && !isAdmin && loggedIn) {
     return next("/subjects");
   }
+
   if (
     (userPage && isAdmin && loggedIn) ||
     (publicPage && isAdmin && loggedIn)

@@ -65,7 +65,7 @@ export default {
           },
         })
         .then(() => {
-          this.$router.push("/admin/allSubjects");
+          this.$router.push("/admin/subjects");
         })
 
         .catch((err) => {

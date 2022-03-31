@@ -21,6 +21,7 @@ public class GetSubjectsDTO {
     private boolean isQueueActive;
 
     public GetSubjectsDTO(Subject subject, Queue queue) {
+        this.id = subject.getId();
         this.subjectCode = subject.getSubjectCode();
         this.subjectName = subject.getSubjectName();
         this.subjectDescription = subject.getSubjectDescription();

@@ -19,10 +19,10 @@ import axios from "axios";
 export default {
   name: "HomeView",
   components: {},
-  created() {
+  async created() {
     document.title = "QS99 - Students";
     //getting subjects of the user
-    axios
+    await axios
       .get("http://localhost:8001/subject/getAllSubject")
       .then((response) => {
         this.subjects = response.data;

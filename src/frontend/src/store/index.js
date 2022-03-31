@@ -10,10 +10,10 @@ const store = createStore({
       return !!state.user;
     },
     isProfessor(state) {
-      return state.user.role === "PROFESSOR";
+      return state.user.role === "Professor";
     },
     isAdmin(state) {
-      return state.user.role === "ADMIN";
+      return state.user.role === "Admin";
     },
   },
   mutations: {
@@ -42,7 +42,7 @@ const store = createStore({
     },
     register({ commit }, credentials) {
       return axios
-        .post("http://localhost:8001/user/register", null, {
+        .post("http://localhost:8001/user/registerAdmin", null, {
           params: {
             lastname: credentials.lastname,
             firstname: credentials.firstname,

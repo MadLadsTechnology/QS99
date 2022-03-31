@@ -13,7 +13,7 @@ export default {
   created() {
     document.title = "QS99 - Students";
     //getting subjects of the user
-    axios.get("http://localhost:8001/admin/getUsers").then((response) => {
+    axios.get("http://localhost:8001/user/getAllStudents").then((response) => {
       this.students = response.data;
     });
   },

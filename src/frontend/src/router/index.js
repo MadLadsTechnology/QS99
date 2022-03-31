@@ -9,7 +9,7 @@ import RegisterUser from "../views/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
-import AllStudents from "../views/admin/AllUser";
+import AllUser from "../views/admin/AllUser";
 import AllSubjects from "../views/admin/AllSubjects";
 import CreateSubject from "../views/admin/CreateSubject";
 
@@ -72,9 +72,9 @@ const routes = [
     },
     children: [
       {
-        path: "students",
-        name: "students",
-        component: AllStudents,
+        path: "users",
+        name: "users",
+        component: AllUser,
       },
       {
         path: "subjects",

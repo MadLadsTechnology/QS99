@@ -97,9 +97,9 @@ const router = createRouter({
 import store from "../store";
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ["/login", "/register"];
+  const publicPages = ["/login"];
   const publicPage = publicPages.includes(to.path);
-  const adminPages = ["/admin"];
+  const adminPages = ["/admin", "/register"];
   const adminPage = adminPages.includes(to.path);
   const userPages = ["/subjects"];
   const userPage = userPages.includes(to.path);

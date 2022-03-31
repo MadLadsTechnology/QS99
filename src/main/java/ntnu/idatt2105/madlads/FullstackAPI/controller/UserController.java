@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
 import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
 import static ntnu.idatt2105.madlads.FullstackAPI.service.UserService.generateToken;
 
@@ -91,9 +92,9 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
-    @PostMapping("/registerStudent")
+    @PostMapping("/registerStudentOLD")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
+    public ResponseEntity<Student> createStudentOLD(@RequestParam("firstname") final String firstname,
                                               @RequestParam("lastname") final String lastname,
                                               @RequestParam("email") final String email,
                                               @RequestParam("password") final String password) {
@@ -119,9 +120,36 @@ public class UserController {
         }
     }
 
-    @PostMapping("/registerProfessor")
+    @PostMapping("/registerStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
+    public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
+                                                 @RequestParam("lastname") final String lastname,
+                                                 @RequestParam("email") final String email) {
+        logger.info("email: " + email + " password: ");
+
+        if (userRepository.findByEmailAddress(email) == null){
+            try {
+                logger.info("trying to register student");
+                String hashedPassword = PasswordHashing.generatePasswordHash(generateCommonLangPassword());
+                QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
+                Student student = userRepository.save(new Student(user));
+                logger.info(student.getDtype());
+                logger.info("Saved new user: " + student.getEmailAddress());
+                QSUser user2 = userRepository.getDistinctByEmailAddress(student.getEmailAddress());
+                logger.info(user2.getDtype());
+                return new ResponseEntity<>(student, HttpStatus.CREATED);
+            } catch (Exception e) {
+                logger.info(e.getMessage());
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @PostMapping("/registerProfessorOLD")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Professor> createProfessorOLD(@RequestParam("firstname") final String firstname,
                                                  @RequestParam("lastname") final String lastname,
                                                  @RequestParam("email") final String email,
                                                  @RequestParam("password") final String password) {
@@ -130,6 +158,31 @@ public class UserController {
         if (userRepository.findByEmailAddress(email) == null){
             try {
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
+                QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
+                Professor professor = userRepository
+                        .save(new Professor(user));
+                QSUser user2 = userRepository.getDistinctByEmailAddress(professor.getEmailAddress());
+                return new ResponseEntity<>(professor, HttpStatus.CREATED);
+            } catch (Exception e) {
+                logger.info(e.getMessage());
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }else{
+            return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+
+    @PostMapping("/registerProfessor")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
+                                                     @RequestParam("lastname") final String lastname,
+                                                     @RequestParam("email") final String email) {
+        logger.info("email: " + email);
+
+        if (userRepository.findByEmailAddress(email) == null){
+            try {
+                String hashedPassword = PasswordHashing.generatePasswordHash(generateCommonLangPassword());
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                 Professor professor = userRepository
                         .save(new Professor(user));

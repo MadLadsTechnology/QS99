@@ -4,13 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.StudentDTO;
+import ntnu.idatt2105.madlads.FullstackAPI.dto.UserLoginDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
-import ntnu.idatt2105.madlads.FullstackAPI.service.CustomEmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class UserController {
 
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Map<String,String>> login(@RequestParam("email") final String email,
+    public ResponseEntity<UserLoginDTO> login(@RequestParam("email") final String email,
                                                             @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         QSUser foundUser = userRepository.findByEmailAddress(email);
@@ -64,14 +64,9 @@ public class UserController {
                 }else{
                     role="ROLE_ADMIN";
                 }
-                HashMap<String,String> returnMap = new HashMap<>();
-                returnMap.put("email",foundUser.getEmailAddress());
-                returnMap.put("firstname",foundUser.getFirstName());
-                returnMap.put("lastname",foundUser.getLastName());
-                returnMap.put("role",foundUser.getDtype());
-                returnMap.put("token",generateToken(email, role));
+                UserLoginDTO user = new UserLoginDTO(foundUser, generateToken(email, role));
                 logger.info("Logged in successfully");
-                return new ResponseEntity<>(returnMap, HttpStatus.OK);
+                return new ResponseEntity<>(user, HttpStatus.OK);
             }
             logger.info("Wrong password");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

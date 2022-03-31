@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ subject }}</h1>
+    <h1>{{ subject.subjectCode }}</h1>
 
     <div id="nav">
       <router-link :to="{ name: 'SubjectQueue' }">Queue</router-link>

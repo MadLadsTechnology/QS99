@@ -11,6 +11,9 @@ public class Student extends QSUser {
     @ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Set<Subject> studentSubjects = new HashSet<>();
 
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Subject> assitantSubjects = new HashSet<>();
+
     @ManyToOne
     private Entry entry;
 
@@ -29,7 +32,11 @@ public class Student extends QSUser {
         }
         return subjects;
     }
-    public void addSubject(Subject subject){
+    public void addStudentSubject(Subject subject){
+        studentSubjects.add(subject);
+    }
+
+    public void addAssistantSubject(Subject subject){
         studentSubjects.add(subject);
     }
 }

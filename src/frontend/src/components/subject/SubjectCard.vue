@@ -1,8 +1,13 @@
 <template>
-  <router-link :to="{ name: 'SubjectDetails', params: { id: subject.id } }">
+  <router-link
+    :to="{
+      name: 'SubjectLayout',
+      params: { id: subject.id, subject: subject },
+    }"
+  >
     <div class="card">
-      <h1>{{ subject.code }}</h1>
-      {{ subject.name }}
+      <h1>{{ subject.subjectCode }}</h1>
+      {{ subject.subjectName }}
       <br />
     </div>
   </router-link>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ subject.code }}</h1>
+    <h1>{{ subject.id }}</h1>
 
     <div id="nav">
       <router-link :to="{ name: 'SubjectQueue' }">Queue</router-link>
@@ -16,18 +16,27 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: ["id"],
-  created() {
-    document.title = "QS99 - " + this.subject.code;
+
+  async created() {
+    await axios
+      .get("http://localhost:8001/getSubject", null, {
+        params: {
+          subjectId: this.id,
+        },
+      })
+      .then((response) => {
+        this.subject = response.data;
+      });
+
+    document.title = "QS99 - " + this.subject.subjectCode;
   },
   data() {
     return {
-      subject: {
-        id: 1,
-        code: "IDATT1234",
-        name: "Tester",
-      },
+      subject: null,
     };
   },
 };

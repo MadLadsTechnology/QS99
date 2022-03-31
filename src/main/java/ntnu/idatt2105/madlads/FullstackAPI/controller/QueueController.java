@@ -55,10 +55,13 @@ public class QueueController {
 
     @PostMapping("/setQueueStatus")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> setQueueStatus (@RequestParam("isActive") boolean isActive, @RequestParam("id") Long id, Authentication authentication){
+    public ResponseEntity<Boolean> setQueueStatus (@RequestParam("isActive") boolean isActive, @RequestParam("subjectId") int id, Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
-                queueRepository.changeQueue(isActive, id);
+                Subject su;
+                if ((su = subjectRepository.findById(id))!=null){
+                    queueRepository.changeQueue(isActive, su.getId());
+                }
                 return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
             }
         }

@@ -1,5 +1,7 @@
 <template>
-  <h1>{{ subject.name }}</h1>
+  <h1>{{ subject.subjectName }}</h1>
+
+  <h3>{{ subject.subjectDescription }}</h3>
 </template>
 <script>
 export default {

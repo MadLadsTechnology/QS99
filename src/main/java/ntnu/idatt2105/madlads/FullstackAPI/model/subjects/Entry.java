@@ -3,6 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 
@@ -12,9 +13,8 @@ public class Entry {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Date startTime;
+    private LocalDateTime startTime;
     private String room;
-    private String status;
     private String type;
     private String building;
     private int tableNumber;
@@ -29,7 +29,7 @@ public class Entry {
             inverseJoinColumns = @JoinColumn(name= "exercise_id", referencedColumnName = "id"))
     private Collection<Exercise> exercises;
 
-    public Entry(Date startTime, String room,  String building, int tableNumber, String type, Student student, Queue queue, Collection<Exercise> exercises) {
+    public Entry(LocalDateTime startTime, String room,  String building, int tableNumber, String type, Student student, Queue queue, Collection<Exercise> exercises) {
         this.startTime = startTime;
         this.room = room;
         this.type = type;

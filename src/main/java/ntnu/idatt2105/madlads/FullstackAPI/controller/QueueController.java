@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -114,25 +115,38 @@ public class QueueController {
     @PostMapping("/addEntry")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Entry> addEntryToQueue(Authentication authentication,
+                                                 @RequestParam("room") final String room,
+                                                 @RequestParam("building") final String building,
+                                                 @RequestParam("tableNumber") final int tableNumber,
+                                                 @RequestParam("type") final String type,
+                                                 @RequestParam("subjectId") final int subjectId,
                                                  @RequestBody Map<String, Object> payload){
+        logger.info("Trying to add an entry...");
         if(authentication!=null){
             if(authentication.isAuthenticated()){
-                if(subjectRepository.findById((Long) payload.get("subjectId")).isPresent() &&
-                        studentRepository.findByEmailAddress(authentication.getName()) != null){
+                if(subjectRepository.findById(subjectId) != null && studentRepository.findByEmailAddress(authentication.getName()) != null){
+                    LocalDateTime now = LocalDateTime.now();
 
-                    Subject subject = subjectRepository.getById((Long) payload.get("subjectId"));
+                    Subject subject = subjectRepository.findById(subjectId);
+                    logger.info(subject.getSubjectCode());
                     Student student = studentRepository.findByEmailAddress(authentication.getName());
+                    logger.info(student.getFirstName());
                     Queue queue = queueRepository.findBySubject(subject);
-                    Collection<Long> exerciseIds = (Collection<Long>) payload.get("exercises");
+                    Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises"); //Splits the string of exercise IDs on newlines
                     ArrayList<Exercise> exercises = new ArrayList<>();
-                    for(Long id: exerciseIds){
-                        exercises.add(exerciseRepository.findExerciseById(id));
+                    for(int exerciseNumber: exerciseIds){
+                        if(exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
+                            logger.info("Couldn't find the exercise");
+                        } else {
+
+                            Exercise exercise = exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber);
+                            exercises.add(exercise);
+                            logger.info("Exercise number: " + exercise.getId());
+                        }
                     }
-                    Entry entry = new Entry(
-                            (Date) payload.get("startTime"), (String) payload.get("room"),
-                            (String) payload.get("building"), Integer.parseInt((String) payload.get("tableNumber")),
-                            (String) payload.get("type"), student, queue, exercises
-                    );
+                    Entry entry = entryRepository.save(new Entry( now, room, building, tableNumber, type, student, queue, exercises ));
+                    logger.info("entryid: " + entry.getId());
+
                     return new ResponseEntity<>(entry, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);

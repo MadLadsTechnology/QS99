@@ -54,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/subject/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/queue/setQueueStatus").authenticated()
                 .antMatchers(HttpMethod.POST,"/queue/create").authenticated()
+                .antMatchers(HttpMethod.POST,"/exercise/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/user/login").authenticated()
                 .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated();
 

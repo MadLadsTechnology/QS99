@@ -36,7 +36,7 @@ public class Subject {
 
     @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
-            name = "Subject_Assistants",
+            name = "Assistants_Subject",
             joinColumns = {@JoinColumn(name = "subject_id")},
             inverseJoinColumns = {@JoinColumn(name = "student_id")}
     )

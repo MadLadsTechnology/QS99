@@ -1,11 +1,16 @@
 <template>
-  <div class="window">
-    <button @click="closeWindow()">Close</button>
-    <h1>Add multiple users to {{ subject.code }}</h1>
+  <div class="background">
+    <div class="window">
+      <button @click="closeWindow()">Close</button>
+      <h1>Add multiple users to {{ subject.code }}</h1>
 
-    <textarea v-model="users" placeholder="Paste emails separated by new lines">
-    </textarea>
-    <button :disabled="users == null" type="submit">Submit</button>
+      <textarea
+        v-model="users"
+        placeholder="Paste emails separated by new lines"
+      >
+      </textarea>
+      <button :disabled="users == null" type="submit">Submit</button>
+    </div>
   </div>
 </template>
 <script>
@@ -57,6 +62,10 @@ export default {
 </script>
 
 <style>
+.background {
+  width: 100%;
+  height: 100%;
+}
 .window {
   position: absolute;
   background-color: antiquewhite;

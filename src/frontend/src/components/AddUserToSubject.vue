@@ -40,7 +40,7 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post("http://localhost:8001/subject/addStudent", null, {
+        .post("http://localhost:8001/subject/addUser", null, {
           params: {
             subjectCode: this.subject.code,
             year: this.subject.year,

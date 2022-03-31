@@ -31,6 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().csrf().ignoringAntMatchers("/user/login")
                 .and().headers().frameOptions().sameOrigin();
 
+        //User
         http
                 .csrf().disable()
                 .cors().and()

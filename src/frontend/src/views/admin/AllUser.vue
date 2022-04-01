@@ -6,6 +6,7 @@
     <p>{{ user.emailAddress }}</p>
     <p>{{ user.lastname }}</p>
     <p>{{ user.firstname }}</p>
+    <p>Role: {{ user.role }}</p>
 
     <button @click="deleteUser(user)">Delete</button>
   </div>

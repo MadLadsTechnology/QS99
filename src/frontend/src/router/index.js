@@ -88,6 +88,12 @@ const routes = [
     name: "createSubject",
     component: CreateSubject,
   },
+  {
+    path: "/subjectInfo/:id",
+    props: true,
+    name: "subjectInfo",
+    component: ProffesorSubjectInfoView,
+  },
 ];
 
 const router = createRouter({
@@ -95,6 +101,7 @@ const router = createRouter({
   routes,
 });
 import store from "../store";
+import ProffesorSubjectInfoView from "@/views/ProffesorSubjectInfoView";
 
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login"];

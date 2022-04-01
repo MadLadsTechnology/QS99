@@ -22,7 +22,8 @@ const store = createStore({
       localStorage.setItem("user", JSON.stringify(user));
       axios.defaults.headers.common["authorization"] = "Bearer " + user.token;
     },
-    async CLEAR_USER_DATA() {
+    async CLEAR_USER_DATA(state) {
+      state.user = null;
       await localStorage.removeItem("user");
       location.reload();
     },

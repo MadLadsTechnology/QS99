@@ -41,8 +41,8 @@ export default {
 
   methods: {
     //Method for submitting form
-    submit() {
-      this.$store
+    async submit() {
+      await this.$store
         .dispatch("login", {
           email: this.email,
           password: this.password,

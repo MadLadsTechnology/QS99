@@ -55,7 +55,7 @@ public class Student extends QSUser {
         return subjects;
     }
     public boolean addStudentSubject(Subject subject){
-        if(studentSubjects.contains(subject)){
+        if(studentSubjects.contains(subject) || assistantSubjects.contains(subject)){
             return false;
         } else {
             studentSubjects.add(subject);
@@ -64,8 +64,13 @@ public class Student extends QSUser {
 
     }
 
-    public void addAssistantSubject(Subject subject){
-        assistantSubjects.add(subject);
+    public boolean addAssistantSubject(Subject subject){
+        if(studentSubjects.contains(subject) || assistantSubjects.contains(subject)){
+            return false;
+        } else {
+            assistantSubjects.add(subject);
+            return true;
+        }
     }
 
     public void addApprovedExercise(Exercise exercise){
@@ -78,5 +83,17 @@ public class Student extends QSUser {
 
     public boolean removeStudentSubject(Subject subject){
         return studentSubjects.remove(subject);
+    }
+
+    public boolean removeAssistantSubject(Subject subject){
+        return assistantSubjects.remove(subject);
+    }
+
+    public boolean removeExercise(Exercise exercise){
+        return approvedExercises.remove(exercise);
+    }
+
+    public void setEntry(Entry entry){
+        this.entry = entry;
     }
 }

@@ -21,7 +21,6 @@ public class SubjectDTO {
         this.subjectCode = subject.getSubjectCode();
         this.subjectName = subject.getSubjectName();
         this.subjectDescription = subject.getSubjectDescription();
-        this.mandatoryCount = subject.getMandatoryCount();
         this.subjectYear = subject.getSubjectYear();
     }
 }

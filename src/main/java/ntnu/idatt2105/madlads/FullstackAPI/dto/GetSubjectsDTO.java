@@ -14,7 +14,6 @@ public class GetSubjectsDTO {
     private String subjectName;
     private String subjectCode;
     private String subjectDescription;
-    private int mandatoryCount;
     private int subjectYear;
     private boolean isQueueActive;
 
@@ -23,7 +22,6 @@ public class GetSubjectsDTO {
         this.subjectCode = subject.getSubjectCode();
         this.subjectName = subject.getSubjectName();
         this.subjectDescription = subject.getSubjectDescription();
-        this.mandatoryCount = subject.getMandatoryCount();
         this.subjectYear = subject.getSubjectYear();
         this.isQueueActive = queue.getStatus();
     }

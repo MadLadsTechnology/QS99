@@ -15,52 +15,43 @@
     v-bind:subject="currentSubject"
   />
 
-  <h3>All Subjects</h3>
+  <div>
+    <h1>{{ subject.subjectCode }}</h1>
 
-  <router-link to="/createSubject"
-    ><button>Create a subject</button></router-link
-  >
-  <div class="subjectlist">
-    <div v-for="object in subjects" :key="object.id" class="subject">
-      <p>{{ object.subjectCode }}</p>
-      <p>{{ object.subjectName }}</p>
-      <p>{{ object.subjectDescription }}</p>
-      <p>{{ object.subjectYear }}</p>
-      <router-link
-        :to="{
-          name: 'subjectInfo',
-          params: { id: object.id },
-        }"
-      >
-        <button>Info</button>
-      </router-link>
+    <button @click="showSingleUserWindow(id, subject.subjectCode)">
+      Add user
+    </button>
+    <button @click="showMultipleUserWindow(id, subject.subjectCode)">
+      Add multiple users
+    </button>
+    <button @click="showAddExercisesWindow(id, subject.subjectCode)">
+      Add exercises
+    </button>
 
-      <button @click="showSingleUserWindow(object.id, object.subjectCode)">
-        Add user
-      </button>
-      <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
-        Add multiple users
-      </button>
-      <button @click="showAddExercisesWindow(object.id, object.subjectCode)">
-        Add exercises
-      </button>
+    <div v-for="user in users" :key="user.emailAddress">
+      <h4>
+        Name: {{ user.firstName + " " + user.lastName }} Email:
+        {{ user.emailAddress }} Role: {{ user.role }}
+        <button @click="removeUser(user)">Remove</button>
+      </h4>
     </div>
   </div>
 </template>
+
 <script>
+import axios from "axios";
 import AddUserToSubject from "@/components/AddUserToSubject";
 import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
 import AddExercises from "@/components/AddExercises";
-import { authComputed } from "@/store/helpers";
-import axios from "axios";
-
 export default {
-  name: "HomeView",
+  name: "ProffesorSubjectInfoView",
   components: {
     AddUserToSubject,
     AddMultipleUsersToSubject,
     AddExercises,
   },
+
+  props: ["id"],
   methods: {
     setCurrentSubject(id, subjectCode) {
       this.currentSubject = {
@@ -88,19 +79,49 @@ export default {
       this.showAddSingleUser = false;
       this.showAddMultipleUsers = false;
       this.showAddExercises = false;
+      location.reload();
+    },
+    async removeUser(user) {
+      await axios
+        .delete("http://localhost:8001/subject/deleteUserFromSubject", {
+          params: {
+            subjectId: this.id,
+            emailAddress: user.emailAddress,
+          },
+        })
+        .then((response) => {
+          if (response) {
+            location.reload();
+          }
+        });
     },
   },
+
   async created() {
-    document.title = "QS99 - Students";
-    //getting subjects of the user
     await axios
-      .get("http://localhost:8001/subject/getAllSubject")
+      .get("http://localhost:8001/user/getAllUsersFromSubject", {
+        params: {
+          subjectId: this.id,
+        },
+      })
       .then((response) => {
-        this.subjects = response.data;
+        this.users = response.data;
+        console.table(this.users);
+      });
+    await axios
+      .get("http://localhost:8001/subject/getSubject", {
+        params: {
+          subjectId: this.id,
+        },
+      })
+      .then((response) => {
+        this.subject = response.data;
       });
   },
   data() {
     return {
+      users: [],
+      subject: null,
       subjects: null,
       showAddSingleUser: false,
       showAddMultipleUsers: false,
@@ -108,35 +129,7 @@ export default {
       currentSubject: null,
     };
   },
-  computed: {
-    ...authComputed,
-  },
 };
 </script>
-<style>
-.subjectlist {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin: auto;
-  width: 50%;
-}
 
-.subject {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  align-items: center;
-  border: solid;
-  border-radius: 3px;
-  padding: 10px;
-}
-.cardHolder {
-  margin-top: 40px;
-  width: 100%;
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-}
-</style>
+<style scoped></style>

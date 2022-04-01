@@ -297,4 +297,21 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @GetMapping("/getAllUsersFromSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<UserDTO>> getAllStudentsFromSubject(@RequestParam("subjectId") int subjectId, Authentication authentication){
+        if (authentication!=null){
+            if (authentication.isAuthenticated()){
+                Subject subject = subjectRepository.findById(subjectId);
+                ArrayList<UserDTO> userDTOs = new ArrayList<>();
+                ArrayList<QSUser> usersInSubject = new ArrayList<>(subject.getStudents());
+                for (QSUser user: usersInSubject){
+                    userDTOs.add(new UserDTO(user));
+                }
+                return new ResponseEntity<>(userDTOs, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }

@@ -72,7 +72,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .cardHolder {
   margin-top: 40px;
   width: 100%;

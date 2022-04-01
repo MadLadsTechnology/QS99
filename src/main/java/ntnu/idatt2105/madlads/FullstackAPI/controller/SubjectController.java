@@ -362,4 +362,18 @@ public class SubjectController {
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
+
+    @DeleteMapping("/deleteUserFromSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> removeUserFromSubject(@RequestParam("subjectId") int subjectId,@RequestParam("emailAddress") String emailAddress, Authentication authentication){
+        if(authentication!=null){
+            if(authentication.isAuthenticated()){
+                Student student = studentRepository.getById(emailAddress);
+                student.removeStudentSubject(subjectRepository.findById(subjectId));
+                studentRepository.save(student);
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }

@@ -101,4 +101,8 @@ public class Subject {
     public Set<Professor> getProfessors() {
         return professors;
     }
+
+    public Set<Student> getAssistants() {
+        return assitants;
+    }
 }

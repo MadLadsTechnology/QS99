@@ -6,6 +6,7 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.ExerciseSubList;
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,12 +77,15 @@ public class ExerciseController {
     public ResponseEntity<Boolean> approveExercise(@RequestParam("subjectId") int subjectId, @RequestParam("exerciseNumber") int exerciseNumber, @RequestParam("studentEmail") String studentEmail, Authentication authentication){
         if (authentication!=null) {
             if (authentication.isAuthenticated()) {
-                Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), exerciseNumber);
-                exercise.addStudent(studentRepository.findByEmailAddress(studentEmail));
-                exerciseRepository.save(exercise);
-                return new ResponseEntity<>(true, HttpStatus.CREATED);
+                Subject subject = subjectRepository.findById(subjectId);
+                if(subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))){
+                    Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
+                    exercise.addStudent(studentRepository.findByEmailAddress(studentEmail));
+                    exerciseRepository.save(exercise);
+                    return new ResponseEntity<>(true, HttpStatus.CREATED);
+                }
             }
         }
-        return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 }

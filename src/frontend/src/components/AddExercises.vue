@@ -8,13 +8,13 @@
         label="Number of exercises"
         type="number"
         v-model.lazy="count"
-        :error="errors.email"
+        :error="errors.count"
       />
       <BaseInput
         label="Number of mandatory"
         type="number"
         v-model.lazy="mandatory"
-        :error="errors.email"
+        :error="errors.mandatory"
       />
       <button :disabled="!isValid" type="submit">Submit</button>
     </form>
@@ -22,7 +22,7 @@
 </template>
 <script>
 import { useField, useForm } from "vee-validate";
-import { object, string, number } from "yup";
+import { object, number } from "yup";
 import axios from "axios";
 
 export default {
@@ -46,10 +46,11 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post("http://localhost:8001/subject/addUser", null, {
+        .post("http://localhost:8001/exercise", null, {
           params: {
             subjectId: this.subject.id,
-            email: this.email,
+            numberOfExercises: this.count,
+            numberOfMandatory: this.mandatory,
           },
         })
         .then(() => {
@@ -69,7 +70,7 @@ export default {
     //Setting up form validation
     const validationSchema = object({
       count: number().min(1).required(),
-      mandatory: number().max(count.value).required(),
+      mandatory: number().min(1).required(),
     });
     const { errors } = useForm({
       validationSchema,
@@ -86,10 +87,10 @@ export default {
   },
   computed: {
     isValid() {
-      if (this.errors.email) {
+      if (this.errors.count || this.errors.mandatory) {
         return false;
       } else {
-        return this.email;
+        return this.count && this.mandatory;
       }
     },
   },

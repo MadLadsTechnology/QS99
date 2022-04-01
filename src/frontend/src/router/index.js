@@ -103,32 +103,29 @@ router.beforeEach((to, from, next) => {
   const adminPage = adminPages.includes(to.path);
   const userPages = ["/subjects"];
   const userPage = userPages.includes(to.path);
-  const loggedIn = localStorage.getItem("user");
+  const loggedIn = store.state.user;
   let isAdmin = false;
   if (loggedIn) {
     isAdmin = store.getters.isAdmin;
   }
-
-  if ((adminPage && !loggedIn) || (userPage && !loggedIn)) {
-    return next("/login");
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!loggedIn) {
+      return next({ name: "login" });
+    } else if (publicPage && loggedIn && isAdmin) {
+      return next("/subjects");
+    } else if (adminPage && !isAdmin && loggedIn) {
+      return next("/subjects");
+    } else if (
+      (userPage && isAdmin && loggedIn) ||
+      (publicPage && isAdmin && loggedIn)
+    ) {
+      return next("/admin");
+    } else {
+      return next();
+    }
+  } else {
+    return next();
   }
-
-  if (publicPage && loggedIn && !isAdmin) {
-    return next("/subjects");
-  }
-
-  if (adminPage && !isAdmin && loggedIn) {
-    return next("/subjects");
-  }
-
-  if (
-    (userPage && isAdmin && loggedIn) ||
-    (publicPage && isAdmin && loggedIn)
-  ) {
-    return next("/admin");
-  }
-
-  return next();
 });
 
 export default router;

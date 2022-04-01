@@ -27,9 +27,9 @@ import { authComputed } from "@/store/helpers";
 
 export default {
   methods: {
-    logOut() {
-      this.$store.dispatch("logout");
-      this.$router.push("/");
+    async logOut() {
+      await this.$store.dispatch("logout");
+      await this.$router.push("/login");
     },
   },
   computed: {

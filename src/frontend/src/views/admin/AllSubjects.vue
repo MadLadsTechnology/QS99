@@ -1,11 +1,16 @@
 <template>
+  <AddExercises
+    v-if="showAddExercises"
+    v-on:closeWindow="closeWindow"
+    v-bind:subject="currentSubject"
+  />
   <AddUserToSubject
-    v-if="addSingleUser"
+    v-if="showAddSingleUser"
     v-on:closeWindow="closeWindow"
     v-bind:subject="currentSubject"
   />
   <AddMultipleUsersToSubject
-    v-if="addMultipleUsers"
+    v-if="showAddMultipleUsers"
     v-on:closeWindowMultipleUsers="closeWindow"
     v-bind:subject="currentSubject"
   />
@@ -28,8 +33,8 @@
       <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
         Add multiple users
       </button>
-      <button @click="addExercises(object.id, object.subjectCode)">
-        Add user
+      <button @click="showAddExercisesWindow(object.id, object.subjectCode)">
+        Add exercises
       </button>
     </div>
   </div>
@@ -37,13 +42,16 @@
 <script>
 import AddUserToSubject from "@/components/AddUserToSubject";
 import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
+import AddExercises from "@/components/AddExercises";
 import { authComputed } from "@/store/helpers";
 import axios from "axios";
+
 export default {
   name: "HomeView",
   components: {
     AddUserToSubject,
     AddMultipleUsersToSubject,
+    AddExercises,
   },
   methods: {
     setCurrentSubject(id, subjectCode) {
@@ -54,15 +62,24 @@ export default {
     },
     showSingleUserWindow(id, subjectCode) {
       this.setCurrentSubject(id, subjectCode);
-      this.addSingleUser = true;
+      this.showAddSingleUser = true;
+      this.showAddMultipleUsers = false;
     },
     showMultipleUserWindow(id, subjectCode) {
       this.setCurrentSubject(id, subjectCode);
-      this.addMultipleUsers = true;
+      this.showAddSingleUser = false;
+      this.showAddMultipleUsers = true;
+    },
+    showAddExercisesWindow(id, subjectCode) {
+      this.setCurrentSubject(id, subjectCode);
+      this.showAddSingleUser = false;
+      this.showAddMultipleUsers = false;
+      this.showAddExercises = true;
     },
     closeWindow() {
-      this.addSingleUser = false;
-      this.addMultipleUsers = false;
+      this.showAddSingleUser = false;
+      this.showAddMultipleUsers = false;
+      this.showAddExercises = false;
     },
   },
   async created() {
@@ -77,12 +94,10 @@ export default {
   data() {
     return {
       subjects: null,
-      addSingleUser: false,
-      addMultipleUsers: false,
-      currentSubject: {
-        code: null,
-        year: null,
-      },
+      showAddSingleUser: false,
+      showAddMultipleUsers: false,
+      showAddExercises: false,
+      currentSubject: null,
     };
   },
   computed: {

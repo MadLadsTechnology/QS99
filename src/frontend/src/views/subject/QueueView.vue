@@ -18,7 +18,7 @@ export default {
   props: ["subject"],
 
   created() {
-    axios.get("http://localhost:8001/queue", null, {
+    axios.get("http://localhost:8001/queue", {
       params: {
         id: this.subject.id,
       },

@@ -58,7 +58,6 @@ public class SubjectController {
      * Creates a subject. Can be called by a professor.
      * @param subjectName
      * @param description
-     * @param mandatoryCount
      * @param year
      * @param subjectCode
      * @param authentication
@@ -68,7 +67,6 @@ public class SubjectController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
                                               @RequestParam("subjectDescription") final String description,
-                                              @RequestParam("mandatoryCount") final int mandatoryCount,
                                               @RequestParam("year") final int year,
                                               @RequestParam("subjectCode") final String subjectCode,
                                               Authentication authentication) {
@@ -77,7 +75,7 @@ public class SubjectController {
                 logger.info("subject: " + subjectCode + subjectName + " "+ year);
                 try {
                     Subject newSubject = subjectRepository
-                            .save(new Subject(subjectCode, subjectName, description, mandatoryCount, year));
+                            .save(new Subject(subjectCode, subjectName, description, year));
                     queueController.createQueue( newSubject.getId(), true, subjectRepository, queueRepository);
                     return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
                 } catch (Exception e) {

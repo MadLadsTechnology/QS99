@@ -1,11 +1,15 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
+import ntnu.idatt2105.madlads.FullstackAPI.controller.ExerciseController;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +22,6 @@ public class Subject {
     private String subjectName;
     private String subjectCode;
     private String subjectDescription;
-    private int mandatoryCount;
     private int subjectYear;
     @ManyToMany(mappedBy = "studentSubjects", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -32,11 +35,10 @@ public class Subject {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Student> assitants = new HashSet<>();
 
-    public Subject(String subjectCode,String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {
+    public Subject(String subjectCode,String subjectName, String subjectDescription, int subjectYear) {
         this.subjectCode = subjectCode;
         this.subjectName = subjectName;
         this.subjectDescription = subjectDescription;
-        this.mandatoryCount = mandatoryCount;
         this.subjectYear = subjectYear;
     }
 
@@ -82,10 +84,6 @@ public class Subject {
 
     public String getSubjectDescription() {
         return subjectDescription;
-    }
-
-    public int getMandatoryCount() {
-        return mandatoryCount;
     }
 
     public int getSubjectYear() {

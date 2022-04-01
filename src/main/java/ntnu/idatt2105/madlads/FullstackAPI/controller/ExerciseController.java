@@ -4,6 +4,8 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/exercise")
 public class ExerciseController {
+    Logger logger = LoggerFactory.getLogger(SubjectController.class);
 
     @Autowired
     SubjectRepository subjectRepository;
@@ -29,14 +32,19 @@ public class ExerciseController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addExercise(@RequestParam("subjectId") int subjectId, @RequestParam("exerciseNumber") int exerciseNumber, Authentication authentication){
+    public ResponseEntity<Boolean> addExercise(@RequestParam("subjectId") int subjectId, @RequestParam("numberOfExercises") int numberOfExercises, Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
-                if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), exerciseNumber)==null){
-                    Exercise exercise = new Exercise(true, subjectRepository.findById(subjectId), exerciseNumber,null);
-                    exerciseRepository.save(exercise);
-                    return new ResponseEntity<>(true, HttpStatus.CREATED);
+                int startNumber = exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)).size();
+                for (int i = startNumber; i < startNumber + numberOfExercises; i++) {
+                    if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), i+1)==null){
+                        Exercise exercise = new Exercise(true, subjectRepository.findById(subjectId), i+1,null);
+                        exerciseRepository.save(exercise);
+                    } else {
+                        logger.info("Exercise already exist");
+                    }
                 }
+                return new ResponseEntity<>(true, HttpStatus.CREATED);
             }
         }
         return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);

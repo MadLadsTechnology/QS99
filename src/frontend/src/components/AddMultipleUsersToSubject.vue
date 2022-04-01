@@ -9,7 +9,7 @@
         placeholder="Paste emails separated by new lines"
       >
       </textarea>
-      <button :disabled="users == null" type="submit">Submit</button>
+      <button :disabled="users == null" @click="submit">Submit</button>
     </div>
   </div>
 </template>
@@ -38,12 +38,16 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post("http://localhost:8001/subject/addStudent", this.users, {
-          params: {
-            subjectCode: this.subject.code,
-            year: this.subject.year,
-          },
-        })
+        .post(
+          "http://localhost:8001/subject/addUsers",
+          { data: this.users },
+          {
+            params: {
+              subjectCode: this.subject.code,
+              year: this.subject.year,
+            },
+          }
+        )
         .then(() => {
           this.closeWindow();
         })
@@ -65,6 +69,7 @@ export default {
 .background {
   width: 100%;
   height: 100%;
+  background-color: white;
 }
 .window {
   position: absolute;

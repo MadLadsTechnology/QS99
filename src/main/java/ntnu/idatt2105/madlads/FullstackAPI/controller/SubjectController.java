@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
@@ -181,10 +182,12 @@ public class SubjectController {
      */
     @PostMapping("/addUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") String subjectCode, @RequestParam("year") int year, @RequestBody String payload, Authentication authentication) {
+    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") String subjectCode, @RequestParam("year") int year, @RequestBody Map<String, String> payload, Authentication authentication) {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
-                String[] list = payload.split("\n");
+
+
+                String[] list = payload.get("data").split("\n");
                 Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, year);
                 ArrayList<String[]> listSplitProperly = new ArrayList<>();
                 Pattern pattern = Pattern.compile("^(.+)@(.+)$");

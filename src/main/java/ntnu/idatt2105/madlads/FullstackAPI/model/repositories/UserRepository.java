@@ -2,9 +2,12 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.repositories;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import javax.transaction.Transactional;
 
 public interface UserRepository extends JpaRepository<QSUser, Long> {
-    QSUser findByEmailAddress(String email);
 
     /*@Modifying
     @Query("")
@@ -13,6 +16,5 @@ public interface UserRepository extends JpaRepository<QSUser, Long> {
 
     QSUser getDistinctByEmailAddress(String email);
 
-    long deleteByEmailAddress(String email);
-
+    void deleteByEmailAddress(String email);
 }

@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +50,7 @@ public class UserController {
     public ResponseEntity<UserLoginDTO> login(@RequestParam("email") final String email,
                                                             @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-        QSUser foundUser = userRepository.findByEmailAddress(email);
+        QSUser foundUser = userRepository.getDistinctByEmailAddress(email);
 
         if (foundUser != null) {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
@@ -84,7 +82,7 @@ public class UserController {
                                              @RequestParam("email") final String email,
                                              @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
-        if (userRepository.findByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null){
             try {
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser QSUser = userRepository
@@ -106,7 +104,7 @@ public class UserController {
                                               @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
 
-        if (userRepository.findByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null){
             try {
                 logger.info("trying to register student");
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
@@ -133,7 +131,7 @@ public class UserController {
                                                  @RequestParam("email") final String email) {
         logger.info("email: " + email + " password: ");
 
-        if (userRepository.findByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null){
             try {
                 logger.info("trying to register student");
                 String password = generateCommonLangPassword();
@@ -163,7 +161,7 @@ public class UserController {
                                                  @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
 
-        if (userRepository.findByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null){
             try {
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
@@ -188,7 +186,7 @@ public class UserController {
                                                      @RequestParam("email") final String email) {
         logger.info("email: " + email);
 
-        if (userRepository.findByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null){
             try {
                 String password = generateCommonLangPassword();
                 sendEmail(email, "This is your password to QS: " + password);
@@ -214,7 +212,7 @@ public class UserController {
                                              @RequestParam("email") final String email){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
-                QSUser foundUser = userRepository.findByEmailAddress(email);
+                QSUser foundUser = userRepository.getDistinctByEmailAddress(email);
                 if(foundUser != null){
                     if(email.equals(foundUser.getEmailAddress())){
                         if(foundUser instanceof Student){
@@ -257,8 +255,8 @@ public class UserController {
                     String email =strings[2];
                     String firstname = strings[0];
                     String lastname =strings[1];
-                    if (userRepository.findByEmailAddress(strings[2]) == null){
-                        if (userRepository.findByEmailAddress(email) == null){
+                    if (userRepository.getDistinctByEmailAddress(strings[2]) == null){
+                        if (userRepository.getDistinctByEmailAddress(email) == null){
                             try {
                                 logger.info("trying to register student");
                                 String hashedPassword = PasswordHashing.generatePasswordHash("Test");

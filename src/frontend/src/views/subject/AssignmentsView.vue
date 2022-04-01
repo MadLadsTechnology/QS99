@@ -1,48 +1,44 @@
 <template>
-  <h1>Assignments</h1>
-
-  <div v-for="(entry, index) in assignments" :key="entry" class="entry">
-    <label>{{ index + 1 }}</label>
-
-    {{ entry }}
+  <div>
+    <div class="cardHolder">
+      <AssignementCard
+        v-for="assignment in allAssignments"
+        :key="parseInt(assignment.id)"
+        :assignment="assignment"
+      />
+    </div>
   </div>
 </template>
+
 <script>
+import AssignementCard from "../../components/subject/AssignmentCard";
 import axios from "axios";
 
 export default {
-  props: ["subject"],
+  name: "AssignementView",
+  components: {
+    AssignementCard,
+  },
+  async created() {
+    document.title = "QS99 - Subjects";
 
-  created() {
-    axios
-      .get("http://localhost:8001/subject/getByUser", {
+    //getting subjects assigments
+    await axios
+      .get("http://localhost:8001/exercise/getByUser", {
         params: {
-          id: this.subject.id,
+          subjectId: 1,
         },
       })
       .then((response) => {
-        this.assignments = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
+        this.allAssignments = response.data;
+        console.log(this.allAssignments);
       });
   },
 
-  methods: {},
-
   data() {
     return {
-      assignments: null,
+      allAssignments: [],
     };
   },
 };
 </script>
-
-<style>
-.entry {
-  border: solid 1px;
-  margin: 5px auto auto;
-  padding: 10px;
-  width: 70%;
-}
-</style>

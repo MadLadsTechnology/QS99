@@ -29,28 +29,7 @@ export default {
 
   data() {
     return {
-      queue: [
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-      ],
+      queue: null,
     };
   },
 };

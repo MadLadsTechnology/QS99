@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!!subject">
     <h1>{{ subject.subjectCode }}</h1>
 
     <div id="nav">

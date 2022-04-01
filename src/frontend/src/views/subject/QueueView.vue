@@ -20,7 +20,7 @@ export default {
   created() {
     axios.get("http://localhost:8001/queue", {
       params: {
-        id: this.subject.id,
+        subjectId: this.subject.id,
       },
     });
   },

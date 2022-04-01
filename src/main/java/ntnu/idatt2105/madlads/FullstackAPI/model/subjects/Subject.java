@@ -20,31 +20,16 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int subjectYear;
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "studentSubjects", cascade =  CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(
-            name = "Student_Subject",
-            joinColumns = {@JoinColumn(name = "subject_id")},
-            inverseJoinColumns = {@JoinColumn(name = "student_id")}
-    )
     private Set<Student> students = new HashSet<>();
 
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "professorSubjects", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(
-            name = "Professor_Subject",
-            joinColumns = {@JoinColumn(name = "subject_id")},
-            inverseJoinColumns = {@JoinColumn(name = "professor_id")}
-    )
     private Set<Professor> professors = new HashSet<>();
 
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "assistantSubjects", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinTable(
-            name = "Assistants_Subject",
-            joinColumns = {@JoinColumn(name = "subject_id")},
-            inverseJoinColumns = {@JoinColumn(name = "student_id")}
-    )
     private Set<Student> assitants = new HashSet<>();
 
     public Subject(String subjectCode,String subjectName, String subjectDescription, int mandatoryCount, int subjectYear) {

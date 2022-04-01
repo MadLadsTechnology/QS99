@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<QSUser, Long> {
 
     QSUser getDistinctByEmailAddress(String email);
 
+    long deleteByEmailAddress(String email);
+
 }

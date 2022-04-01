@@ -5,7 +5,6 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,14 +14,22 @@ import java.util.Set;
 @Entity
 public class Student extends QSUser {
     //List of all subjects the student is a student in.
-    @ManyToMany(mappedBy = "students", cascade =  CascadeType.REMOVE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "Subject_Students",
+            joinColumns = {@JoinColumn(name = "student_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subject_id")}
+    )
     private Set<Subject> studentSubjects = new HashSet<>();
 
     //List of all subjects the student is an assistant in.
-    @ManyToMany(mappedBy = "students", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<Subject> assitantSubjects = new HashSet<>();
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "Subject_Assistants",
+            joinColumns = {@JoinColumn(name = "student_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subject_id")}
+    )
+    private Set<Subject> assistantSubjects = new HashSet<>();
 
     //List of all approved exercises of a student across all subjects.
     @ManyToMany(mappedBy = "students", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
@@ -47,12 +54,18 @@ public class Student extends QSUser {
         }
         return subjects;
     }
-    public void addStudentSubject(Subject subject){
-        studentSubjects.add(subject);
+    public boolean addStudentSubject(Subject subject){
+        if(studentSubjects.contains(subject)){
+            return false;
+        } else {
+            studentSubjects.add(subject);
+            return true;
+        }
+
     }
 
     public void addAssistantSubject(Subject subject){
-        assitantSubjects.add(subject);
+        assistantSubjects.add(subject);
     }
 
     public void addApprovedExercise(Exercise exercise){

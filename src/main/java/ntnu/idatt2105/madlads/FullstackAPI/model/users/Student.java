@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 public class Student extends QSUser {
     //List of all subjects the student is a student in.
-    @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToMany( fetch = FetchType.LAZY)
     @JoinTable(
             name = "Subject_Students",
             joinColumns = {@JoinColumn(name = "student_id")},
@@ -23,7 +23,7 @@ public class Student extends QSUser {
     private Set<Subject> studentSubjects = new HashSet<>();
 
     //List of all subjects the student is an assistant in.
-    @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToMany( fetch = FetchType.LAZY)
     @JoinTable(
             name = "Subject_Assistants",
             joinColumns = {@JoinColumn(name = "student_id")},

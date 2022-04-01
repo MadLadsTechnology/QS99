@@ -11,7 +11,6 @@ public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private boolean mandatory;
     private int exerciseNumber;
     @ManyToOne
     private Subject subject;
@@ -28,8 +27,7 @@ public class Exercise {
     )
     private Set<Student> students = new HashSet<>();
 
-    public Exercise(boolean mandatory, Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList){
-        this.mandatory = mandatory;
+    public Exercise(Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList){
         this.subject = subject;
         this.exerciseNumber = exerciseNumber;
         this.subList = ExerciseSubList;
@@ -39,10 +37,6 @@ public class Exercise {
 
     public Long getId() {
         return id;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
     }
 
     public boolean addStudent(Student student){

@@ -1,9 +1,11 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseSubListRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.ExerciseSubList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,25 +31,32 @@ public class ExerciseController {
     @Autowired
     StudentRepository studentRepository;
 
+    @Autowired
+    ExerciseSubListRepository exerciseSubListRepository;
+
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addExercise(@RequestParam("subjectId") int subjectId, @RequestParam("numberOfExercises") int numberOfExercises, Authentication authentication){
+    public ResponseEntity<ExerciseSubList> addExercises(@RequestParam("subjectId") final int subjectId,
+                                               @RequestParam("numberOfExercises") final int numberOfExercises,
+                                               @RequestParam("numberOfMandatory") final int numberOfMandatory,
+                                               Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
                 int startNumber = exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)).size();
+                ExerciseSubList exerciseSubList = exerciseSubListRepository.save(new ExerciseSubList(numberOfMandatory));
                 for (int i = startNumber; i < startNumber + numberOfExercises; i++) {
                     if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), i+1)==null){
-                        Exercise exercise = new Exercise(true, subjectRepository.findById(subjectId), i+1,null);
+                        Exercise exercise = new Exercise(subjectRepository.findById(subjectId), i+1, exerciseSubList);
                         exerciseRepository.save(exercise);
                     } else {
                         logger.info("Exercise already exist");
                     }
                 }
-                return new ResponseEntity<>(true, HttpStatus.CREATED);
+                return new ResponseEntity<>(exerciseSubList, HttpStatus.CREATED);
             }
         }
-        return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @DeleteMapping

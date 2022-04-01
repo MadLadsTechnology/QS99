@@ -203,7 +203,7 @@ public class UserController {
 
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<QSUser> deleteUser(Authentication authentication,
+    public ResponseEntity<Boolean> deleteUser(Authentication authentication,
                                              @RequestParam("email") final String email){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
@@ -212,10 +212,10 @@ public class UserController {
                     if(email.equals(foundUser.getEmailAddress())){
                         userRepository.delete(foundUser);
                         logger.info("User " + email + " removed");
-                        return new ResponseEntity<>(foundUser, HttpStatus.OK);
+                        return new ResponseEntity<>(true, HttpStatus.OK);
                     } else {
                         logger.info("User not removed");
-                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                        return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
                     }
                 }
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);

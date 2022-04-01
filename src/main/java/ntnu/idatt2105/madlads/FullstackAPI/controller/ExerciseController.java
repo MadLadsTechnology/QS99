@@ -85,14 +85,14 @@ public class ExerciseController {
                                                    @RequestParam("studentEmail") String studentEmail,
                                                    Authentication authentication){
         if (authentication!=null) {
-            if (authentication.isAuthenticated()) {
-                Subject subject = subjectRepository.findById(subjectId);
-                if(subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))){
-                    Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
-                    exercise.addStudent(studentRepository.findByEmailAddress(studentEmail));
-                    exerciseRepository.save(exercise);
-                    return new ResponseEntity<>(true, HttpStatus.CREATED);
-                }
+            Subject subject = subjectRepository.findById(subjectId);
+            if (authentication.isAuthenticated() || subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))) {
+                Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
+                exercise.addStudent(studentRepository.findByEmailAddress(studentEmail));
+                exerciseRepository.save(exercise);
+                return new ResponseEntity<>(true, HttpStatus.CREATED);
+            } else {
+                logger.info(authentication.getName() + " is not a student assistant in this subject");
             }
         }
         return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);

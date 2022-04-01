@@ -1,15 +1,11 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
-import ntnu.idatt2105.madlads.FullstackAPI.controller.ExerciseController;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +29,7 @@ public class Subject {
 
     @ManyToMany(mappedBy = "assistantSubjects", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<Student> assitants = new HashSet<>();
+    private Set<Student> assistants = new HashSet<>();
 
     public Subject(String subjectCode,String subjectName, String subjectDescription, int subjectYear) {
         this.subjectCode = subjectCode;
@@ -45,7 +41,7 @@ public class Subject {
     protected Subject() {}
 
     public boolean addStudent(Student student){
-        if(!((students.contains(student)) || assitants.contains(student))){
+        if(!((students.contains(student)) || assistants.contains(student))){
             students.add(student);
             return true;
         } else {
@@ -64,8 +60,8 @@ public class Subject {
     }
 
     public boolean addAssistant(Student student){
-        if(!((students.contains(student)) || assitants.contains(student))){
-            assitants.add(student);
+        if(!((students.contains(student)) || assistants.contains(student))){
+            assistants.add(student);
             return true;
         } else {
             return false;
@@ -103,6 +99,6 @@ public class Subject {
     }
 
     public Set<Student> getAssistants() {
-        return assitants;
+        return assistants;
     }
 }

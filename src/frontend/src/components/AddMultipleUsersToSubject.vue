@@ -43,8 +43,7 @@ export default {
           { data: this.users },
           {
             params: {
-              subjectCode: this.subject.code,
-              year: this.subject.year,
+              subjectId: this.subject.id,
             },
           }
         )

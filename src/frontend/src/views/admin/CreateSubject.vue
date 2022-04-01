@@ -61,7 +61,6 @@ export default {
             subjectCode: this.code,
             subjectDescription: this.description,
             year: this.year,
-            mandatoryCount: 8,
           },
         })
         .then(() => {

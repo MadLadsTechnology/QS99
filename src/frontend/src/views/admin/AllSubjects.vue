@@ -22,15 +22,14 @@
       <p>{{ object.subjectDescription }}</p>
       <p>{{ object.subjectYear }}</p>
 
-      <button
-        @click="showSingleUserWindow(object.subjectCode, object.subjectYear)"
-      >
+      <button @click="showSingleUserWindow(object.id, object.subjectCode)">
         Add user
       </button>
-      <button
-        @click="showMultipleUserWindow(object.subjectCode, object.subjectYear)"
-      >
+      <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
         Add multiple users
+      </button>
+      <button @click="addExercises(object.id, object.subjectCode)">
+        Add user
       </button>
     </div>
   </div>
@@ -47,18 +46,18 @@ export default {
     AddMultipleUsersToSubject,
   },
   methods: {
-    setCurrentSubject(subjectCode, year) {
+    setCurrentSubject(id, subjectCode) {
       this.currentSubject = {
         code: subjectCode,
-        year: year,
+        id: id,
       };
     },
-    showSingleUserWindow(subjectCode, year) {
-      this.setCurrentSubject(subjectCode, year);
+    showSingleUserWindow(id, subjectCode) {
+      this.setCurrentSubject(id, subjectCode);
       this.addSingleUser = true;
     },
-    showMultipleUserWindow(subjectCode, year) {
-      this.setCurrentSubject(subjectCode, year);
+    showMultipleUserWindow(id, subjectCode) {
+      this.setCurrentSubject(id, subjectCode);
       this.addMultipleUsers = true;
     },
     closeWindow() {

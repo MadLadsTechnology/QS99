@@ -42,8 +42,7 @@ export default {
       axios
         .post("http://localhost:8001/subject/addUser", null, {
           params: {
-            subjectCode: this.subject.code,
-            year: this.subject.year,
+            subjectId: this.subject.id,
             email: this.email,
           },
         })

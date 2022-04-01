@@ -91,26 +91,24 @@ public class SubjectController {
 
     /**
      * Method for adding a student to a subject.
-     * @param subjectYear
      * @param email
      * @param authentication
      * @return
      */
     @PostMapping("/addUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addUser(@RequestParam("subjectCode") final String subjectCode,
-                                               @RequestParam("year") final int subjectYear,
+    public ResponseEntity<Boolean> addUser(@RequestParam("subjectId") final int subjectId,
                                                @RequestParam("email") final String email,
                                                Authentication authentication
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
                 QSUser user = userRepository.findByEmailAddress(email);
-                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
+                Subject subject = subjectRepository.findById(subjectId);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Trying to add user to subject: " + subjectCode);
+                    logger.info("Trying to add user to subject: " + subject.getSubjectCode());
                     if (user instanceof Student){
                         boolean response = studentRepository.findByEmailAddress(email).addStudentSubject(subject);
                         if(response){
@@ -140,26 +138,25 @@ public class SubjectController {
 
     /**
      * Method for adding a student assistant to a subject
-     * @param subjectYear
+     * @param subjectId
      * @param email
      * @param authentication
      * @return
      */
     @PostMapping("/addStudentAssistant")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectCode") final String subjectCode,
-                                                       @RequestParam("year") final int subjectYear,
+    public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectId") final int subjectId,
                                                        @RequestParam("email") final String email,
                                                        Authentication authentication
 
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()) {
-                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, subjectYear);
+                Subject subject = subjectRepository.findById(subjectId);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
-                    logger.info("Adding studentassistant to subject: " + subjectCode);
+                    logger.info("Adding studentassistant to subject: " + subject.getSubjectCode());
                     boolean response = subject.addAssistant(studentRepository.findByEmailAddress(email));
                     if(response){
                         logger.info(subject.toString());
@@ -182,13 +179,13 @@ public class SubjectController {
      */
     @PostMapping("/addUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") String subjectCode, @RequestParam("year") int year, @RequestBody Map<String, String> payload, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectId") int subjectId, @RequestBody Map<String, String> payload, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
 
 
                 String[] list = payload.get("data").split("\n");
-                Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, year);
+                Subject subject = subjectRepository.findById(subjectId);
                 ArrayList<String[]> listSplitProperly = new ArrayList<>();
                 Pattern pattern = Pattern.compile("^(.+)@(.+)$");
 

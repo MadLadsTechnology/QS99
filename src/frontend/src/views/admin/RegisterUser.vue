@@ -3,18 +3,21 @@
     <form class="loginForm" @submit.prevent="submit()">
       <h1>Register a new user</h1>
 
-      <BaseInput
-        label="Last name"
-        type="lastname"
-        v-model.lazy="lastname"
-        :error="errors.lastname"
-      />
-      <BaseInput
-        label="First name"
-        type="text"
-        v-model.lazy="firstname"
-        :error="errors.firstname"
-      />
+      <div class="nameInputs">
+        <BaseInput
+          label="Last name"
+          type="lastname"
+          v-model.lazy="lastname"
+          :error="errors.lastname"
+        />
+        <BaseInput
+          label="First name"
+          type="text"
+          v-model.lazy="firstname"
+          :error="errors.firstname"
+        />
+      </div>
+
       <BaseInput
         label="Email"
         type="email"
@@ -22,18 +25,21 @@
         :error="errors.email"
       />
 
-      <div v-if="this.$store.getters.isAdmin">
-        <input
-          type="radio"
-          id="one"
-          value="Professor"
-          checked="checked"
-          v-model="userType"
-        />
-        <label for="one">Professor</label>
-        <br />
-        <input type="radio" id="two" value="Student" v-model="userType" />
-        <label for="two">Student</label>
+      <div class="radioButtons" v-if="this.$store.getters.isAdmin">
+        <div>
+          <input
+            type="radio"
+            id="one"
+            value="Professor"
+            checked="checked"
+            v-model="userType"
+          />
+          <label for="one">Professor</label>
+        </div>
+        <div>
+          <input type="radio" id="two" value="Student" v-model="userType" />
+          <label for="two">Student</label>
+        </div>
       </div>
 
       <button :disabled="!isValid" type="submit">Submit</button>
@@ -119,6 +125,18 @@ export default {
 </script>
 
 <style>
+.nameInputs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+}
+.radioButtons {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
 .loginForm {
   width: 70%;
   min-width: 300px;

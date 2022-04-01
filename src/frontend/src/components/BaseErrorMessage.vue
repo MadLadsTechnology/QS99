@@ -21,6 +21,5 @@ p {
   max-height: 20px;
   text-align: left;
   color: red;
-  padding: 5px;
 }
 </style>

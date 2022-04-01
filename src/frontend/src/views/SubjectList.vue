@@ -2,7 +2,9 @@
   <h3>Active queues</h3>
 
   <div class="teacherToolbar" v-if="this.$store.getters.isProfessor">
-    <button></button>
+    <button @click="this.$router.push('/createSubject')">
+      Create new subject
+    </button>
   </div>
 
   <div class="cardHolder">
@@ -13,7 +15,7 @@
     />
   </div>
 
-  <h3>Other subjects</h3>
+  <h3>Subjects</h3>
 
   <div class="cardHolder">
     <SubjectCard

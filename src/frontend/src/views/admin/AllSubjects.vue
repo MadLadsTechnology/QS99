@@ -20,32 +20,42 @@
   <router-link to="/createSubject"
     ><button>Create a subject</button></router-link
   >
-  <div class="subjectlist">
-    <div v-for="object in subjects" :key="object.id" class="subject">
-      <p>{{ object.subjectCode }}</p>
-      <p>{{ object.subjectName }}</p>
-      <p>{{ object.subjectDescription }}</p>
-      <p>{{ object.subjectYear }}</p>
-      <router-link
-        :to="{
-          name: 'subjectInfo',
-          params: { id: object.id },
-        }"
-      >
-        <button>Info</button>
-      </router-link>
 
-      <button @click="showSingleUserWindow(object.id, object.subjectCode)">
-        Add user
-      </button>
-      <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
-        Add multiple users
-      </button>
-      <button @click="showAddExercisesWindow(object.id, object.subjectCode)">
-        Add exercises
-      </button>
-    </div>
-  </div>
+  <table>
+    <tr>
+      <th>Code</th>
+      <th>Name name</th>
+      <th>Description</th>
+      <th>Year</th>
+      <th>Actions</th>
+    </tr>
+    <tr v-for="object in subjects" :key="object.id">
+      <td>{{ object.subjectCode }}</td>
+      <td>{{ object.subjectName }}</td>
+      <td>{{ object.subjectDescription }}</td>
+      <td>{{ object.subjectYear }}</td>
+      <td>
+        <router-link
+          :to="{
+            name: 'subjectInfo',
+            params: { id: object.id },
+          }"
+        >
+          <button>Info</button>
+        </router-link>
+
+        <button @click="showSingleUserWindow(object.id, object.subjectCode)">
+          Add user
+        </button>
+        <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
+          Add multiple users
+        </button>
+        <button @click="showAddExercisesWindow(object.id, object.subjectCode)">
+          Add exercises
+        </button>
+      </td>
+    </tr>
+  </table>
 </template>
 <script>
 import AddUserToSubject from "@/components/AddUserToSubject";
@@ -114,29 +124,16 @@ export default {
 };
 </script>
 <style>
-.subjectlist {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+table {
   margin: auto;
-  width: 50%;
+  width: 80%;
+  border-collapse: collapse;
 }
 
-.subject {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  align-items: center;
-  border: solid;
-  border-radius: 3px;
-  padding: 10px;
-}
-.cardHolder {
-  margin-top: 40px;
-  width: 100%;
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
+td,
+th {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: left;
 }
 </style>

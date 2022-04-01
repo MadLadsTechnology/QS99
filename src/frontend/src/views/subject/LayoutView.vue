@@ -1,14 +1,16 @@
 <template>
-  <div v-if="!!subject">
+  <div class="container" v-if="!!subject">
     <h1>{{ subject.subjectCode }}</h1>
 
-    <div id="nav">
-      <router-link :to="{ name: 'SubjectQueue' }">Queue</router-link>
-      |
-      <router-link :to="{ name: 'SubjectDetails' }">Details</router-link>
-      |
+    <div class="nav">
+      <router-link :to="{ name: 'SubjectQueue' }"><div>Queue</div></router-link>
+
+      <router-link :to="{ name: 'SubjectDetails' }"
+        ><div>Details</div></router-link
+      >
+
       <router-link :to="{ name: 'SubjectAssignments' }"
-        >Assignments</router-link
+        ><div>Assignments</div></router-link
       >
     </div>
     <router-view :subject="subject" />
@@ -44,3 +46,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  text-align: center;
+}
+.nav {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  justify-content: space-around;
+  width: 50%;
+  min-width: 200px;
+}
+.nav div {
+  width: 100px;
+}
+</style>

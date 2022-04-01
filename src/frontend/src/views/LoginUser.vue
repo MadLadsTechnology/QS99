@@ -18,7 +18,6 @@
       <button :disabled="!isValid" type="submit">Log in</button>
 
       <br />
-      <router-link to="register">Dont have a user? Register here!</router-link>
 
       <p v-if="error">{{ errors }}</p>
     </form>

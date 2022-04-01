@@ -2,14 +2,23 @@
   <h3>All users</h3>
 
   <router-link to="/register">Register user</router-link>
-  <div v-for="user in users" :key="user" class="user">
-    <p>{{ user.emailAddress }}</p>
-    <p>{{ user.lastname }}</p>
-    <p>{{ user.firstname }}</p>
-    <p>Role: {{ user.role }}</p>
 
-    <button @click="deleteUser(user)">Delete</button>
-  </div>
+  <table>
+    <tr>
+      <th>Email</th>
+      <th>Last name</th>
+      <th>First name</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+    <tr v-for="user in users" :key="user">
+      <td>{{ user.emailAddress }}</td>
+      <td>{{ user.lastName }}</td>
+      <td>{{ user.firstName }}</td>
+      <td>{{ user.role }}</td>
+      <td><button @click="deleteUser(user)">Delete</button></td>
+    </tr>
+  </table>
 </template>
 <script>
 import { authComputed } from "@/store/helpers";
@@ -50,22 +59,17 @@ export default {
   },
 };
 </script>
-<style>
-.user {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  align-items: center;
-  border: solid;
-  border-radius: 3px;
-  padding: 10px;
+<style scoped>
+table {
+  margin: auto;
+  width: 80%;
+  border-collapse: collapse;
 }
-.cardHolder {
-  margin-top: 40px;
-  width: 100%;
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
+
+td,
+th {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: left;
 }
 </style>

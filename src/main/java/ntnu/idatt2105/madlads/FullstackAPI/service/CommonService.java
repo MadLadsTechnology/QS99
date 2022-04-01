@@ -32,7 +32,7 @@ public class CommonService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
-            message.setSubject("This is the Subject Line!");
+            message.setSubject("You have been added as a user at NTNU QS");
             message.setText(text);
             Transport.send(message);
 

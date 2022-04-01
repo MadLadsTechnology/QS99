@@ -84,4 +84,16 @@ public class Student extends QSUser {
     public boolean removeStudentSubject(Subject subject){
         return studentSubjects.remove(subject);
     }
+
+    public boolean removeAssistantSubject(Subject subject){
+        return assistantSubjects.remove(subject);
+    }
+
+    public boolean removeExercise(Exercise exercise){
+        return approvedExercises.remove(exercise);
+    }
+
+    public void setEntry(Entry entry){
+        this.entry = entry;
+    }
 }

@@ -20,4 +20,8 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     Exercise findExerciseBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);
 
     void deleteBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);
+
+    void deleteById(Long id);
+
+    void deleteAllBySubject(Subject subject);
 }

@@ -40,5 +40,7 @@ public class Professor extends QSUser {
             return true;
         }
     }
-
+    public boolean removeProfessorSubject(Subject subject){
+        return professorSubjects.remove(subject);
+    }
 }

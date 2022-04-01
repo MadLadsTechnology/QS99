@@ -3,6 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.SubjectDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
@@ -18,9 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -51,6 +55,9 @@ public class SubjectController {
 
     @Autowired
     QueueRepository queueRepository;
+
+    @Autowired
+    ExerciseRepository exerciseRepository;
 
     QueueController queueController = new QueueController();
 
@@ -314,5 +321,45 @@ public class SubjectController {
             }
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @Transactional
+    public ResponseEntity<Boolean> deleteSubject(Authentication authentication,
+                                              @RequestParam("subjectId") final int subjectId){
+        if (authentication!=null) {
+            if (authentication.isAuthenticated()) {
+                Subject subject = subjectRepository.findById(subjectId);
+                if (subject != null) {
+                    ArrayList<Student> students = new ArrayList<>(subject.getStudents());
+                    ArrayList<Professor> professors = new ArrayList<>(subject.getProfessors());
+                    ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
+                    for(Student student: students){
+                        for(Exercise exercise: exercises){
+                            try{
+                                student.removeExercise(exercise);
+                            } catch(Exception e) {
+                                logger.info("Couldn't remove, because student didn't have exercise approved");
+                            }
+                        }
+                        student.setEntry(null);
+                        student.removeStudentSubject(subject);
+                        student.removeAssistantSubject(subject);
+                        studentRepository.save(student);
+                    }
+                    for(Professor professor: professors){
+                        professor.removeProfessorSubject(subject);
+                    }
+                    exerciseRepository.deleteAllBySubject(subject);
+                    queueRepository.deleteBySubject(subject);
+                    subjectRepository.deleteById(subjectId);
+
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 }

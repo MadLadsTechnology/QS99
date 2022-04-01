@@ -55,4 +55,12 @@ public class Exercise {
     public Set<Student> getStudents() {
         return students;
     }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public ExerciseSubList getSubList() {
+        return subList;
+    }
 }

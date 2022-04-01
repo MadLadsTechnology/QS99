@@ -22,4 +22,8 @@ public class ExerciseSubList {
     public Long getId() {
         return id;
     }
+
+    public int getNumberOfMandatory() {
+        return numberOfMandatory;
+    }
 }

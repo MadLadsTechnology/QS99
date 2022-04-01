@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().csrf().ignoringAntMatchers("/user/login")
                 .and().headers().frameOptions().sameOrigin();
 
-        //User
+        //Student / Student Assistant
         http
                 .csrf().disable()
                 .cors().and()
@@ -41,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated()
                 .antMatchers(HttpMethod.POST,"/queue/addEntry").authenticated()
                 .antMatchers(HttpMethod.POST,"/user/registerAdmin").permitAll()
-                .antMatchers(HttpMethod.GET,"/queue/**").authenticated();
+                .antMatchers(HttpMethod.GET,"/queue/**").authenticated()
+                .antMatchers(HttpMethod.GET,"/exercise/**").authenticated();
 
         //PROFESSOR
         http

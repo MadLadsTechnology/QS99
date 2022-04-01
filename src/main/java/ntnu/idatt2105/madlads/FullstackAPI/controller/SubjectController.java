@@ -214,7 +214,7 @@ public class SubjectController {
                         user = new Student(new QSUser(firstName, lastName, email, hashedPassword));
                         studentRepository.save((Student) user);
                         logger.info("Sent email to:" +email);
-                        sendEmail(email,"Test Your password is:"+ password);
+                        sendEmail(email,"Your password to QS is:  "+ password);
                     }
                     logger.info("user: " + user.toString());
                     if (user instanceof Student){

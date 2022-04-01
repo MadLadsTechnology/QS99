@@ -1,0 +1,167 @@
+<template>
+  <div>
+    <form class="loginForm" v-if="!!assignments" @submit.prevent="submit()">
+      <h1>Get in the queue!</h1>
+
+      <BaseInput
+        label="Room"
+        type="text"
+        v-model.lazy="room"
+        :error="errors.room"
+      />
+      <BaseInput
+        label="Building"
+        type="text"
+        v-model.lazy="building"
+        :error="errors.building"
+      />
+      <BaseInput
+        label="Table number"
+        type="number"
+        v-model.lazy="tableNumber"
+        :error="errors.tableNumber"
+      />
+
+      <div class="checkBoxHolder">
+        <div v-for="assignment in assignments" v-bind:key="assignment">
+          <input
+            type="checkbox"
+            :id="assignment.id"
+            :disabled="assignment.approved"
+            :value="assignment.id"
+            v-model="exercises"
+          />
+          <label :for="assignment.id">{{ assignment.exerciseNumber }}</label>
+        </div>
+      </div>
+
+      <input
+        type="radio"
+        id="one"
+        value="help"
+        checked="checked"
+        v-model="helpType"
+      />
+      <label for="one">Help</label>
+      <br />
+      <input type="radio" id="two" value="approval" v-model="helpType" />
+      <label for="two">Approval</label>
+
+      <br />
+      <button :disabled="!isValid" type="submit">Submit</button>
+
+      <p v-if="error">{{ error }}</p>
+    </form>
+  </div>
+</template>
+
+<script>
+import { useField, useForm } from "vee-validate";
+import { object, string, number } from "yup";
+import axios from "axios";
+
+export default {
+  props: ["subject"],
+  data() {
+    return {
+      error: null,
+      helpType: "help",
+      assignments: null,
+      exercises: [],
+    };
+  },
+
+  created() {
+    axios
+      .get("http://localhost:8001/exercise/getByUser", {
+        params: {
+          subjectId: parseInt(this.subject.id),
+        },
+      })
+      .then((response) => {
+        this.assignments = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    document.title = "QS99 - Join queue";
+  },
+
+  methods: {
+    //Method for submitting form
+    submit() {
+      console.log(this.exercises);
+      axios
+        .post(
+          "http://localhost:8001/queue/addEntry",
+          { exercises: this.exercises },
+          {
+            params: {
+              room: this.room,
+              building: this.building,
+              tableNumber: this.tableNumber,
+              type: this.helpType,
+              subjectId: this.subject.id,
+            },
+          }
+        )
+        .then(() => {
+          this.$router.push("/subjects/:id/queue");
+        })
+
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+
+  setup() {
+    //Setting up form validation
+    const validationSchema = object({
+      room: string().required(),
+      building: string().required(),
+      tableNumber: number().required(),
+    });
+    const { errors } = useForm({
+      validationSchema,
+    });
+
+    const { value: room } = useField("room");
+    const { value: building } = useField("building");
+    const { value: tableNumber } = useField("tableNumber");
+
+    return {
+      room,
+      building,
+      tableNumber,
+      errors,
+    };
+  },
+  computed: {
+    isValid() {
+      if (this.errors.room || this.errors.building || this.errors.tableNumber) {
+        return false;
+      } else {
+        return this.room && this.building && this.tableNumber;
+      }
+    },
+  },
+};
+</script>
+
+<style>
+.checkBoxHolder {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  justify-content: center;
+  margin: auto;
+}
+
+.loginForm {
+  width: 70%;
+  min-width: 300px;
+  max-width: 600px;
+  margin: auto;
+}
+</style>

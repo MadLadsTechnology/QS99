@@ -1,7 +1,7 @@
 <template>
   <h1>Queue</h1>
 
-  <button>Join queue</button>
+  <button @click="this.$router.push('JoinQueue')">Join queue</button>
 
   <div v-for="(entry, index) in queue" :key="entry.lastname" class="entry">
     <label>{{ index + 1 }}</label>
@@ -18,39 +18,22 @@ export default {
   props: ["subject"],
 
   created() {
-    axios.get("http://localhost:8001/queue", {
-      params: {
-        id: this.subject.id,
-      },
-    });
+    axios
+      .get("http://localhost:8001/queue", {
+        params: {
+          subjectId: this.subject.id,
+        },
+      })
+      .then((response) => {
+        this.queue = response.data;
+      });
   },
 
   methods: {},
 
   data() {
     return {
-      queue: [
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-        {
-          lastname: "navnesen",
-          firstname: "navn",
-          assignment: 6,
-        },
-      ],
+      queue: null,
     };
   },
 };

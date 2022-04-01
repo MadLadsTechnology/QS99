@@ -2,7 +2,7 @@
   <div>
     <div class="cardHolder">
       <AssignementCard
-        v-for="assignment in allAssignments"
+        v-for="assignment in assignments"
         :key="parseInt(assignment.id)"
         :assignment="assignment"
       />
@@ -16,6 +16,7 @@ import axios from "axios";
 
 export default {
   name: "AssignementView",
+  props: ["subject"],
   components: {
     AssignementCard,
   },
@@ -26,18 +27,18 @@ export default {
     await axios
       .get("http://localhost:8001/exercise/getByUser", {
         params: {
-          subjectId: 1,
+          subjectId: parseInt(this.subject.id),
         },
       })
       .then((response) => {
-        this.allAssignments = response.data;
-        console.log(this.allAssignments);
+        this.assignments = response.data;
+        console;
       });
   },
 
   data() {
     return {
-      allAssignments: [],
+      assignments: null,
     };
   },
 };

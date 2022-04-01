@@ -155,7 +155,7 @@ public class SubjectController {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }else{
                     logger.info("Adding studentassistant to subject: " + subject.getSubjectCode());
-                    boolean response = subject.addAssistant(studentRepository.findByEmailAddress(email));
+                    boolean response = studentRepository.findByEmailAddress(email).addAssistantSubject(subject);
                     if(response){
                         logger.info(subject.toString());
                         subjectRepository.save(subject);

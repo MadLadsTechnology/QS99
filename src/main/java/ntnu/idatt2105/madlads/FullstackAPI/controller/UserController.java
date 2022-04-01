@@ -201,13 +201,13 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<QSUser> deleteUser(Authentication authentication){
+    public ResponseEntity<QSUser> deleteUser(Authentication authentication,
+                                             @RequestParam("email") final String email){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
-                String email = authentication.getName();
-                QSUser foundUser = userRepository.findByEmailAddress(authentication.getName());
+                QSUser foundUser = userRepository.findByEmailAddress(email);
                 if(foundUser != null){
                     if(email.equals(foundUser.getEmailAddress())){
                         userRepository.delete(foundUser);

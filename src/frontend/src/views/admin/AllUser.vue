@@ -18,9 +18,9 @@ export default {
   methods: {
     deleteUser(user) {
       axios
-        .delete("http://localhost:8001/user/delete", {
+        .delete("http://localhost:8001/user", {
           params: {
-            email: user.email,
+            email: user.emailAddress,
           },
         })
         .then((response) => {
@@ -50,6 +50,15 @@ export default {
 };
 </script>
 <style>
+.user {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: center;
+  border: solid;
+  border-radius: 3px;
+  padding: 10px;
+}
 .cardHolder {
   margin-top: 40px;
   width: 100%;

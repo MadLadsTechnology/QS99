@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import ntnu.idatt2105.madlads.FullstackAPI.dto.GetEntryDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
@@ -111,7 +112,7 @@ public class QueueController {
      */
     @PostMapping("/addEntry")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Entry> addEntryToQueue(Authentication authentication,
+    public ResponseEntity<GetEntryDTO> addEntryToQueue(Authentication authentication,
                                                  @RequestParam("room") final String room,
                                                  @RequestParam("building") final String building,
                                                  @RequestParam("tableNumber") final int tableNumber,
@@ -143,9 +144,10 @@ public class QueueController {
                             }
                         }
                         Entry entry = entryRepository.save(new Entry( now, room, building, tableNumber, type, student, queue, exercises ));
+                        GetEntryDTO getEntryDTO = new GetEntryDTO(entry);
                         logger.info("entryid: " + entry.getId());
 
-                        return new ResponseEntity<>(entry, HttpStatus.OK);
+                        return new ResponseEntity<>(getEntryDTO, HttpStatus.OK);
                     } else {
                         logger.info("Queue not active, or student is not in this subject");
                         return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);

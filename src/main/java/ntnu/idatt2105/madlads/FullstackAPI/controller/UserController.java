@@ -19,6 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
@@ -203,6 +204,7 @@ public class UserController {
 
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Transactional
     public ResponseEntity<Boolean> deleteUser(Authentication authentication,
                                              @RequestParam("email") final String email){
         if (authentication!=null){
@@ -210,7 +212,7 @@ public class UserController {
                 QSUser foundUser = userRepository.findByEmailAddress(email);
                 if(foundUser != null){
                     if(email.equals(foundUser.getEmailAddress())){
-                        userRepository.delete(foundUser);
+                        userRepository.deleteByEmailAddress(email);
                         logger.info("User " + email + " removed");
                         return new ResponseEntity<>(true, HttpStatus.OK);
                     } else {
@@ -221,7 +223,7 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/registerMultipleUsers")

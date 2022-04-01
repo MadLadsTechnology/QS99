@@ -112,7 +112,7 @@ public class SubjectController {
                 }else{
                     logger.info("Trying to add user to subject: " + subjectCode);
                     if (user instanceof Student){
-                        boolean response = subject.addStudent(studentRepository.findByEmailAddress(email));
+                        boolean response = studentRepository.findByEmailAddress(email).addStudentSubject(subject);
                         if(response){
                             logger.info(subject.toString());
                             subjectRepository.save(subject);
@@ -122,7 +122,7 @@ public class SubjectController {
                         }
                     }
                     else if(user instanceof Professor){
-                        boolean response = subject.addProfessor(professorRepository.findByEmailAddress(email));
+                        boolean response = professorRepository.findByEmailAddress(email).addSubject(subject);
                         if(response){
                             logger.info(subject.toString());
                             subjectRepository.save(subject);

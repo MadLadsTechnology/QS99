@@ -2,17 +2,19 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Professor extends QSUser {
-    @ManyToMany(mappedBy = "professors", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "Subject_Professors",
+            joinColumns = {@JoinColumn(name = "professor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subject_id")}
+    )
     private Set<Subject> professorSubjects = new HashSet<>();
 
     public Professor(QSUser user) {
@@ -30,8 +32,13 @@ public class Professor extends QSUser {
         }
         return subjects;
     }
-    public void addSubject(Subject subject){
-        professorSubjects.add(subject);
+    public boolean addSubject(Subject subject){
+        if(professorSubjects.contains(subject)){
+            return false;
+        }else{
+            professorSubjects.add(subject);
+            return true;
+        }
     }
 
 }

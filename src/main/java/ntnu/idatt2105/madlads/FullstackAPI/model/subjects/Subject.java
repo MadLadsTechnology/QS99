@@ -2,6 +2,8 @@ package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,7 +20,8 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int subjectYear;
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "Student_Subject",
             joinColumns = {@JoinColumn(name = "subject_id")},
@@ -26,7 +29,8 @@ public class Subject {
     )
     private Set<Student> students = new HashSet<>();
 
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "Professor_Subject",
             joinColumns = {@JoinColumn(name = "subject_id")},
@@ -34,7 +38,8 @@ public class Subject {
     )
     private Set<Professor> professors = new HashSet<>();
 
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(
             name = "Assistants_Subject",
             joinColumns = {@JoinColumn(name = "subject_id")},

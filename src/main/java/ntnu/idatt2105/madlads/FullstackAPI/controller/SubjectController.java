@@ -101,7 +101,7 @@ public class SubjectController {
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
-                QSUser user = userRepository.findByEmailAddress(email);
+                QSUser user = userRepository.getDistinctByEmailAddress(email);
                 Subject subject = subjectRepository.findById(subjectId);
                 if(subject == null){
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -243,10 +243,10 @@ public class SubjectController {
             String email = authentication.getName();
 
             logger.info("Trying to get subjects for " + email);
-            if (userRepository.findByEmailAddress(email) == null) {
+            if (userRepository.getDistinctByEmailAddress(email) == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                QSUser user = userRepository.findByEmailAddress(email);
+                QSUser user = userRepository.getDistinctByEmailAddress(email);
                 ArrayList<Integer> subjectIds;
                 if(user instanceof Student){
                     Student student = studentRepository.findByEmailAddress(email);

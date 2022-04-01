@@ -20,15 +20,15 @@ public class Subject {
     private String subjectDescription;
     private int mandatoryCount;
     private int subjectYear;
-    @ManyToMany(mappedBy = "studentSubjects", cascade =  CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "studentSubjects", cascade =  CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Student> students = new HashSet<>();
 
-    @ManyToMany(mappedBy = "professorSubjects", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "professorSubjects", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Professor> professors = new HashSet<>();
 
-    @ManyToMany(mappedBy = "assistantSubjects", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "assistantSubjects", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Student> assitants = new HashSet<>();
 

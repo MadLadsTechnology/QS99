@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 public class Professor extends QSUser {
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany( fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "Subject_Professors",
             joinColumns = {@JoinColumn(name = "professor_id")},

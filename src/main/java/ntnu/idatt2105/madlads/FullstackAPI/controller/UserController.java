@@ -3,7 +3,9 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserLoginDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
@@ -41,6 +43,9 @@ public class UserController {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    SubjectRepository subjectRepository;
 
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -212,6 +217,14 @@ public class UserController {
                 QSUser foundUser = userRepository.findByEmailAddress(email);
                 if(foundUser != null){
                     if(email.equals(foundUser.getEmailAddress())){
+                        if(foundUser instanceof Student){
+                            Student student = studentRepository.findByEmailAddress(email);
+                            ArrayList<Integer> subjectIDs = student.getStudentSubjects();
+                            for(int id: subjectIDs){
+                                Subject subject = subjectRepository.findById(id);
+                                student.removeStudentSubject(subject);
+                            }
+                        }
                         userRepository.deleteByEmailAddress(email);
                         logger.info("User " + email + " removed");
                         return new ResponseEntity<>(true, HttpStatus.OK);

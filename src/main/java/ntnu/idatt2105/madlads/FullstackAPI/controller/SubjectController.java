@@ -8,19 +8,20 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
-import ntnu.idatt2105.madlads.FullstackAPI.service.SubjectService;
+import ntnu.idatt2105.madlads.FullstackAPI.security.PasswordHashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
@@ -181,10 +182,12 @@ public class SubjectController {
      */
     @PostMapping("/addUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") String subjectCode, @RequestParam("year") int year, @RequestBody String payload, Authentication authentication) {
+    public ResponseEntity<Boolean> addStudents(@RequestParam("subjectCode") String subjectCode, @RequestParam("year") int year, @RequestBody Map<String, String> payload, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
-                String[] list = payload.split("\n");
+
+
+                String[] list = payload.get("data").split("\n");
                 Subject subject = subjectRepository.findBySubjectCodeAndSubjectYear(subjectCode, year);
                 ArrayList<String[]> listSplitProperly = new ArrayList<>();
                 Pattern pattern = Pattern.compile("^(.+)@(.+)$");
@@ -205,7 +208,8 @@ public class SubjectController {
 
                     if (user == null){
                         String password = generateCommonLangPassword();
-                        user = new Student(new QSUser(firstName, lastName, email, password));
+                        String hashedPassword = PasswordHashing.generatePasswordHash(password);
+                        user = new Student(new QSUser(firstName, lastName, email, hashedPassword));
                         studentRepository.save((Student) user);
                         logger.info("Sent email to:" +email);
                         sendEmail(email,"Test Your password is:"+ password);

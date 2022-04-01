@@ -130,7 +130,9 @@ public class UserController {
         if (userRepository.findByEmailAddress(email) == null){
             try {
                 logger.info("trying to register student");
-                String hashedPassword = PasswordHashing.generatePasswordHash(generateCommonLangPassword());
+                String password = generateCommonLangPassword();
+                sendEmail(email, "This is your password to QS: " + password);
+                String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                 Student student = userRepository.save(new Student(user));
                 logger.info(student.getDtype());
@@ -182,7 +184,9 @@ public class UserController {
 
         if (userRepository.findByEmailAddress(email) == null){
             try {
-                String hashedPassword = PasswordHashing.generatePasswordHash(generateCommonLangPassword());
+                String password = generateCommonLangPassword();
+                sendEmail(email, "This is your password to QS: " + password);
+                String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                 Professor professor = userRepository
                         .save(new Professor(user));

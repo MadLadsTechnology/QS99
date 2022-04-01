@@ -4,5 +4,5 @@
     |
     <router-link :to="{ name: 'allSubjects' }">Subjects</router-link>
   </div>
-  <router-view :subject="subject" />
+  <router-view />
 </template>

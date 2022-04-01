@@ -38,7 +38,7 @@ public class ExerciseController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ExerciseSubList> addExercises(@RequestParam("subjectId") final int subjectId,
+    public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
                                                @RequestParam("numberOfExercises") final int numberOfExercises,
                                                @RequestParam("numberOfMandatory") final int numberOfMandatory,
                                                Authentication authentication){

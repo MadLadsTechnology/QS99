@@ -211,8 +211,8 @@ public class SubjectController {
                     }
                     logger.info("user: " + user.toString());
                     if (user instanceof Student){
-                        if (!subject.getStudents().contains(user)){
-                            subject.addStudent((Student) user);
+                        if (!((Student) user).getStudentSubjects().contains(subjectId)){
+                            ((Student) user).addStudentSubject(subject);
                         }
                         else{
                             Student newStudent = new Student();

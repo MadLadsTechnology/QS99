@@ -3,13 +3,28 @@
 
   <button @click="this.$router.push('JoinQueue')">Join queue</button>
 
-  <div v-for="(entry, index) in queue" :key="entry.lastname" class="entry">
-    <label>{{ index + 1 }}</label>
-
-    {{ entry.lastname }}, {{ entry.firstname }}
-
-    | Øving {{ entry.assignment }}
-  </div>
+  <table>
+    <tr>
+      <th>Place</th>
+      <th>Last name</th>
+      <th>First name</th>
+      <th>Assignment</th>
+      <th>Type</th>
+      <th>Table</th>
+    </tr>
+    <tr v-for="(entry, index) in queue" :key="entry.lastname">
+      <td>{{ index }}</td>
+      <td>{{ entry.lastName }}</td>
+      <td>{{ entry.firstName }}</td>
+      <td>
+        <text v-for="assignment in entry.exercises" v-bind:key="assignment">
+          {{ assignment }},
+        </text>
+      </td>
+      <td>{{ entry.type }}</td>
+      <td>{{ entry.tableNumber }}</td>
+    </tr>
+  </table>
 </template>
 <script>
 import axios from "axios";

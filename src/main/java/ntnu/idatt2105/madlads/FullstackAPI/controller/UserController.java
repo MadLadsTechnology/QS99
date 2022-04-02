@@ -324,6 +324,22 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @GetMapping("/getUserFromSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<UserDTO> getUserFromSubject(@RequestParam("subjectId") int subjectId, @RequestParam("email") String email, Authentication authentication){
+        if (authentication!=null){
+            if (authentication.isAuthenticated()){
+                Student student = studentRepository.findByEmailAddress(email);
+                Subject subject = subjectRepository.findById(subjectId);
+                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || authentication.getAuthorities().contains("ROLE_ADMIN")|| authentication.getAuthorities().contains("ROLE_PROFESSOR")){
+                    UserDTO user = new UserDTO(student, exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)));
+                    return new ResponseEntity<>(user, HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     @PostMapping ("/changePassword")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("oldPassword") String oldPassword, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {

@@ -10,6 +10,7 @@ import JoinQueue from "../views/subject/JoinQueue.vue";
 import RegisterUser from "../views/admin/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
 import Profile from "../views/ProfilePage.vue";
+import HelpAndApprove from "../views/HelpAndApproval.vue";
 
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
@@ -80,6 +81,13 @@ const routes = [
     path: "/register",
     name: "register",
     component: RegisterUser,
+  },
+
+  {
+    path: "/helpAndApprove/:subjectId/:studentId",
+    name: "helpAndApprove",
+    props: true,
+    component: HelpAndApprove,
   },
   {
     path: "/admin",

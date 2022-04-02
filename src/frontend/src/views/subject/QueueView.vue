@@ -1,7 +1,9 @@
 <template>
   <h1>Queue</h1>
 
-  <button @click="this.$router.push('JoinQueue')">Join queue</button>
+  <button :disabled="inQueue" @click="this.$router.push('JoinQueue')">
+    Join queue
+  </button>
 
   <table>
     <tr>
@@ -40,28 +42,29 @@ export default {
           subjectId: this.subject.id,
         },
       })
+
       .then((response) => {
         console.log(response.data);
         this.queue = response.data;
+        this.queue.some((element) => {
+          if (element.studentId === this.$store.state.user.emailAddress) {
+            this.inQueue = true;
+          }
+        });
       });
   },
 
-  methods: {},
+  methods: {
+    setInQueue() {},
+  },
 
   data() {
     return {
       queue: null,
+      inQueue: false,
     };
   },
 };
 </script>
 
-<style>
-.entry {
-  border: solid 1px;
-  margin: auto;
-  margin-top: 5px;
-  padding: 10px;
-  width: 70%;
-}
-</style>
+<style></style>

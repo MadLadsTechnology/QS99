@@ -16,7 +16,14 @@
       <td>{{ user.lastName }}</td>
       <td>{{ user.firstName }}</td>
       <td>{{ user.role }}</td>
-      <td><button @click="deleteUser(user)">Delete</button></td>
+      <td>
+        <button
+          v-if="user.emailAddress !== this.$store.state.user.emailAddress"
+          @click="deleteUser(user)"
+        >
+          Delete
+        </button>
+      </td>
     </tr>
   </table>
 </template>

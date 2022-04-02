@@ -27,11 +27,6 @@ export default {
   methods:{
 
     approve(){
-      console.log( this.subjectId);
-      console.log(this.exercise.exerciseNumber);
-      console.log( this.studentId);
-
-
       axios.post("http://localhost:8001/exercise/approveExercise", null, {
         params: {
           subjectId: this.subjectId,

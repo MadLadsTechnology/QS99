@@ -16,6 +16,18 @@
     </div>
   </div>
 
+  <div v-if="subjects.inStudAss.length > 0">
+    <h3>Student Assistant subjects</h3>
+
+    <div class="cardHolder">
+      <SubjectCard
+          v-for="subject in subjects.inActive"
+          :key="parseInt(subject.id)"
+          :subject="subject"
+      />
+    </div>
+  </div>
+
   <div v-if="subjects.inActive.length > 0">
     <h3>Subjects</h3>
 
@@ -60,6 +72,7 @@ export default {
     subjects: function () {
       const active = [];
       const inActive = [];
+      const inStudAss = [];
       for (let i = 0; i < this.allSubjects.length; i++) {
         console.log(this.allSubjects[i]);
         if (this.allSubjects[i].queueActive === true) {
@@ -67,10 +80,12 @@ export default {
         } else {
           inActive.push(this.allSubjects[i]);
         }
+        if (this.allSubjects[i].isStudAss===true) inStudAss.push()
       }
       return {
         active,
         inActive,
+        inStudAss
       };
     },
   },

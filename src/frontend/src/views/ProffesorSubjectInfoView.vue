@@ -131,7 +131,7 @@ export default {
         console.table(this.users);
       });
     await axios
-      .get("http://localhost:8001/subject/getSubject", {
+      .get("http://localhost:8001/subject/admin/getSubject", {
         params: {
           subjectId: this.id,
         },

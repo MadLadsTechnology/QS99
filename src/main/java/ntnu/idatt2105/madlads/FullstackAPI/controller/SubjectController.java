@@ -1,6 +1,7 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsDTO;
+import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsStudassCheckDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.SubjectDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
@@ -245,7 +246,7 @@ public class SubjectController {
      */
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<GetSubjectsDTO>> getSubjectsByUser(Authentication authentication) {
+    public ResponseEntity<ArrayList<GetSubjectsStudassCheckDTO>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
 
@@ -255,8 +256,9 @@ public class SubjectController {
             } else {
                 QSUser user = userRepository.getDistinctByEmailAddress(email);
                 ArrayList<Integer> subjectIds;
+                Student student=null;
                 if(user instanceof Student){
-                    Student student = studentRepository.findByEmailAddress(email);
+                    student = studentRepository.findByEmailAddress(email);
                     subjectIds = student.getStudentSubjects();
                 } else if (user instanceof Professor) {
                     Professor professor = professorRepository.findByEmailAddress(email);
@@ -264,11 +266,11 @@ public class SubjectController {
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
                 }
-                ArrayList<GetSubjectsDTO> subjects = new ArrayList<>();
+                ArrayList<GetSubjectsStudassCheckDTO> subjects = new ArrayList<>();
                 for(int id: subjectIds){
                     Subject subject = subjectRepository.findById(id);
                     Queue queue = queueRepository.findBySubject(subject);
-                    GetSubjectsDTO getSubjectsDTO = new GetSubjectsDTO(subject,queue);
+                    GetSubjectsStudassCheckDTO getSubjectsDTO = new GetSubjectsStudassCheckDTO(subject,queue,student);
                     subjects.add(getSubjectsDTO);
                 }
                 logger.info("Sending all subjects related to " + email);
@@ -286,15 +288,39 @@ public class SubjectController {
      * @param authentication
      * @return
      */
-    @GetMapping("/getSubject")
+    @GetMapping("/admin/getSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<SubjectDTO> getSubject (@RequestParam("subjectId") int subjectId, Authentication authentication){
+    public ResponseEntity<SubjectDTO> getSubjectAdmin (@RequestParam("subjectId") int subjectId, Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
                 Subject subject;
                 if ((subject = subjectRepository.findById(subjectId))!=null){
                     SubjectDTO subjectDTO = new SubjectDTO(subject);
                     return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @GetMapping("/getSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<GetSubjectsStudassCheckDTO> getSubject (@RequestParam("subjectId") int subjectId, Authentication authentication){
+        if (authentication!=null){
+            if (authentication.isAuthenticated()){
+                QSUser user = userRepository.getDistinctByEmailAddress(authentication.getName());
+                Student student = null;
+                if (user instanceof Student){
+                    student = (Student) user;
+                }
+                Subject subject;
+
+                if ((subject = subjectRepository.findById(subjectId))!=null){
+                    if (subject.getStudents().contains(student)){
+                        Queue queue = queueRepository.findBySubject(subject);
+                        GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, student);
+                        return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
+                    }
                 }
             }
         }

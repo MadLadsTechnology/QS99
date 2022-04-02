@@ -15,6 +15,9 @@ const store = createStore({
     isAdmin(state) {
       return state.user.role === "Admin";
     },
+    isStudent(state) {
+      return state.user.role === "Student";
+    },
   },
   mutations: {
     SET_USER_DATA(state, user) {

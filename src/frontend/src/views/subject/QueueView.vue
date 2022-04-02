@@ -1,15 +1,31 @@
 <template>
-  <h1>Queue</h1>
+  <button :disabled="inQueue" @click="this.$router.push('JoinQueue')">
+    Join queue
+  </button>
 
-  <button @click="this.$router.push('JoinQueue')">Join queue</button>
-
-  <div v-for="(entry, index) in queue" :key="entry.lastname" class="entry">
-    <label>{{ index + 1 }}</label>
-
-    {{ entry.lastname }}, {{ entry.firstname }}
-
-    | Øving {{ entry.assignment }}
-  </div>
+  <table>
+    <tr>
+      <th>Place</th>
+      <th>Last name</th>
+      <th>First name</th>
+      <th>Assignment</th>
+      <th>Type</th>
+      <th>Table</th>
+      <th v-if="!this.$store.getters.isStudent">Actions</th>
+    </tr>
+    <tr v-for="(entry, index) in queue" :key="entry.lastname">
+      <td>{{ index }}</td>
+      <td>{{ entry.lastName }}</td>
+      <td>{{ entry.firstName }}</td>
+      <td>
+        <text v-for="assignment in entry.exercises" v-bind:key="assignment">
+          {{ assignment }},
+        </text>
+      </td>
+      <td>{{ entry.type }}</td>
+      <td>{{ entry.tableNumber }}</td>
+    </tr>
+  </table>
 </template>
 <script>
 import axios from "axios";
@@ -24,28 +40,29 @@ export default {
           subjectId: this.subject.id,
         },
       })
+
       .then((response) => {
         console.log(response.data);
         this.queue = response.data;
+        this.queue.some((element) => {
+          if (element.studentId === this.$store.state.user.emailAddress) {
+            this.inQueue = true;
+          }
+        });
       });
   },
 
-  methods: {},
+  methods: {
+    setInQueue() {},
+  },
 
   data() {
     return {
       queue: null,
+      inQueue: false,
     };
   },
 };
 </script>
 
-<style>
-.entry {
-  border: solid 1px;
-  margin: auto;
-  margin-top: 5px;
-  padding: 10px;
-  width: 70%;
-}
-</style>
+<style></style>

@@ -2,6 +2,9 @@
   <div class="container" v-if="!!subject">
     <h1>{{ subject.subjectCode }}</h1>
 
+    <h4 v-if="subject.isStudAss">Hello, you are a student assistant in this subject</h4>
+
+
     <div class="nav">
       <router-link :to="{ name: 'SubjectQueue' }"><div>Queue</div></router-link>
 

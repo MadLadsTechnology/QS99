@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div class="cardHolder">
+    <div v-if="!!assignments" class="cardHolder">
       <AssignementCard
         v-for="assignment in assignments"
         :key="parseInt(assignment.id)"
         :assignment="assignment"
       />
+    </div>
+    <div v-else>
+      <h3>No assignments have been registered to this subject yet</h3>
     </div>
   </div>
 </template>
@@ -31,8 +34,9 @@ export default {
         },
       })
       .then((response) => {
-        this.assignments = response.data;
-        console;
+        if (response.data.length > 0) {
+          this.assignments = response.data;
+        }
       });
   },
 

@@ -131,7 +131,14 @@ public class QueueController {
                     Student student = studentRepository.findByEmailAddress(authentication.getName());
                     logger.info(student.getFirstName());
                     Queue queue = queueRepository.findBySubject(subject);
-                    if(queue.getStatus() && subject.getStudents().contains(student)){
+                    Collection<Entry> entries = entryRepository.findDistinctByQueue(queue);
+                    for(Entry entry: entries){
+                        if(entry.getStudent().equals(student)){
+                            logger.info("Student already in queue");
+                            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+                        }
+                    }
+                    if(queue.getStatus() && subject.getStudents().contains(student)) {
                         Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises");
                         ArrayList<Exercise> exercises = new ArrayList<>();
                         for(int exerciseNumber: exerciseIds){

@@ -1,6 +1,4 @@
 <template>
-  <h1>Queue</h1>
-
   <button :disabled="inQueue" @click="this.$router.push('JoinQueue')">
     Join queue
   </button>

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @RestController
@@ -65,6 +66,7 @@ public class ExerciseController {
     }
 
     @DeleteMapping
+    @Transactional
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> deleteExercise(@RequestParam("subjectId") int subjectId,
                                                   @RequestParam("exerciseNumber") int exerciseNumber,
@@ -122,5 +124,22 @@ public class ExerciseController {
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/getBySubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesBySubject(Authentication authentication,
+                                                                        @RequestParam("subjectId") final int subjectId){
+        if (authentication != null){
+            if (authentication.isAuthenticated()){
+                ArrayList<Exercise> exercises = (ArrayList<Exercise>)exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId));
+                ArrayList<GetExerciseDTO> exerciseDTOS = new ArrayList<>();
+                for (Exercise exercise : exercises){
+                    exerciseDTOS.add(new GetExerciseDTO(exercise, null));
+                }
+                return new ResponseEntity<>(exerciseDTOS, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

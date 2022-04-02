@@ -54,24 +54,19 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
-      let url = "http://localhost:8001/user/registerStudent";
-      console.log(this.userType);
-      if (this.userType === "Professor") {
-        url = "http://localhost:8001/user/registerProfessor";
-      }
+
       axios
-          .post(url, null, {
+          .post("http://localhost:8001/user/changePassword", null, {
             params: {
-              lastname: this.lastname,
-              firstname: this.firstname,
-              email: this.email,
+              newPassword: this.newPassword,
+              oldPassword: this.oldPassword,
             },
           })
           .then(() => {
-            this.$router.push("/admin/users");
+            location.reload();
           })
           .catch((err) => {
-            console.log(err);
+            alert(err);
           });
     },
   },

@@ -17,7 +17,7 @@
       >
     </div>
 
-    <router-link to="/Profile">
+    <router-link class="profileLink" to="/Profile">
       <div v-if="loggedIn" class="userInformation">
         <h3 class="role">{{ this.$store.state.user.role }}:</h3>
         <h3>{{ this.$store.state.user.emailAddress }}</h3>
@@ -44,6 +44,10 @@ export default {
 </script>
 
 <style scoped>
+
+.profileLink{
+  margin-left: auto;
+}
 .role {
   font-style: italic;
   margin-right: 0;

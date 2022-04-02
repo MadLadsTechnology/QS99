@@ -73,6 +73,14 @@ public class Student extends QSUser {
         }
     }
 
+    public ArrayList<Integer> getAssistantSubjects() {
+        ArrayList<Integer> subjects = new ArrayList<>();
+        for(Subject subject: assistantSubjects){
+            subjects.add(subject.getId());
+        }
+        return subjects;
+    }
+
     public void addApprovedExercise(Exercise exercise){
         approvedExercises.add(exercise);
     }

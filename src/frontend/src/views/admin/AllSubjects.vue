@@ -63,6 +63,9 @@
         <button @click="showAddExercisesWindow(object.id, object.subjectCode)">
           Add exercises
         </button>
+        <button @click="deleteSubject(object)">
+          Delete Subject
+        </button>
       </td>
     </tr>
   </table>
@@ -123,6 +126,16 @@ export default {
       this.showAddMultipleUsers = false;
       this.showAddExercises = false;
       this.showAddAssistant = false;
+    },
+
+    deleteSubject(subject){
+      let confirmAction = confirm("Are you sure to execute this action?");
+      if (confirmAction) {
+        axios.delete("http://localhost:8001/subject", {params:{
+          subjectId: subject.id,
+          }})
+        location.reload()
+      }
     },
   },
   async created() {

@@ -14,6 +14,11 @@
     v-on:closeWindowMultipleUsers="closeWindow"
     v-bind:subject="currentSubject"
   />
+  <AddAssistantToSubject
+    v-if="showAddAssistant"
+    v-on:closeWindow="closeWindow"
+    v-bind:subject="currentSubject"
+  />
 
   <h3>All Subjects</h3>
 
@@ -45,10 +50,15 @@
         </router-link>
 
         <button @click="showSingleUserWindow(object.id, object.subjectCode)">
-          Add user
+          Add student
         </button>
         <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
-          Add multiple users
+          Add multiple students
+        </button>
+        <button
+          @click="showSingleAssistantWindow(object.id, object.subjectCode)"
+        >
+          Add student assistant
         </button>
         <button @click="showAddExercisesWindow(object.id, object.subjectCode)">
           Add exercises
@@ -61,6 +71,7 @@
 import AddUserToSubject from "@/components/AddUserToSubject";
 import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
 import AddExercises from "@/components/AddExercises";
+import AddAssistantToSubject from "@/components/AddAssistantToSubject";
 import { authComputed } from "@/store/helpers";
 import axios from "axios";
 
@@ -70,6 +81,7 @@ export default {
     AddUserToSubject,
     AddMultipleUsersToSubject,
     AddExercises,
+    AddAssistantToSubject,
   },
   methods: {
     setCurrentSubject(id, subjectCode) {
@@ -82,22 +94,35 @@ export default {
       this.setCurrentSubject(id, subjectCode);
       this.showAddSingleUser = true;
       this.showAddMultipleUsers = false;
+      this.showAddExercises = false;
+      this.showAddAssistant = false;
     },
     showMultipleUserWindow(id, subjectCode) {
       this.setCurrentSubject(id, subjectCode);
       this.showAddSingleUser = false;
       this.showAddMultipleUsers = true;
+      this.showAddExercises = false;
+      this.showAddAssistant = false;
     },
     showAddExercisesWindow(id, subjectCode) {
       this.setCurrentSubject(id, subjectCode);
       this.showAddSingleUser = false;
       this.showAddMultipleUsers = false;
       this.showAddExercises = true;
+      this.showAddAssistant = false;
+    },
+    showSingleAssistantWindow(id, subjectCode) {
+      this.setCurrentSubject(id, subjectCode);
+      this.showAddAssistant = true;
+      this.showAddSingleUser = false;
+      this.showAddMultipleUsers = false;
+      this.showAddExercises = false;
     },
     closeWindow() {
       this.showAddSingleUser = false;
       this.showAddMultipleUsers = false;
       this.showAddExercises = false;
+      this.showAddAssistant = false;
     },
   },
   async created() {
@@ -114,6 +139,7 @@ export default {
       subjects: null,
       showAddSingleUser: false,
       showAddMultipleUsers: false,
+      showAddAssistant: false,
       showAddExercises: false,
       currentSubject: null,
     };

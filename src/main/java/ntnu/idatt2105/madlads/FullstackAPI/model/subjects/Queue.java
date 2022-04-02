@@ -28,5 +28,11 @@ public class Queue {
         return isActive;
     }
 
+    public Subject getSubject() {
+        return subject;
+    }
 
+    public boolean isActive() {
+        return isActive;
+    }
 }

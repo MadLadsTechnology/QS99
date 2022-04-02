@@ -18,6 +18,7 @@ public class Entry {
     private String type;
     private String building;
     private int tableNumber;
+    private boolean isGettingHelp;
     @ManyToOne
     private Student student;
     @ManyToOne
@@ -38,6 +39,7 @@ public class Entry {
         this.queue = queue;
         this.exercises = exercises;
         this.student = student;
+        this.isGettingHelp = false;
     }
 
     public Entry() {
@@ -77,5 +79,13 @@ public class Entry {
 
     public Collection<Exercise> getExercises() {
         return exercises;
+    }
+
+    public void setGettingHelp(boolean gettingHelp) {
+        isGettingHelp = gettingHelp;
+    }
+
+    public boolean isGettingHelp() {
+        return isGettingHelp;
     }
 }

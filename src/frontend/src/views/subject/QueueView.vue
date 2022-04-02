@@ -14,7 +14,7 @@
       <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
     <tr v-for="(entry, index) in queue" :key="entry.lastname">
-      <td>{{ index }}</td>
+      <td>{{ index+1 }}</td>
       <td>{{ entry.lastName }}</td>
       <td>{{ entry.firstName }}</td>
       <td>

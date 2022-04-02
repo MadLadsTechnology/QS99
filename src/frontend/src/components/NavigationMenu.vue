@@ -17,11 +17,14 @@
       >
     </div>
 
-    <div v-if="loggedIn" class="userInformation">
-      <h3 class="role">{{ this.$store.state.user.role }}:</h3>
-      <h3>{{ this.$store.state.user.emailAddress }}</h3>
-      <button class="logOutBtn" @click="logOut()">Log out</button>
-    </div>
+    <router-link to="/Profile">
+      <div v-if="loggedIn" class="userInformation">
+        <h3 class="role">{{ this.$store.state.user.role }}:</h3>
+        <h3>{{ this.$store.state.user.emailAddress }}</h3>
+        <button class="logOutBtn" @click="logOut()">Log out</button>
+      </div>
+    </router-link>
+
   </div>
 </template>
 <script>

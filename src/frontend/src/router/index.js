@@ -9,6 +9,8 @@ import JoinQueue from "../views/subject/JoinQueue.vue";
 
 import RegisterUser from "../views/admin/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
+import Profile from "../views/ProfilePage.vue";
+
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
 import AllUser from "../views/admin/AllUser";
@@ -68,6 +70,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: LoginUser,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
   },
   {
     path: "/register",

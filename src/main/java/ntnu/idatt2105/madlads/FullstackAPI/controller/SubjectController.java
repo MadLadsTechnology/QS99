@@ -202,8 +202,8 @@ public class SubjectController {
                 }
 
                 for (String[] strings: listSplitProperly){
-                    String firstName = strings[0];
-                    String lastName = strings[1];
+                    String lastName = strings[0];
+                    String firstName = strings[1];
                     String email = strings[2].trim();
                     QSUser user = userRepository.getDistinctByEmailAddress(email);
 

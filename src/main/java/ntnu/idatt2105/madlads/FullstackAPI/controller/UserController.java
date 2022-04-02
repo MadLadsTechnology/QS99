@@ -2,6 +2,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserLoginDTO;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
@@ -44,6 +45,9 @@ public class UserController {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    ExerciseRepository exerciseRepository;
 
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -307,6 +311,10 @@ public class UserController {
                 ArrayList<UserDTO> userDTOs = new ArrayList<>();
                 ArrayList<QSUser> usersInSubject = new ArrayList<>(subject.getStudents());
                 for (QSUser user: usersInSubject){
+                    if(user instanceof Student){
+                        Student student = studentRepository.findByEmailAddress(user.getEmailAddress());
+                        userDTOs.add(new UserDTO(student, exerciseRepository.findExerciseBySubject(subject)));
+                    }
                     userDTOs.add(new UserDTO(user));
                 }
                 return new ResponseEntity<>(userDTOs, HttpStatus.OK);

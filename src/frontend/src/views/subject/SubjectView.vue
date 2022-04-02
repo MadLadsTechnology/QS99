@@ -18,12 +18,14 @@
         ><div>Details</div></router-link
       >
 
-      <router-link v-if="this.$store.getters.isStudent" :to="{ name: 'SubjectAssignments' }"
-        ><div>Assignments</div></router-link
-      >
-      <router-link v-if="!this.$store.getters.isStudent" :to="{ name: 'subjectUsers' }"
+      <router-link v-if="!this.$store.getters.isStudent || subject.isStudAss" :to="{ name: 'subjectUsers' }"
       ><div>Users</div></router-link
       >
+
+      <router-link v-else :to="{ name: 'SubjectAssignments' }"
+        ><div>Assignments</div></router-link
+      >
+
 
     </div>
     <router-view :subject="subject" />

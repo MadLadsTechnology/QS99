@@ -15,6 +15,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetEntryDTO {
+    private Long entryId;
     private String studentId;
     private String firstName;
     private String lastName;
@@ -27,6 +28,7 @@ public class GetEntryDTO {
     private Map<Long, Integer> exercises;
 
     public GetEntryDTO(Entry entry){
+        entryId = entry.getId();
         studentId = entry.getStudent().getEmailAddress();
         firstName = entry.getStudent().getFirstName();
         lastName = entry.getStudent().getLastName();

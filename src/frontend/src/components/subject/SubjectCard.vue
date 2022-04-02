@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="{
-      name: 'SubjectLayout',
+      name: link,
       params: { id: subject.id },
     }"
   >
@@ -21,6 +21,14 @@ export default {
     subject: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    link: function () {
+      if (this.subject.queueActive) {
+        return "SubjectQueue";
+      }
+      return "SubjectAssignments";
     },
   },
 };

@@ -1,28 +1,31 @@
 <template>
-  <h3>Active queues</h3>
-
   <div class="teacherToolbar" v-if="this.$store.getters.isProfessor">
     <button @click="this.$router.push('/createSubject')">
       Create new subject
     </button>
   </div>
 
-  <div class="cardHolder">
-    <SubjectCard
-      v-for="subject in subjects.active"
-      :key="parseInt(subject.id)"
-      :subject="subject"
-    />
+  <div v-if="subjects.active.length > 0">
+    <h3>Active queues</h3>
+    <div class="cardHolder">
+      <SubjectCard
+        v-for="subject in subjects.active"
+        :key="parseInt(subject.id)"
+        :subject="subject"
+      />
+    </div>
   </div>
 
-  <h3>Subjects</h3>
+  <div v-if="subjects.inActive.length > 0">
+    <h3>Subjects</h3>
 
-  <div class="cardHolder">
-    <SubjectCard
-      v-for="subject in subjects.inActive"
-      :key="parseInt(subject.id)"
-      :subject="subject"
-    />
+    <div class="cardHolder">
+      <SubjectCard
+        v-for="subject in subjects.inActive"
+        :key="parseInt(subject.id)"
+        :subject="subject"
+      />
+    </div>
   </div>
 </template>
 <script>

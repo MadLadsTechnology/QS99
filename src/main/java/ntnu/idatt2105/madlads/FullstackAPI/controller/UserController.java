@@ -314,8 +314,9 @@ public class UserController {
                     if(user instanceof Student){
                         Student student = studentRepository.findByEmailAddress(user.getEmailAddress());
                         userDTOs.add(new UserDTO(student, exerciseRepository.findExerciseBySubject(subject)));
+                    } else {
+                        userDTOs.add(new UserDTO(user));
                     }
-                    userDTOs.add(new UserDTO(user));
                 }
                 return new ResponseEntity<>(userDTOs, HttpStatus.OK);
             }

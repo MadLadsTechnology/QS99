@@ -11,11 +11,7 @@ import java.util.List;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 
-    Exercise findExerciseById(Long id);
-
     List<Exercise> findExerciseBySubject(Subject subject);
-
-    Exercise findDistinctBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);
 
     Exercise findExerciseBySubjectAndExerciseNumber(Subject subject, int exerciseNumber);
 

@@ -46,6 +46,10 @@ public class QSUser {
         this.dtype = dtype;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return new StringBuilder().append("emailAddress").append(emailAddress).append("firstName").append(firstName)

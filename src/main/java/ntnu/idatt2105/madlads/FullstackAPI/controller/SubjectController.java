@@ -202,8 +202,8 @@ public class SubjectController {
                 }
 
                 for (String[] strings: listSplitProperly){
-                    String firstName = strings[0];
-                    String lastName = strings[1];
+                    String lastName = strings[0];
+                    String firstName = strings[1];
                     String email = strings[2].trim();
                     QSUser user = userRepository.getDistinctByEmailAddress(email);
 
@@ -313,18 +313,24 @@ public class SubjectController {
             if (authentication.isAuthenticated()){
                 QSUser user = userRepository.getDistinctByEmailAddress(authentication.getName());
                 Student student = null;
+
                 if (user instanceof Student){
                     student = (Student) user;
                 }
                 Subject subject;
 
                 if ((subject = subjectRepository.findById(subjectId))!=null ){
-                    if (subject.getStudents().contains(student)|| Objects.requireNonNull(student).getAssistantSubjects().contains(subjectId)){
+                    if(student == null){
+                        Queue queue = queueRepository.findBySubject(subject);
+                        GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, null);
+                        return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
+                    }else if (subject.getStudents().contains(student)|| Objects.requireNonNull(student).getAssistantSubjects().contains(subjectId)){
                         Queue queue = queueRepository.findBySubject(subject);
                         GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, student);
                         return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
                     }
                 }
+
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);

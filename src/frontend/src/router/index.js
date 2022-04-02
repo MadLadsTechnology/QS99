@@ -1,13 +1,16 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Subjects from "../views/SubjectList.vue";
-import SubjectLayout from "../views/subject/LayoutView.vue";
+import SubjectLayout from "../views/subject/SubjectView.vue";
 import SubjectDetails from "../views/subject/DetailsView.vue";
 import SubjectQueue from "../views/subject/QueueView.vue";
 import SubjectAssignments from "../views/subject/AssignmentsView.vue";
+import SubjectUsersView from "../views/subject/SubjectUsersView";
 import JoinQueue from "../views/subject/JoinQueue.vue";
 
 import RegisterUser from "../views/admin/RegisterUser.vue";
 import LoginUser from "../views/LoginUser.vue";
+import Profile from "../views/ProfilePage.vue";
+
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
 import AllUser from "../views/admin/AllUser";
@@ -52,6 +55,11 @@ const routes = [
         component: SubjectAssignments,
       },
       {
+        path: "subjectUsers",
+        name: "subjectUsers",
+        component: SubjectUsersView,
+      },
+      {
         path: "joinQueue",
         name: "joinQueue",
         component: JoinQueue,
@@ -62,6 +70,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: LoginUser,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
   },
   {
     path: "/register",
@@ -94,12 +107,6 @@ const routes = [
     name: "createSubject",
     component: CreateSubject,
   },
-  {
-    path: "/subjectInfo/:id",
-    props: true,
-    name: "subjectInfo",
-    component: ProffesorSubjectInfoView,
-  },
 ];
 
 const router = createRouter({
@@ -107,7 +114,6 @@ const router = createRouter({
   routes,
 });
 import store from "../store";
-import ProffesorSubjectInfoView from "@/views/ProffesorSubjectInfoView";
 
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login"];

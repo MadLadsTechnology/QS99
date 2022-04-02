@@ -31,7 +31,7 @@
           <label for="professor">Professor</label>
         </div>
         <div>
-          <input type="radio" id="student" value="Student" v-model="this.userType">
+          <input type="radio" id="student" value="Student" v-model="this.userType" checked>
           <label for="student">Student</label>
         </div>
       </div>
@@ -81,6 +81,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          alert("User already exists")
         });
     },
   },

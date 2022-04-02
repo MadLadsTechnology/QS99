@@ -323,4 +323,20 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @PostMapping ("/changePassword")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("oldPassword") String oldPassword, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if(authentication!=null){
+            if(authentication.isAuthenticated()){
+                QSUser user = userRepository.getDistinctByEmailAddress(authentication.getName());
+                if (PasswordHashing.validatePassword(oldPassword, user.getPassword())){
+                    user.setPassword(PasswordHashing.generatePasswordHash(newPassword));
+                    userRepository.save(user);
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }

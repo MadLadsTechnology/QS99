@@ -42,7 +42,7 @@
       <td>
         <router-link
           :to="{
-            name: 'subjectInfo',
+            name: 'SubjectLayout',
             params: { id: object.id },
           }"
         >

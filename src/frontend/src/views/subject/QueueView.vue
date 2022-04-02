@@ -22,7 +22,12 @@
           {{ assignment }},
         </text>
       </td>
-      <td><button @click="helpAndApprove(entry)">{{ entry.type }}</button></td>
+      <td  v-if="subject.isStudAss">
+        <button @click="helpAndApprove(entry)">{{ entry.type }}</button>
+      </td>
+      <td v-else>
+        {{ entry.type }}
+      </td>
       <td>{{ entry.tableNumber }}</td>
     </tr>
   </table>
@@ -54,9 +59,8 @@ export default {
 
   methods: {
 
-    helpAndApprove(){
-
-
+    helpAndApprove(entry){
+      this.$router.push({ name: 'helpAndApprove', params: { studentId: entry.studentId, subjectId: this.subject.id}})
     },
 
     getClass(isGettingHelp) {

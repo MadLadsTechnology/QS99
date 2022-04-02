@@ -2,17 +2,17 @@
   <AddExercises
     v-if="showAddExercises"
     v-on:closeWindow="closeWindow"
-    v-bind:subject="currentSubject"
+    v-bind:subject="subject"
 />
   <AddUserToSubject
       v-if="showAddSingleUser"
       v-on:closeWindow="closeWindow"
-      v-bind:subject="currentSubject"
+      v-bind:subject="subject"
   />
   <AddMultipleUsersToSubject
       v-if="showAddMultipleUsers"
       v-on:closeWindowMultipleUsers="closeWindow"
-      v-bind:subject="currentSubject"
+      v-bind:subject="subject"
   />
 
   <button @click="showSingleUserWindow(id, subject.subjectCode)">
@@ -80,7 +80,7 @@ export default{
       await axios
           .delete("http://localhost:8001/subject/deleteUserFromSubject", {
             params: {
-              subjectId: this.id,
+              subjectId: this.subject.id,
               emailAddress: user.emailAddress,
             },
           })
@@ -104,19 +104,6 @@ export default{
     },
   },
 
-  async created() {
-    await axios
-        .get("http://localhost:8001/user/getAllUsersFromSubject", {
-          params: {
-            subjectId: this.id,
-          },
-        })
-        .then((response) => {
-          this.users = response.data;
-          console.table(this.users);
-        });
-
-  },
   data() {
     return {
       users: [],

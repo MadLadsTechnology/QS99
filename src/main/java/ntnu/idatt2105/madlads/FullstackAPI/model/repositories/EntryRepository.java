@@ -10,4 +10,5 @@ public interface EntryRepository extends JpaRepository<Entry, Long> {
     Entry findEntryById(Long id);
     Collection<Entry> findDistinctByQueue(Queue queue);
     void deleteAllByQueue(Queue queue);
+    void deleteById(Long id);
 }

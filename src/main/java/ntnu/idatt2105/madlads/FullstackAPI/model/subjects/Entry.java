@@ -4,6 +4,7 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -87,5 +88,16 @@ public class Entry {
 
     public boolean isGettingHelp() {
         return isGettingHelp;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public void setQueue(Queue queue) {
+        this.queue = queue;
+    }
+    public void removeExercises(){
+        exercises = new ArrayList<>();
     }
 }

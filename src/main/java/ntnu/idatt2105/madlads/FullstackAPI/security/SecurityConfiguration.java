@@ -66,7 +66,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/queue/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/user/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/subject/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/entry/**").authenticated();
+                .antMatchers(HttpMethod.POST, "/entry/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/entry/**").authenticated();
 
         //ADMIN
         http

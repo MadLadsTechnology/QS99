@@ -35,12 +35,35 @@ public class EntryController {
         Subject subject = entry.getQueue().getSubject();
         if (authentication!=null && (authentication.isAuthenticated() ||
                 subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())))
-        ){
+        ) {
             entry.setGettingHelp(isGettingHelp);
             entryRepository.save(entry);
             return new ResponseEntity<>(entry.isGettingHelp(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+    }
+    @DeleteMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @Transactional
+    public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
+                                               @RequestParam("entryId") final Long entryId
+                                               ){
+        Entry entry = entryRepository.findEntryById(entryId);
+        Subject subject = entry.getQueue().getSubject();
+        if(authentication.isAuthenticated() ||
+                subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))
+        ) {
+            if(entryRepository.findEntryById(entryId) == null){
+                return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            }
+            entry.removeExercises();
+            entry.setQueue(null); //Removing entry from queue
+            entry.setStudent(null); //Removing entry from student
+            entryRepository.deleteById(entryId);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
         }
     }
 }

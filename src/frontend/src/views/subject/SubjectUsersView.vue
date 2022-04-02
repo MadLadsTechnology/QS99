@@ -7,7 +7,7 @@
       <th>Email</th>
       <th>Role</th>
       <th>Exercises</th>
-      <th>Actions</th>
+      <th v-if="!subject.isStudAss">Actions</th>
     </tr>
 
     <tr  v-for="user in users" :key="user.emailAddress">
@@ -21,12 +21,15 @@
           <ExerciseBox
               v-for="exercise in user.exercises" :key="exercise"
               :exercise="exercise"
+              :subjectId="subject.id"
+              :studentId="user.email"
+
           />
         </div>
 
       </td>
 
-      <td><button @click="removeUser(user)">Remove</button></td>
+      <td v-if="!subject.isStudAss"><button @click="removeUser(user)">Remove</button></td>
     </tr>
 
   </table>
@@ -57,7 +60,7 @@ export default{
       await axios
           .delete("http://localhost:8001/subject/deleteUserFromSubject", {
             params: {
-              subjectId: this.id,
+              subjectId: this.subject.id,
               emailAddress: user.emailAddress,
             },
           })
@@ -71,7 +74,7 @@ export default{
       await axios
           .delete("http://localhost:8001/exercise", {
             params: {
-              subjectId: this.id,
+              subjectId: this.subject.id,
               exerciseNumber: exercise.exerciseNumber,
             },
           })

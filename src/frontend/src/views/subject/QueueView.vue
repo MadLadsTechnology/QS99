@@ -38,8 +38,8 @@ import axios from "axios";
 export default {
   props: ["subject"],
 
-  created() {
-    axios
+  async created() {
+    await axios
       .get("http://localhost:8001/queue", {
         params: {
           subjectId: this.subject.id,
@@ -60,7 +60,13 @@ export default {
   methods: {
 
     helpAndApprove(entry){
-      this.$router.push({ name: 'helpAndApprove', params: { studentId: entry.studentId, subjectId: this.subject.id}})
+      this.$router.push({ name: 'helpAndApprove',
+        params: {
+          studentId: entry.studentId,
+          subjectId: this.subject.id,
+          entryId: entry.entryId
+      }})
+
     },
 
     getClass(isGettingHelp) {

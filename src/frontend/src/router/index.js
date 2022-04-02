@@ -84,7 +84,7 @@ const routes = [
   },
 
   {
-    path: "/helpAndApprove/:subjectId/:studentId",
+    path: "/helpAndApprove/:subjectId/:studentId/:entryId",
     name: "helpAndApprove",
     props: true,
     component: HelpAndApprove,

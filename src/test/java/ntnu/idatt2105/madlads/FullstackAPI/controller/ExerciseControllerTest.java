@@ -59,7 +59,7 @@ class ExerciseControllerTest {
                 .param("numberOfExcercises","2")
                 .param("numberOfMandatory","1"));
 
-        Assertions.assertEquals(exerciseRepository.findExerciseBySubjectAndExerciseNumber());
+
     }
 
     @Test

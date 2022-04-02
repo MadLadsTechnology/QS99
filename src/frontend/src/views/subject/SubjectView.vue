@@ -1,5 +1,10 @@
 <template>
+
+  <ProfessorActions v-if="!this.$store.getters.isStudent"
+      :subject="subject"
+  />
   <div class="container" v-if="!!subject">
+
     <h1>{{ subject.subjectCode }}</h1>
 
     <h4 v-if="subject.isStudAss">
@@ -13,9 +18,13 @@
         ><div>Details</div></router-link
       >
 
-      <router-link :to="{ name: 'SubjectAssignments' }"
+      <router-link v-if="this.$store.getters.isStudent" :to="{ name: 'SubjectAssignments' }"
         ><div>Assignments</div></router-link
       >
+      <router-link v-if="!this.$store.getters.isStudent" :to="{ name: 'subjectUsers' }"
+      ><div>Users</div></router-link
+      >
+
     </div>
     <router-view :subject="subject" />
   </div>
@@ -23,8 +32,10 @@
 
 <script>
 import axios from "axios";
+import ProfessorActions from "@/components/ProfessorActions";
 
 export default {
+  components: {ProfessorActions},
   props: ["id"],
 
   data() {

@@ -331,7 +331,7 @@ public class UserController {
             if (authentication.isAuthenticated()){
                 Student student = studentRepository.findByEmailAddress(email);
                 Subject subject = subjectRepository.findById(subjectId);
-                if (subject.getAssistants().contains(student) || authentication.getAuthorities().contains("ROLE_ADMIN")|| authentication.getAuthorities().contains("ROLE_PROFESSOR")){
+                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || authentication.getAuthorities().contains("ROLE_ADMIN")|| authentication.getAuthorities().contains("ROLE_PROFESSOR")){
                     UserDTO user = new UserDTO(student, exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)));
                     return new ResponseEntity<>(user, HttpStatus.OK);
                 }

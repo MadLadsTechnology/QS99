@@ -17,7 +17,6 @@
 
   <div>
     <h1>{{ subject.subjectCode }}</h1>
-
     <button @click="showSingleUserWindow(id, subject.subjectCode)">
       Add user
     </button>
@@ -28,11 +27,22 @@
       Add exercises
     </button>
 
+    <h2>Users</h2>
+
     <div v-for="user in users" :key="user.emailAddress">
       <h4>
         Name: {{ user.firstName + " " + user.lastName }} Email:
         {{ user.emailAddress }} Role: {{ user.role }}
         <button @click="removeUser(user)">Remove</button>
+      </h4>
+    </div>
+
+    <h2>Assignments</h2>
+    <div v-for="assignment in assignments" :key="assignment.id">
+      <h4>
+        Assignment: {{ assignment.exerciseNumber }} Mandatory:
+        {{ assignment.mandatory }}
+        <button @click="removeExercise(assignment)">Remove</button>
       </h4>
     </div>
   </div>
@@ -95,6 +105,18 @@ export default {
           }
         });
     },
+    async removeExercise(exercise) {
+      await axios
+        .delete("http://localhost:8001/exercise", {
+          params: {
+            subjectId: this.id,
+            exerciseNumber: exercise.exerciseNumber,
+          },
+        })
+        .then(() => {
+          location.reload();
+        });
+    },
   },
 
   async created() {
@@ -117,6 +139,15 @@ export default {
       .then((response) => {
         this.subject = response.data;
       });
+    await axios
+      .get("http://localhost:8001/exercise/getBySubject", {
+        params: {
+          subjectId: this.id,
+        },
+      })
+      .then((response) => {
+        this.assignments = response.data;
+      });
   },
   data() {
     return {
@@ -127,6 +158,7 @@ export default {
       showAddMultipleUsers: false,
       showAddExercises: false,
       currentSubject: null,
+      assignments: [],
     };
   },
 };

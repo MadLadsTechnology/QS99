@@ -14,9 +14,9 @@ public class GetExerciseDTO {
     private int exerciseNumber;
     private Long subListId;
     private int mandatoryNumber;
-    private boolean isApproved;
+    private Boolean isApproved;
 
-    public GetExerciseDTO(Exercise exercise, boolean isApproved){
+    public GetExerciseDTO(Exercise exercise, Boolean isApproved){
         this.id = exercise.getId();
         this.exerciseNumber = exercise.getExerciseNumber();
         this.subListId = exercise.getSubList().getId();

@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Subject findById(int id);
-    Subject findBySubjectCodeAndSubjectYear(String subjectCode, int subjectYear);
     List<Subject> findAll();
     void deleteById(int id);
 }

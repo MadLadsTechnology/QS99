@@ -11,6 +11,7 @@
       <th>Assignment</th>
       <th>Type</th>
       <th>Table</th>
+      <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
     <tr v-for="(entry, index) in queue" :key="entry.lastname">
       <td>{{ index }}</td>

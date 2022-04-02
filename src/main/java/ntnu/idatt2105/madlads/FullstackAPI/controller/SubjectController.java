@@ -320,8 +320,13 @@ public class SubjectController {
                         Queue queue = queueRepository.findBySubject(subject);
                         GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, student);
                         return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
+                    }else{
+                        Queue queue = queueRepository.findBySubject(subject);
+                        GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, null);
+                        return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
                     }
                 }
+
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);

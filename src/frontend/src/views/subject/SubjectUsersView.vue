@@ -22,7 +22,7 @@
               v-for="exercise in user.exercises" :key="exercise"
               :exercise="exercise"
               :subjectId="subject.id"
-              :studentId="user.email"
+              :studentId="user.emailAddress"
 
           />
         </div>

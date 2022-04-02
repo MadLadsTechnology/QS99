@@ -49,7 +49,7 @@ export default {
 
 
   async created(){
-    axios.get("http://localhost:8001/user/getUserFromSubject", {
+   await axios.get("http://localhost:8001/user/getUserFromSubject", {
       params: {
         email: this.studentId,
         subjectId: this.subjectId,

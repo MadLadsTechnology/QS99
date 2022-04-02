@@ -21,7 +21,7 @@
 
     <div class="cardHolder">
       <SubjectCard
-        v-for="subject in subjects.inActive"
+        v-for="subject in subjects.inStudAss"
         :key="parseInt(subject.id)"
         :subject="subject"
       />
@@ -74,13 +74,14 @@ export default {
       const inActive = [];
       const inStudAss = [];
       for (let i = 0; i < this.allSubjects.length; i++) {
-        console.log(this.allSubjects[i]);
-        if (this.allSubjects[i].queueActive === true) {
-          active.push(this.allSubjects[i]);
-        } else {
-          inActive.push(this.allSubjects[i]);
+        if (this.allSubjects[i].isStudAss === true) inStudAss.push(this.allSubjects[i]);
+        else {
+          if (this.allSubjects[i].queueActive === true && this.allSubjects[i].isStudAss === false) {
+            active.push(this.allSubjects[i]);
+          } else {
+            inActive.push(this.allSubjects[i]);
+          }
         }
-        if (this.allSubjects[i].isStudAss === true) inStudAss.push();
       }
       return {
         active,

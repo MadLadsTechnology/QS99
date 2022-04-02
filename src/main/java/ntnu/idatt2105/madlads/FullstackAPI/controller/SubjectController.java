@@ -25,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
@@ -261,6 +262,7 @@ public class SubjectController {
                 if(user instanceof Student){
                     student = studentRepository.findByEmailAddress(email);
                     subjectIds = student.getStudentSubjects();
+                    subjectIds.addAll(student.getAssistantSubjects());
                 } else if (user instanceof Professor) {
                     Professor professor = professorRepository.findByEmailAddress(email);
                     subjectIds = professor.getProfessorSubjects();
@@ -316,8 +318,8 @@ public class SubjectController {
                 }
                 Subject subject;
 
-                if ((subject = subjectRepository.findById(subjectId))!=null){
-                    if (subject.getStudents().contains(student)){
+                if ((subject = subjectRepository.findById(subjectId))!=null ){
+                    if (subject.getStudents().contains(student)|| Objects.requireNonNull(student).getAssistantSubjects().contains(subjectId)){
                         Queue queue = queueRepository.findBySubject(subject);
                         GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, student);
                         return new ResponseEntity<>(subjectDTO, HttpStatus.OK);

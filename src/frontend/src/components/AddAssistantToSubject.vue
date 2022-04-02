@@ -2,7 +2,7 @@
   <div class="window">
     <button @click="closeWindow()">Close</button>
     <form class="loginForm" @submit.prevent="submit()">
-      <h1>Add user to {{ subject.code }}</h1>
+      <h1>Add student assistant to {{ subject.code }}</h1>
 
       <BaseInput
         label="Email"

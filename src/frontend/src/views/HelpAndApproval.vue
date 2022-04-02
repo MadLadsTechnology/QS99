@@ -1,6 +1,5 @@
 <template>
-
-
+{{object}}
 </template>
 
 <script>
@@ -10,15 +9,24 @@ export default {
   name: "HelpAndApprove",
   props:["subjectId", "studentId"],
 
+  data(){
+    return{
+      object:null,
+    }
+  },
 
-  async create(){
 
+  async created(){
     axios.get("http://localhost:8001/user/getUserFromSubject", {
       params: {
         email: this.studentId,
         subjectId: this.subjectId,
       }
-
+    }).then(response => {
+      console.table(response);
+      this.object = response.data;
+    }).catch(error => {
+      console.log(error)
     })
 
   }

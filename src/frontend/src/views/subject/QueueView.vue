@@ -1,5 +1,5 @@
 <template>
-  <button v-if="this.$store.getters.isStudent" :disabled="inQueue" @click="this.$router.push('JoinQueue')">
+  <button v-if="this.$store.getters.isStudent && !subject.isStudAss" :disabled="inQueue" @click="this.$router.push('JoinQueue')">
     Join queue
   </button>
 

@@ -63,7 +63,12 @@ public class QSUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof QSUser)) return false;
-        Student student = (Student) o;
-        return getEmailAddress().equals(student.getEmailAddress());
+        if(o instanceof Student student){
+            return getEmailAddress().equals(student.getEmailAddress());
+        }  else if (o instanceof Professor professor) {
+            return getEmailAddress().equals(professor.getEmailAddress());
+        } else {
+            return false;
+        }
     }
 }

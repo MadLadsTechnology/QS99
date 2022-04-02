@@ -9,13 +9,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Tests for the user repository
+ */
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * Testing method for finding user by its ID (email address).
+     */
     @Test
     void getDistinctByEmailAddress() {
         String email = "test@email.com";
@@ -28,6 +33,10 @@ class UserRepositoryTest {
         assertThat(userRepository.getDistinctByEmailAddress(notEmail)).isNull();
     }
 
+    /**
+     * Testing method for deleting a user by its ID (email address).
+     * Both positive and negative.
+     */
     @Test
     void deleteByEmailAddress() {
         String email = "test@email.com";

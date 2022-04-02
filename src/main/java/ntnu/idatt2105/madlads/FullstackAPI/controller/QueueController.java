@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Controller for api calls related to the queue
@@ -96,7 +95,9 @@ public class QueueController {
             if (authentication.isAuthenticated()){
                 Subject su;
                 if ((su = subjectRepository.findById(id))!=null){
-                    queueRepository.changeQueue(isActive, su.getId());
+                    Queue queue = queueRepository.findBySubject(su);
+                    queue.setActive(isActive);
+                    queueRepository.save(queue);
                 }
                 return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
             }

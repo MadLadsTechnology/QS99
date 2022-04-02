@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, String> {
     Student findByEmailAddress(String email);
-
     List<Student> findAll();
 }

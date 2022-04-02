@@ -51,11 +51,11 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 label {
-  margin-bottom: 10px;
   text-align: left;
-  font-size: 120%;
+  font-size: 100%;
 }
 input {
   padding: 10px;

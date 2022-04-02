@@ -1,5 +1,5 @@
 <template>
-  <div @click="approve" class="box" :class="getClass(`${exercise.approved}`)">
+  <div @click="approve" class="box" :class="getClass(exercise.approved)">
     {{this.exercise.exerciseNumber}}
   </div>
 
@@ -39,7 +39,7 @@ export default {
     },
 
     getClass(approved){
-      if(approved === true){
+      if(approved == true){
         return "approved"
       }
       return "";

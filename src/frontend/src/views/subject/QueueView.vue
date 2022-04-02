@@ -13,7 +13,7 @@
       <th>Table</th>
       <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
-    <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(`${entry.gettingHelp}`)" >
+    <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry.gettingHelp)" >
       <td>{{ index+1 }}</td>
       <td>{{ entry.lastName }}</td>
       <td>{{ entry.firstName }}</td>
@@ -60,6 +60,10 @@ export default {
   methods: {
 
     helpAndApprove(entry){
+      axios.post("http://localhost:8001/entry/setIsGettingHelp", null, {params: {
+        entryId: entry.entryId,
+          isGettingHelp: true,
+        }})
       this.$router.push({ name: 'helpAndApprove',
         params: {
           studentId: entry.studentId,
@@ -70,7 +74,7 @@ export default {
     },
 
     getClass(isGettingHelp) {
-      if(isGettingHelp === true){
+      if(isGettingHelp == true){
         return "gettingHelp"
       }
       return "";
@@ -92,9 +96,6 @@ export default {
 </script>
 
 <style>
-
-
-
 .gettingHelp{
   background-color: lightgreen;
 }

@@ -1,6 +1,6 @@
 <template>
 
-  <table>
+  <table v-if="!!users">
     <tr>
       <th>Last name</th>
       <th>First name</th>

@@ -3,7 +3,7 @@
     Join queue
   </button>
 
-  <table>
+  <table v-if="!!queue">
     <tr>
       <th>Place</th>
       <th>Last name</th>
@@ -13,7 +13,7 @@
       <th>Table</th>
       <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
-    <tr v-for="(entry, index) in queue" :key="entry.lastname">
+    <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(`${entry.gettingHelp}`)" >
       <td>{{ index+1 }}</td>
       <td>{{ entry.lastName }}</td>
       <td>{{ entry.firstName }}</td>
@@ -22,7 +22,7 @@
           {{ assignment }},
         </text>
       </td>
-      <td>{{ entry.type }}</td>
+      <td><button @click="helpAndApprove(entry)">{{ entry.type }}</button></td>
       <td>{{ entry.tableNumber }}</td>
     </tr>
   </table>
@@ -53,7 +53,23 @@ export default {
   },
 
   methods: {
-    setInQueue() {},
+
+    helpAndApprove(){
+
+
+    },
+
+    getClass(isGettingHelp) {
+      if(isGettingHelp === true){
+        return "gettingHelp"
+      }
+      return "";
+    }
+
+  },
+
+  computed:{
+
   },
 
   data() {
@@ -65,4 +81,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+
+
+.gettingHelp{
+  background-color: lightgreen;
+}
+</style>

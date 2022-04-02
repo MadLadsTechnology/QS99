@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Controller for api calls related to the queue
@@ -183,15 +184,20 @@ public class QueueController {
     }
     @GetMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<Entry>> getEntriesBySubject(Authentication authentication,
+    public ResponseEntity<ArrayList<GetEntryDTO>> getEntriesBySubject(Authentication authentication,
                                                                         @RequestParam("subjectId") final int subjectId){
         if (authentication != null && authentication.isAuthenticated()) {
             Subject subject;
             if(subjectRepository.findById(subjectId) != null ){
                 subject = subjectRepository.findById(subjectId);
                 Queue queue = queueRepository.findBySubject(subject);
-                ArrayList<Entry> entries = (ArrayList<Entry>) entryRepository.findDistinctByQueue(queue);
-                return new ResponseEntity<>(entries, HttpStatus.OK);
+                Collection<Entry> entries = entryRepository.findDistinctByQueue(queue);
+                ArrayList<GetEntryDTO> entryDTOS = new ArrayList<>();
+                for(Entry entry: entries){
+                    GetEntryDTO getEntryDTO = new GetEntryDTO(entry);
+                    entryDTOS.add(getEntryDTO);
+                }
+                return new ResponseEntity<>(entryDTOS, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

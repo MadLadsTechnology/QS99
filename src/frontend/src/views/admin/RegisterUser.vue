@@ -27,18 +27,12 @@
 
       <div class="radioButtons" v-if="this.$store.getters.isAdmin">
         <div>
-          <input
-            type="radio"
-            id="one"
-            value="Professor"
-            checked="checked"
-            v-model="userType"
-          />
-          <label for="one">Professor</label>
+          <input type="radio" id="professor" value="Professor" v-model="this.userType">
+          <label for="professor">Professor</label>
         </div>
         <div>
-          <input type="radio" id="two" value="Student" v-model="userType" />
-          <label for="two">Student</label>
+          <input type="radio" id="student" value="Student" v-model="this.userType">
+          <label for="student">Student</label>
         </div>
       </div>
 
@@ -70,6 +64,7 @@ export default {
     //Method for submitting form
     submit() {
       let url = "http://localhost:8001/user/registerStudent";
+      console.log(this.userType);
       if (this.userType === "Professor") {
         url = "http://localhost:8001/user/registerProfessor";
       }

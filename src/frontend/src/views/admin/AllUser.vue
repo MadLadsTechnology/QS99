@@ -1,8 +1,7 @@
 <template>
   <h3>All users</h3>
 
-  <router-link to="/register">Register user</router-link>
-
+  <router-link to="/register"><button>Register user</button></router-link>
   <table>
     <tr>
       <th>Email</th>

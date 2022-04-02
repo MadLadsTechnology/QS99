@@ -24,9 +24,8 @@ import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
@@ -59,6 +58,9 @@ public class SubjectController {
 
     @Autowired
     ExerciseRepository exerciseRepository;
+
+    @Autowired
+    EntryRepository entryRepository;
 
     QueueController queueController = new QueueController();
 
@@ -260,6 +262,7 @@ public class SubjectController {
                 if(user instanceof Student){
                     student = studentRepository.findByEmailAddress(email);
                     subjectIds = student.getStudentSubjects();
+                    subjectIds.addAll(student.getAssistantSubjects());
                 } else if (user instanceof Professor) {
                     Professor professor = professorRepository.findByEmailAddress(email);
                     subjectIds = professor.getProfessorSubjects();
@@ -315,8 +318,8 @@ public class SubjectController {
                 }
                 Subject subject;
 
-                if ((subject = subjectRepository.findById(subjectId))!=null){
-                    if (subject.getStudents().contains(student)){
+                if ((subject = subjectRepository.findById(subjectId))!=null ){
+                    if (subject.getStudents().contains(student)|| Objects.requireNonNull(student).getAssistantSubjects().contains(subjectId)){
                         Queue queue = queueRepository.findBySubject(subject);
                         GetSubjectsStudassCheckDTO subjectDTO = new GetSubjectsStudassCheckDTO(subject, queue, student);
                         return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
@@ -354,6 +357,12 @@ public class SubjectController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Method for deleting a subject without deleting users connected to the subject
+     * @param authentication
+     * @param subjectId
+     * @return
+     */
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
@@ -366,25 +375,28 @@ public class SubjectController {
                     ArrayList<Student> students = new ArrayList<>(subject.getStudents());
                     ArrayList<Professor> professors = new ArrayList<>(subject.getProfessors());
                     ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
+                    //We need to remove all elements connected to the student
                     for(Student student: students){
                         for(Exercise exercise: exercises){
                             try{
+                                //Remove approved exercises from student
                                 student.removeExercise(exercise);
                             } catch(Exception e) {
                                 logger.info("Couldn't remove, because student didn't have exercise approved");
                             }
                         }
                         student.setEntry(null);
-                        student.removeStudentSubject(subject);
-                        student.removeAssistantSubject(subject);
+                        student.removeStudentSubject(subject); //Remove subject from all students
+                        student.removeAssistantSubject(subject); //Remove subject from all assistants
                         studentRepository.save(student);
                     }
                     for(Professor professor: professors){
-                        professor.removeProfessorSubject(subject);
+                        professor.removeProfessorSubject(subject); //Remove subject from all professors
                     }
-                    exerciseRepository.deleteAllBySubject(subject);
-                    queueRepository.deleteBySubject(subject);
-                    subjectRepository.deleteById(subjectId);
+                    entryRepository.deleteAllByQueue(queueRepository.findBySubject(subject)); //Delete all entries in the subject queue
+                    exerciseRepository.deleteAllBySubject(subject); //Delete all exercises in the subject
+                    queueRepository.deleteBySubject(subject); //Delete queue from subject
+                    subjectRepository.deleteById(subjectId); //Delete subject
 
                     return new ResponseEntity<>(true, HttpStatus.OK);
                 }

@@ -23,6 +23,7 @@ public class GetEntryDTO {
     private int tableNumber;
     private String type;
     private LocalDateTime startTime;
+    private boolean isGettingHelp;
     private Map<Long, Integer> exercises;
 
     public GetEntryDTO(Entry entry){
@@ -34,6 +35,7 @@ public class GetEntryDTO {
         tableNumber = entry.getTableNumber();
         type = entry.getType();
         startTime = entry.getStartTime();
+        isGettingHelp = entry.isGettingHelp();
         exercises = getExercises(entry);
     }
 

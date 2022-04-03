@@ -73,7 +73,7 @@ public class UserController {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
                 String role = "";
                 if (userRepository.getDistinctByEmailAddress(email) instanceof Student) {
-                    role = "ROLE_USER";
+                    role = "ROLE_STUDENT";
                 } else if (userRepository.getDistinctByEmailAddress(email) instanceof Professor) {
                     role = "ROLE_PROFESSOR";
                 } else {

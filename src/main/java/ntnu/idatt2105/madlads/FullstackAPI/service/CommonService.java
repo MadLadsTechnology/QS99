@@ -32,7 +32,8 @@ public class CommonService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
-            message.setSubject("You have been added as a user at NTNU QS");
+            message.setSubject("You have been added as a user at NTNU QS \\n " +
+                    "Remember to go to your profile and change your password or save this email");
             message.setText(text);
             Transport.send(message);
 

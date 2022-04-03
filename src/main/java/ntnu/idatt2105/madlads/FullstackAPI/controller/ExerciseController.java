@@ -43,6 +43,15 @@ public class ExerciseController {
     ExerciseSubListRepository exerciseSubListRepository;
 
 
+    /**
+     * Create a new exercise
+     * @param subjectId
+     * @param numberOfExercises
+     * @param numberOfMandatory
+     * @param authentication
+     * @return Returns if a creation was succesfull or not
+     */
+
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
@@ -67,6 +76,14 @@ public class ExerciseController {
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Deletes an exercise
+     * @param subjectId
+     * @param exerciseNumber
+     * @param authentication
+     * @return Returns if a deletion was successfully or not
+     */
+
     @DeleteMapping
     @Transactional
     @ResponseStatus(value = HttpStatus.OK)
@@ -81,6 +98,15 @@ public class ExerciseController {
         }
         return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    /**
+     * Approve an exercise
+     * @param subjectId
+     * @param exerciseNumber
+     * @param studentEmail
+     * @param authentication
+     * @return Returns whether it could approve an exercise or not
+     */
 
     @PostMapping("/approveExercise")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -104,6 +130,13 @@ public class ExerciseController {
         }
         return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
+
+    /**
+     * Get all exercises that belong to a user
+     * @param authentication
+     * @param subjectId
+     * @return Returns a list of all the exercises
+     */
 
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -135,6 +168,12 @@ public class ExerciseController {
         }
     }
 
+    /**
+     * Get all exercises in a spesific subject
+     * @param authentication
+     * @param subjectId
+     * @return A list of exercises
+     */
 
     @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)

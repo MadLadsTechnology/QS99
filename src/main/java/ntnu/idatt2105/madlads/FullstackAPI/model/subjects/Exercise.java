@@ -18,30 +18,40 @@ public class Exercise {
     @ManyToOne
     private ExerciseSubList subList;
 
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Student_Exercises",
             joinColumns = {@JoinColumn(name = "exercise_id")},
             inverseJoinColumns = {@JoinColumn(name = "student_id")}
 
     )
-    private Set<Student> students = new HashSet<>();
+    private final Set<Student> students = new HashSet<>();
 
-    public Exercise(Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList){
+    public Exercise(Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList) {
         this.subject = subject;
         this.exerciseNumber = exerciseNumber;
         this.subList = ExerciseSubList;
     }
 
-    protected Exercise() {}
+    protected Exercise() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public boolean addStudent(Student student){
-        if(!students.contains(student)){
+    public boolean addStudent(Student student) {
+        if (!students.contains(student)) {
             students.add(student);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean removeStudent(Student student) {
+        if (students.contains(student)) {
+            students.remove(student);
             return true;
         } else {
             return false;

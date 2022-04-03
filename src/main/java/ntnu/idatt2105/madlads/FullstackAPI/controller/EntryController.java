@@ -2,7 +2,6 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +24,15 @@ public class EntryController {
     @Autowired
     StudentRepository studentRepository;
 
-    @PostMapping("/setIsGettingHelp")
+    @PostMapping("/qs/student/setIsGettingHelp")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<Boolean> setIsGettingHelp(Authentication authentication,
                                                     @RequestParam("entryId") final Long entryId,
-                                                    @RequestParam("isGettingHelp") final boolean isGettingHelp){
+                                                    @RequestParam("isGettingHelp") final boolean isGettingHelp) {
         Entry entry = entryRepository.findEntryById(entryId);
         Subject subject = entry.getQueue().getSubject();
-        if (authentication!=null && (authentication.isAuthenticated() ||
+        if (authentication != null && (authentication.isAuthenticated() ||
                 subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())))
         ) {
             entry.setGettingHelp(isGettingHelp);
@@ -43,18 +42,19 @@ public class EntryController {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
-    @DeleteMapping
+
+    @DeleteMapping("/qs/student")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
                                                @RequestParam("entryId") final Long entryId
-                                               ){
+    ) {
         Entry entry = entryRepository.findEntryById(entryId);
         Subject subject = entry.getQueue().getSubject();
-        if(authentication.isAuthenticated() ||
+        if (authentication.isAuthenticated() ||
                 subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))
         ) {
-            if(entryRepository.findEntryById(entryId) == null){
+            if (entryRepository.findEntryById(entryId) == null) {
                 return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
             }
             entry.removeExercises();

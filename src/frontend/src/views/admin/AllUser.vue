@@ -1,7 +1,9 @@
 <template>
   <h3>All users</h3>
 
-  <router-link to="/register"><button>Register user</button></router-link>
+  <router-link to="/register">
+    <button>Register user</button>
+  </router-link>
   <table>
     <tr>
       <th>Email</th>
@@ -17,8 +19,8 @@
       <td>{{ user.role }}</td>
       <td>
         <button
-          v-if="user.emailAddress !== this.$store.state.user.emailAddress"
-          @click="deleteUser(user)"
+            v-if="user.emailAddress !== this.$store.state.user.emailAddress"
+            @click="deleteUser(user)"
         >
           Delete
         </button>
@@ -27,24 +29,25 @@
   </table>
 </template>
 <script>
-import { authComputed } from "@/store/helpers";
+import {authComputed} from "@/store/helpers";
 import axios from "axios";
+
 export default {
   name: "HomeView",
   methods: {
     deleteUser(user) {
       axios
-        .delete("http://localhost:8001/user", {
-          params: {
-            email: user.emailAddress,
-          },
-        })
-        .then((response) => {
-          this.users = response.data;
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
+          .delete("http://localhost:8001/user", {
+            params: {
+              email: user.emailAddress,
+            },
+          })
+          .then((response) => {
+            this.users = response.data;
+          })
+          .catch((err) => {
+            alert(err.message);
+          });
     },
   },
   components: {},

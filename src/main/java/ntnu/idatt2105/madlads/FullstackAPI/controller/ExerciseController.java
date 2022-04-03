@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,6 +44,7 @@ public class ExerciseController {
 
     /**
      * Create a new exercise
+     *
      * @param subjectId
      * @param numberOfExercises
      * @param numberOfMandatory
@@ -52,19 +52,19 @@ public class ExerciseController {
      * @return Returns if a creation was succesfull or not
      */
 
-    @PostMapping
+    @PostMapping("/qs")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
-                                               @RequestParam("numberOfExercises") final int numberOfExercises,
-                                               @RequestParam("numberOfMandatory") final int numberOfMandatory,
-                                               Authentication authentication){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+                                                              @RequestParam("numberOfExercises") final int numberOfExercises,
+                                                              @RequestParam("numberOfMandatory") final int numberOfMandatory,
+                                                              Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 int startNumber = exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)).size();
                 ExerciseSubList exerciseSubList = exerciseSubListRepository.save(new ExerciseSubList(numberOfMandatory));
                 for (int i = startNumber; i < startNumber + numberOfExercises; i++) {
-                    if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), i+1)==null){
-                        Exercise exercise = new Exercise(subjectRepository.findById(subjectId), i+1, exerciseSubList);
+                    if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), i + 1) == null) {
+                        Exercise exercise = new Exercise(subjectRepository.findById(subjectId), i + 1, exerciseSubList);
                         exerciseRepository.save(exercise);
                     } else {
                         logger.info("Exercise already exist");
@@ -78,20 +78,21 @@ public class ExerciseController {
 
     /**
      * Deletes an exercise
+     *
      * @param subjectId
      * @param exerciseNumber
      * @param authentication
      * @return Returns if a deletion was successfully or not
      */
 
-    @DeleteMapping
+    @DeleteMapping("/qs")
     @Transactional
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Boolean> deleteExercise(@RequestParam("subjectId") int subjectId,
                                                   @RequestParam("exerciseNumber") int exerciseNumber,
-                                                  Authentication authentication){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+                                                  Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 exerciseRepository.deleteBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), exerciseNumber);
                 return new ResponseEntity<>(true, HttpStatus.OK);
             }
@@ -101,6 +102,7 @@ public class ExerciseController {
 
     /**
      * Approve an exercise
+     *
      * @param subjectId
      * @param exerciseNumber
      * @param studentEmail
@@ -108,18 +110,18 @@ public class ExerciseController {
      * @return Returns whether it could approve an exercise or not
      */
 
-    @PostMapping("/approveExercise")
+    @PostMapping("/qs/student/approveExercise")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> approveExercise(@RequestParam("subjectId") int subjectId,
                                                    @RequestParam("exerciseNumber") int exerciseNumber,
                                                    @RequestParam("studentEmail") String studentEmail,
-                                                   Authentication authentication){
-        if (authentication!=null) {
+                                                   Authentication authentication) {
+        if (authentication != null) {
             Subject subject = subjectRepository.findById(subjectId);
             if (authentication.isAuthenticated() || subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))) {
                 Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
                 exercise.addStudent(studentRepository.findByEmailAddress(studentEmail));
-                logger.warn(""+studentRepository.findByEmailAddress(studentEmail));
+                logger.warn("" + studentRepository.findByEmailAddress(studentEmail));
                 ArrayList<Student> d = (ArrayList<Student>) exercise.getStudents().stream().collect(Collectors.toList());
                 logger.warn(String.valueOf(d.get(0)));
                 exerciseRepository.save(exercise);
@@ -133,12 +135,13 @@ public class ExerciseController {
 
     /**
      * Get all exercises that belong to a user
+     *
      * @param authentication
      * @param subjectId
      * @return Returns a list of all the exercises
      */
 
-    @GetMapping("/getByUser")
+    @GetMapping("/qs/student/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesByUser(Authentication authentication,
                                                                         @RequestParam("subjectId") final int subjectId) {
@@ -170,20 +173,21 @@ public class ExerciseController {
 
     /**
      * Get all exercises in a spesific subject
+     *
      * @param authentication
      * @param subjectId
      * @return A list of exercises
      */
 
-    @GetMapping("/getBySubject")
+    @GetMapping("/qs/student/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesBySubject(Authentication authentication,
-                                                                        @RequestParam("subjectId") final int subjectId){
-        if (authentication != null){
-            if (authentication.isAuthenticated()){
-                ArrayList<Exercise> exercises = (ArrayList<Exercise>)exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId));
+                                                                           @RequestParam("subjectId") final int subjectId) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
+                ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId));
                 ArrayList<GetExerciseDTO> exerciseDTOS = new ArrayList<>();
-                for (Exercise exercise : exercises){
+                for (Exercise exercise : exercises) {
                     exerciseDTOS.add(new GetExerciseDTO(exercise, null));
                 }
                 return new ResponseEntity<>(exerciseDTOS, HttpStatus.OK);

@@ -33,7 +33,7 @@ export default {
         message = "Are you sure you remove the approval of exercise " + this.exercise.exerciseNumber + " for " + this.student.firstName + "?"
       }
       if (confirm(message)) {
-        axios.post("http://localhost:8001/exercise/qs/student/approveExercise", null, {
+        axios.post("http://localhost:8001/exercise/approveExercise", null, {
           params: {
             subjectId: this.subjectId,
             exerciseNumber: this.exercise.exerciseNumber,

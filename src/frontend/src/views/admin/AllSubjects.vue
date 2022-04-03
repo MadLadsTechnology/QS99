@@ -133,7 +133,7 @@ export default {
     deleteSubject(subject) {
       let confirmAction = confirm("Are you sure to execute this action?");
       if (confirmAction) {
-        axios.delete("http://localhost:8001/qs/subject", {
+        axios.delete("http://localhost:8001/subject", {
           params: {
             subjectId: subject.id,
           }

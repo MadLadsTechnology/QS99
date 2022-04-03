@@ -36,7 +36,7 @@ export default {
     //getting subjects assigments
 
     if (this.hasPrivileges) {
-      await axios.get("http://localhost:8001/user/qs/student/getAllUsersFromSubject", {
+      await axios.get("http://localhost:8001/user/getAllUsersFromSubject", {
         params: {
           subjectId: parseInt(this.subject.id),
         }
@@ -45,7 +45,7 @@ export default {
       })
     }
     await axios
-        .get("http://localhost:8001/exercise/qs/student/getByUser", {
+        .get("http://localhost:8001/exercise/getByUser", {
           params: {
             subjectId: parseInt(this.subject.id),
           },

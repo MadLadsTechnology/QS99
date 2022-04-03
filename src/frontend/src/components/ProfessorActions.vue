@@ -78,7 +78,7 @@ export default {
     },
     async removeUser(user) {
       await axios
-          .delete("http://localhost:8001/subject/qs/deleteUserFromSubject", {
+          .delete("http://localhost:8001/deleteUserFromSubject", {
             params: {
               subjectId: this.subject.id,
               emailAddress: user.emailAddress,
@@ -92,7 +92,7 @@ export default {
     },
     async removeExercise(exercise) {
       await axios
-          .delete("http://localhost:8001/qs/exercise", {
+          .delete("http://localhost:8001/exercise", {
             params: {
               subjectId: this.id,
               exerciseNumber: exercise.exerciseNumber,

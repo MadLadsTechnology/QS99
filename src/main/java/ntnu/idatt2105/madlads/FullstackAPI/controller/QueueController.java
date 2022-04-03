@@ -58,7 +58,7 @@ public class QueueController {
      */
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Queue> createQueue(@RequestParam("subject") final int subjectId,
+    public ResponseEntity<Queue> createQueue(@RequestParam("subjectId") final int subjectId,
                                              @RequestParam("isActive") final boolean isActive,
                                              SubjectRepository subjectRepository_,
                                              QueueRepository queueRepository_) {
@@ -76,7 +76,7 @@ public class QueueController {
             return new ResponseEntity<>(queue, HttpStatus.CREATED);
             } catch (Exception e) {
                 logger.info(e.getMessage());
-                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }

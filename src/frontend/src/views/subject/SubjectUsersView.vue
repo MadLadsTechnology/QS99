@@ -90,7 +90,7 @@ export default {
 
   async created() {
     await axios
-        .get("http://localhost:8001/user/qs/student/getAllUsersFromSubject", {
+        .get("http://localhost:8001/user/getAllUsersFromSubject", {
           params: {
             subjectId: parseInt(this.subject.id),
           },

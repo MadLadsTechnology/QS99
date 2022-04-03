@@ -23,7 +23,7 @@ public class Exercise {
     @Schema(type = "sublist", required = true)
     private ExerciseSubList subList;
 
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "Student_Exercises",
             joinColumns = {@JoinColumn(name = "exercise_id")},
@@ -33,7 +33,7 @@ public class Exercise {
     @Schema(type = "set", description = "All students which have this exercise", required = true)
     private Set<Student> students = new HashSet<>();
 
-    public Exercise(Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList){
+    public Exercise(Subject subject, int exerciseNumber, ExerciseSubList ExerciseSubList) {
         this.subject = subject;
         this.exerciseNumber = exerciseNumber;
         this.subList = ExerciseSubList;
@@ -45,9 +45,18 @@ public class Exercise {
         return id;
     }
 
-    public boolean addStudent(Student student){
-        if(!students.contains(student)){
+    public boolean addStudent(Student student) {
+        if (!students.contains(student)) {
             students.add(student);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean removeStudent(Student student) {
+        if (students.contains(student)) {
+            students.remove(student);
             return true;
         } else {
             return false;

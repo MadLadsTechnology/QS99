@@ -142,7 +142,7 @@ export default {
     document.title = "QS99 - Students";
     //getting subjects of the user
     await axios
-      .get("http://localhost:8001/subject/getAllSubject")
+      .get("http://localhost:8001/subject/getAllSubjects")
       .then((response) => {
         this.subjects = response.data;
       });

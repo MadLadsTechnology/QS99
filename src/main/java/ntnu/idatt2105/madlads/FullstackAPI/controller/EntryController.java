@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 
+/**
+ * Class for api calls related to an entry.
+ */
 @RestController
 @EnableAutoConfiguration
 @CrossOrigin
@@ -25,45 +28,71 @@ public class EntryController {
     @Autowired
     StudentRepository studentRepository;
 
+    /**
+     * Method for changing the status of an entry
+     * @param authentication
+     * @param entryId
+     * @param isGettingHelp indicates if an assistant is helping this entry.
+     * @return
+     */
     @PostMapping("/setIsGettingHelp")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<Boolean> setIsGettingHelp(Authentication authentication,
                                                     @RequestParam("entryId") final Long entryId,
                                                     @RequestParam("isGettingHelp") final boolean isGettingHelp){
-        Entry entry = entryRepository.findEntryById(entryId);
-        Subject subject = entry.getQueue().getSubject();
-        if (authentication!=null && (authentication.isAuthenticated() ||
-                subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())))
-        ) {
-            entry.setGettingHelp(isGettingHelp);
-            entryRepository.save(entry);
-            return new ResponseEntity<>(entry.isGettingHelp(), HttpStatus.OK);
-        } else {
+        if(authentication == null){
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
+        try{
+            Entry entry = entryRepository.findEntryById(entryId);
+            Subject subject = entry.getQueue().getSubject();
+            if (
+                    authentication.isAuthenticated() ||
+                    subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))
+            ) {
+                entry.setGettingHelp(isGettingHelp);
+                entryRepository.save(entry);
+                return new ResponseEntity<>(entry.isGettingHelp(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        } catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
+
+    /**
+     * Method for deleting an entry from the queue.
+     * @param authentication
+     * @param entryId
+     * @return
+     */
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
                                                @RequestParam("entryId") final Long entryId
                                                ){
-        Entry entry = entryRepository.findEntryById(entryId);
-        Subject subject = entry.getQueue().getSubject();
-        if(authentication.isAuthenticated() ||
-                subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))
-        ) {
-            if(entryRepository.findEntryById(entryId) == null){
-                return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        try{
+            Entry entry = entryRepository.findEntryById(entryId);
+            Subject subject = entry.getQueue().getSubject();
+            if(authentication.isAuthenticated() ||
+                    subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))
+            ) {
+                if(entryRepository.findEntryById(entryId) == null){
+                    return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+                }
+                entry.removeExercises();
+                entry.setQueue(null); //Removing entry from queue
+                entry.setStudent(null); //Removing entry from student
+                entryRepository.deleteById(entryId);
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
             }
-            entry.removeExercises();
-            entry.setQueue(null); //Removing entry from queue
-            entry.setStudent(null); //Removing entry from student
-            entryRepository.deleteById(entryId);
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+        } catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 }

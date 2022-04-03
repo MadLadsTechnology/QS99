@@ -30,7 +30,7 @@ class ExerciseControllerTest {
     MockMvc mockMvc;
 
     @BeforeAll
-    static void before() throws Exception {
+    static void before() {
          CommonTestService cts = new CommonTestService();
          tokenAdmin = cts.getTokenAdmin();
          tokenStudent = cts.getTokenStudent();

@@ -5,9 +5,6 @@ import ntnu.idatt2105.madlads.FullstackAPI.dto.GetEntryDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.QueueRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +56,10 @@ public class QueueController {
      * @param queueRepository_
      * @return the http response depending on if the queue was successfully created, and the queue as an object
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Create a new queue ", description = "Only used when creating a subject")
-    @PostMapping("/qs/create")
+    @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Queue> createQueue(@RequestParam("subjectId") final int subjectId,
                                              @RequestParam("isActive") final boolean isActive,
@@ -91,8 +91,10 @@ public class QueueController {
      * @param authentication
      * @return the http response and a boolean depending on if the status was changed or not
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Set status of the queue", description = "Sets status of a given queue to either true or false")
-    @PostMapping("/qs/student/setQueueStatus")
+    @PostMapping("/setQueueStatus")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> setQueueStatus(@RequestParam("isActive") boolean isActive, @RequestParam("subjectId") int id, Authentication authentication) {
         if (authentication != null) {
@@ -117,8 +119,10 @@ public class QueueController {
      *                       the user, the exercises and where you are
      * @return the http response depending on if the entry was created or not, and the entry as an object
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Add entry to a queue", description = "Adds an entry to a queue")
-    @PostMapping("/qs/student/addEntry")
+    @PostMapping("/addEntry")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<GetEntryDTO> addEntryToQueue(Authentication authentication,
                                                        @RequestParam("room") final String room,
@@ -182,8 +186,10 @@ public class QueueController {
      * @param id
      * @return the http response and a boolean depending on if the entry was deleted
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Delete an entry", description = "Deletes a given entry from the queue")
-    @DeleteMapping("/qs/student")
+    @DeleteMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
                                                @RequestParam("entryId") final Long id) {
@@ -198,8 +204,10 @@ public class QueueController {
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Gets all entries", description = "Gets all entries in a given subject")
-    @GetMapping("/qs/student")
+    @GetMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetEntryDTO>> getEntriesBySubject(Authentication authentication,
                                                                       @RequestParam("subjectId") final int subjectId) {

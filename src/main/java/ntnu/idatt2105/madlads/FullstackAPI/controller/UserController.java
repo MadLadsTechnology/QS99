@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
-import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
-import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
-import static ntnu.idatt2105.madlads.FullstackAPI.service.UserService.generateToken;
+import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.sendEmail;
+import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.UserService.generateToken;
 
 @RestController
 @EnableAutoConfiguration
@@ -52,6 +53,7 @@ public class UserController {
 
     /**
      * Login endpoint, logs a user in
+     *
      * @param email
      * @param password
      * @return A token
@@ -91,12 +93,15 @@ public class UserController {
 
     /**
      * Register an admin
+     *
      * @param firstname
      * @param lastname
      * @param email
      * @param password
      * @return a QSUser object
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/registerAdmin")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Registers an admin", description = "Registers an admin")
@@ -123,12 +128,14 @@ public class UserController {
 
     /**
      * UNUSED
+     *
      * @param firstname
      * @param lastname
      * @param email
      * @param password
      * @return
      */
+
     @PostMapping("/registerStudentOLD")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "UNUSED", description = "UNUSED")
@@ -160,12 +167,15 @@ public class UserController {
 
     /**
      * Register a student
+     *
      * @param firstname
      * @param lastname
      * @param email
      * @return A student object
      */
-    @PostMapping("/qs/registerStudent")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PostMapping("registerStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Creates a new student", description = "Creates a new student")
     public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
@@ -197,12 +207,15 @@ public class UserController {
 
     /**
      * UNUSED
+     *
      * @param firstname
      * @param lastname
      * @param email
      * @param password
      * @return UNUSED
      */
+
+
     @PostMapping("/registerProfessorOLD")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Unused", description = "Unused")
@@ -231,13 +244,15 @@ public class UserController {
 
     /**
      * Registers a new professor Sends email with password to given emailaddress
+     *
      * @param firstname
      * @param lastname
      * @param email
      * @return
      */
 
-    @PostMapping("/qs/registerProfessor")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PostMapping("/registerProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
                                                      @RequestParam("lastname") final String lastname,
@@ -265,10 +280,13 @@ public class UserController {
 
     /**
      * Deletes a user
+     *
      * @param authentication
      * @param email
      * @return a boolean of whether it was successfull or not
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
@@ -304,16 +322,19 @@ public class UserController {
 
     /**
      * Register multiple users
+     *
      * @param allUsers
      * @param authentication
      * @return A boolean of whether registration was successfull
      */
-    @PostMapping("/qs/registerMultipleUsers")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PostMapping("/registerMultipleUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Add multiple users", description = "Adds multiple users")
-    public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers, Authentication authentication){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+    public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers, Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 String[] listOfAllUsers = allUsers.split("\n");
                 ArrayList<String[]> listSplitProperly = new ArrayList<>();
 
@@ -354,16 +375,18 @@ public class UserController {
 
     /**
      * Get all users that exists
+     *
      * @param authentication
      * @return All users
      */
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @GetMapping("/getAllUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get all users", description = "Gets all users that exist")
-    public ResponseEntity<ArrayList<UserDTO>> getAllStudents(Authentication authentication){
-        if(authentication!=null){
-            if(authentication.isAuthenticated()){
+    public ResponseEntity<ArrayList<UserDTO>> getAllStudents(Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 ArrayList<QSUser> users = (ArrayList<QSUser>) userRepository.findAll();
                 ArrayList<UserDTO> userDto = new ArrayList<>();
                 for (QSUser user : users) {
@@ -378,17 +401,19 @@ public class UserController {
 
     /**
      * Gets all users from a given subject
+     *
      * @param subjectId
      * @param authentication
      * @return A list of users
      */
 
-    @GetMapping("/qs/student/getAllUsersFromSubject")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
+    @GetMapping("/getAllUsersFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get all students from a subject", description = "Get all students from a given subject")
-    public ResponseEntity<ArrayList<UserDTO>> getAllStudentsFromSubject(@RequestParam("subjectId") int subjectId, Authentication authentication){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+    public ResponseEntity<ArrayList<UserDTO>> getAllStudentsFromSubject(@RequestParam("subjectId") int subjectId, Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 Subject subject = subjectRepository.findById(subjectId);
                 ArrayList<UserDTO> userDTOs = new ArrayList<>();
                 ArrayList<QSUser> usersInSubject = new ArrayList<>(subject.getStudents());
@@ -408,18 +433,20 @@ public class UserController {
 
     /**
      * Get all users from given subject
+     *
      * @param subjectId
      * @param email
      * @param authentication
      * @return List of users
      */
 
-    @GetMapping("/qs/student/getUserFromSubject")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
+    @GetMapping("/getUserFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get users from a subject", description = "Adds an exercise to a given subject")
-    public ResponseEntity<UserDTO> getUserFromSubject(@RequestParam("subjectId") int subjectId, @RequestParam("email") String email, Authentication authentication){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+    public ResponseEntity<UserDTO> getUserFromSubject(@RequestParam("subjectId") int subjectId, @RequestParam("email") String email, Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 Student student = studentRepository.findByEmailAddress(email);
                 Subject subject = subjectRepository.findById(subjectId);
                 if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || authentication.getAuthorities().contains("ROLE_ADMIN") || authentication.getAuthorities().contains("ROLE_PROFESSOR")) {
@@ -433,6 +460,7 @@ public class UserController {
 
     /**
      * Change password
+     *
      * @param newPassword
      * @param oldPassword
      * @param authentication
@@ -441,7 +469,8 @@ public class UserController {
      * @throws InvalidKeySpecException
      */
 
-    @PostMapping("/qs/student/changePassword")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
+    @PostMapping("/changePassword")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Change password", description = "Change password of your own user")
     public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("oldPassword") String oldPassword, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {

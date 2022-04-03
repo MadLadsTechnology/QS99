@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class EntryController {
     @Autowired
     StudentRepository studentRepository;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @PostMapping("/qs/student/setIsGettingHelp")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
@@ -45,7 +47,8 @@ public class EntryController {
         }
     }
 
-    @DeleteMapping("/qs/student")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
+    @DeleteMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     @Operation(summary = "Delete entry", description = "Deletes entry by an entryId")

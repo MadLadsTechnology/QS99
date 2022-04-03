@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.service;
+package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
@@ -24,7 +24,7 @@ public class StartupService {
         String email = "admin@admin.no";
 
         QSUser adminUser = new QSUser("Admin", "Admin", email, PasswordHashing.generatePasswordHash("password"));
-        if (userRepository.getDistinctByEmailAddress(email)==null){
+        if (userRepository.getDistinctByEmailAddress(email) == null) {
             userRepository.save(adminUser);
         }
     }

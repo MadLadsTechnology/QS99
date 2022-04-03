@@ -3,7 +3,6 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsStudassCheckDTO;
-import ntnu.idatt2105.madlads.FullstackAPI.dto.SubjectDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
@@ -18,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
-import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
+import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.sendEmail;
 
 /**
  * Controller for api calls related to subjects
@@ -75,8 +75,10 @@ public class SubjectController {
      * @param authentication
      * @return HTTP status and the subject if it was created.
      */
+
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'ADMIN')")
     @Operation(summary = "Create a subject", description = "Creates a new subject and creates a queue for it aswell")
-    @PostMapping("/qs/create")
+    @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
                                                  @RequestParam("subjectDescription") final String description,
@@ -108,8 +110,10 @@ public class SubjectController {
      * @param authentication
      * @return
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Add user to a subject", description = "Adds a given user to a given subject")
-    @PostMapping("/qs/addUser")
+    @PostMapping("/addUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addUser(@RequestParam("subjectId") final int subjectId,
                                            @RequestParam("email") final String email,
@@ -157,8 +161,10 @@ public class SubjectController {
      * @param authentication
      * @return
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Add a student assistant", description = "Adds an a given student as a student assistant to a given subject")
-    @PostMapping("/qs/addStudentAssistant")
+    @PostMapping("/addStudentAssistant")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectId") final int subjectId,
                                                        @RequestParam("email") final String email,
@@ -193,7 +199,9 @@ public class SubjectController {
      * @param authentication
      * @return
      */
-    @PostMapping("/qs/addUsers")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PostMapping("/addUsers")
     @Operation(summary = "Add users to subject", description = "Adds multiple users to a given subject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudents(@RequestParam("subjectId") int subjectId, @RequestBody Map<String, String> payload, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -254,7 +262,9 @@ public class SubjectController {
      * @param authentication
      * @return a list of HashMaps where each HashMap contains details of a subject.
      */
-    @GetMapping("/qs/student/getByUser")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
+    @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get all subjects of a user", description = "Gets all subject from a given user")
     public ResponseEntity<ArrayList<GetSubjectsStudassCheckDTO>> getSubjectsByUser(Authentication authentication) {
@@ -293,8 +303,9 @@ public class SubjectController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Get a subject", description = "Gets a given subject")
-    @GetMapping("/qs/student/getSubject")
+    @GetMapping("/getSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<GetSubjectsStudassCheckDTO> getSubject(@RequestParam("subjectId") int subjectId, Authentication authentication) {
         if (authentication != null) {
@@ -330,6 +341,8 @@ public class SubjectController {
      * @param authentication
      * @return a list of the subjects.
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Get all subjects", description = "Gets all subjects that exist")
     @GetMapping("/getAllSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -355,8 +368,10 @@ public class SubjectController {
      * @param subjectId
      * @return
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Delete a subject", description = "Deletes a given subject")
-    @DeleteMapping("/qs")
+    @DeleteMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<Boolean> deleteSubject(Authentication authentication,
@@ -399,8 +414,9 @@ public class SubjectController {
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Delete a user from a subject", description = "Deletes a given user from a given subject")
-    @DeleteMapping("/qs/deleteUserFromSubject")
+    @DeleteMapping("/deleteUserFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> removeUserFromSubject(@RequestParam("subjectId") int subjectId, @RequestParam("emailAddress") String emailAddress, Authentication authentication) {
         if (authentication != null) {

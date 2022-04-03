@@ -1,13 +1,8 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
-import ntnu.idatt2105.madlads.FullstackAPI.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
+import ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.UserService;
 
 import java.io.IOException;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class CommonTestService {
 
@@ -15,7 +10,7 @@ public class CommonTestService {
     String tokenStudent;
     String tokenProfessor;
 
-    public CommonTestService(){
+    public CommonTestService() {
         tokenAdmin = UserService.generateToken("admin@admin.no", "ROLE_ADMIN");
         tokenStudent = UserService.generateToken("student@student.no", "ROLE_USER");
         tokenProfessor = UserService.generateToken("professor@professor.no", "ROLE_PROFESSOR");
@@ -48,9 +43,9 @@ public class CommonTestService {
     public void deleteDatabase() throws IOException {
         String os = System.getProperty("os.name");
         String shell = "";
-        if (os.contains("Windows")){
+        if (os.contains("Windows")) {
             shell = "powershell.exe";
-        }else if (os.contains("Linux")){
+        } else if (os.contains("Linux")) {
             shell = "";
         }
 

@@ -1,7 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetExerciseDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseSubListRepository;
@@ -17,12 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
@@ -54,7 +53,8 @@ public class ExerciseController {
      * @return Returns if a creation was succesfull or not
      */
 
-    @PostMapping("/qs")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Add exercise ", description = "Adds an exercise to a given subject")
     public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
@@ -88,8 +88,9 @@ public class ExerciseController {
      * @return Returns if a deletion was successfully or not
      */
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Delete an exercise", description = "Deletes an exercise from the subject")
-    @DeleteMapping("/qs")
+    @DeleteMapping()
     @Transactional
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Boolean> deleteExercise(@RequestParam("subjectId") int subjectId,
@@ -106,14 +107,17 @@ public class ExerciseController {
 
     /**
      * Approve an exercise
+     *
      * @param subjectId
      * @param exerciseNumber
      * @param studentEmail
      * @param authentication
      * @return Returns whether it could approve an exercise or not
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Approve an exercise", description = "Approve a given exercise in a given subject")
-    @PostMapping("/qs/student/approveExercise")
+    @PostMapping("approveExercise")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> approveExercise(@RequestParam("subjectId") int subjectId,
                                                    @RequestParam("exerciseNumber") int exerciseNumber,
@@ -150,8 +154,9 @@ public class ExerciseController {
      * @return Returns a list of all the exercises
      */
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Get exercise per user", description = "Gets all exercises for a user within one subject")
-    @GetMapping("/qs/student/getByUser")
+    @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesByUser(Authentication authentication,
                                                                         @RequestParam("subjectId") final int subjectId) {
@@ -189,8 +194,9 @@ public class ExerciseController {
      * @return A list of exercises
      */
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Get all exercises in a subject", description = "Gets all exercises given a subject")
-    @GetMapping("/qs/student/getBySubject")
+    @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesBySubject(Authentication authentication,
                                                                            @RequestParam("subjectId") final int subjectId) {

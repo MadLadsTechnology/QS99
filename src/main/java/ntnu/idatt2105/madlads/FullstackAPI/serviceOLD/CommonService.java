@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.service;
+package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CommonService {
-    public static void sendEmail(String toMail, String text){
+    public static void sendEmail(String toMail, String text) {
 
         String from = "QS99Madlads@gmail.com";
         String host = "smtp.gmail.com";
@@ -41,7 +41,7 @@ public class CommonService {
         }
     }
 
-    public static boolean regexEmail(String email){
+    public static boolean regexEmail(String email) {
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
         return pattern.matcher(email).matches();
     }

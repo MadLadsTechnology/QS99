@@ -73,10 +73,10 @@
   </table>
 </template>
 <script>
-import AddUserToSubject from "@/components/AddUserToSubject";
-import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
-import AddExercises from "@/components/AddExercises";
-import AddAssistantToSubject from "@/components/AddAssistantToSubject";
+import AddUserToSubject from "@/components/PopUps/AddUserToSubject";
+import AddMultipleUsersToSubject from "@/components/PopUps/AddMultipleUsersToSubject";
+import AddExercises from "@/components/PopUps/AddExercises";
+import AddAssistantToSubject from "@/components/PopUps/AddAssistantToSubject";
 import {authComputed} from "@/store/helpers";
 import axios from "axios";
 

@@ -4,14 +4,15 @@
   <router-link to="/register">
     <button>Register user</button>
   </router-link>
+
   <table>
-    <tr>
-      <th>Email</th>
-      <th>Last name</th>
-      <th>First name</th>
-      <th>Role</th>
-      <th>Actions</th>
-    </tr>
+    <thead>
+    <th>Email</th>
+    <th>Last name</th>
+    <th>First name</th>
+    <th>Role</th>
+    <th>Actions</th>
+    </thead>
     <tr v-for="user in users" :key="user">
       <td>{{ user.emailAddress }}</td>
       <td>{{ user.lastName }}</td>
@@ -28,6 +29,7 @@
     </tr>
   </table>
 </template>
+
 <script>
 import {authComputed} from "@/store/helpers";
 import axios from "axios";

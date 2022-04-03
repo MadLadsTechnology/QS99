@@ -4,15 +4,15 @@
       {{ label }}
     </label>
     <input
-      class="field"
-      v-bind="$attrs"
-      @input="$emit('update:modelValue', $event.target.value)"
-      :id="uuid"
-      :value="modelValue"
-      :placeholder="label"
-      :aria-describedby="error ? `${uuid}-error` : null"
-      :aria-invalid="error ? true : false"
-      :class="{ error }"
+        :id="uuid"
+        :aria-describedby="error ? `${uuid}-error` : null"
+        :aria-invalid="error ? true : false"
+        :class="{ error }"
+        :placeholder="label"
+        :value="modelValue"
+        class="field"
+        v-bind="$attrs"
+        @input="$emit('update:modelValue', $event.target.value)"
     />
     <BaseErrorMessage :id="`${uuid}-error`">
       {{ error }}
@@ -22,7 +22,7 @@
 
 <script>
 //import SetupFormComponent from "../features/SetupFormComponent";
-import UniqueID from "../features/UniqueID";
+import UniqueID from "../../features/UniqueID";
 
 export default {
   props: {
@@ -52,14 +52,18 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin: 10px;
 }
+
 label {
   text-align: left;
   font-size: 100%;
 }
+
 input {
   padding: 10px;
 }
+
 input:invalid {
   border-color: red;
 }

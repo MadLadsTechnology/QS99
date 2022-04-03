@@ -15,22 +15,25 @@
       v-on:closeWindowMultipleUsers="closeWindow"
   />
 
-  <button @click="showSingleUserWindow(id, subject.subjectCode)">
-    Add user
-  </button>
-  <button @click="showMultipleUserWindow(id, subject.subjectCode)">
-    Add multiple users
-  </button>
-  <button @click="showAddExercisesWindow(id, subject.subjectCode)">
-    Add exercises
-  </button>
+  <div class="button-group">
+    <button @click="showSingleUserWindow(id, subject.subjectCode)">
+      Add user
+    </button>
+    <button @click="showMultipleUserWindow(id, subject.subjectCode)">
+      Add multiple users
+    </button>
+    <button @click="showAddExercisesWindow(id, subject.subjectCode)">
+      Add exercises
+    </button>
+  </div>
+
 
 </template>
 
 <script>
-import AddUserToSubject from "@/components/AddUserToSubject";
-import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
-import AddExercises from "@/components/AddExercises";
+import AddUserToSubject from "@/components/PopUps/AddUserToSubject";
+import AddMultipleUsersToSubject from "@/components/PopUps/AddMultipleUsersToSubject";
+import AddExercises from "@/components/PopUps/AddExercises";
 import axios from "axios";
 
 export default {
@@ -119,3 +122,24 @@ export default {
 
 
 </script>
+
+<style scoped>
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 70%;
+  margin: auto;
+}
+
+button {
+  width: 100px;
+  height: 40px;
+  padding: 5px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+</style>

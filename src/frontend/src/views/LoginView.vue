@@ -4,30 +4,35 @@
       <h1>Log in</h1>
 
       <BaseInput
-        label="Email"
-        type="email"
-        v-model.lazy="email"
-        :error="errors.email"
+          v-model.lazy="email"
+          :error="errors.email"
+          label="Email"
+          type="email"
       />
       <BaseInput
-        label="Password"
-        type="password"
-        v-model="password"
-        :error="errors.password"
+          v-model="password"
+          :error="errors.password"
+          label="Password"
+          type="password"
       />
       <button :disabled="!isValid" type="submit">Log in</button>
 
-      <br />
+      <br/>
 
       <p v-if="error">{{ errors }}</p>
     </form>
   </div>
 </template>
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, string } from "yup";
+import {useField, useForm} from "vee-validate";
+import {object, string} from "yup";
+import BaseInput from "@/components/BaseComponents/BaseInput";
 
 export default {
+
+  components: {
+    BaseInput,
+  },
   data() {
     return {
       error: null,
@@ -42,16 +47,16 @@ export default {
     //Method for submitting form
     async submit() {
       await this.$store
-        .dispatch("login", {
-          email: this.email,
-          password: this.password,
-        })
-        .then(() => {
-          this.$router.push("/subjects");
-        })
-        .catch((err) => {
-          this.error = err;
-        });
+          .dispatch("login", {
+            email: this.email,
+            password: this.password,
+          })
+          .then(() => {
+            this.$router.push("/subjects");
+          })
+          .catch((err) => {
+            this.error = err;
+          });
     },
   },
 
@@ -61,12 +66,12 @@ export default {
       email: string().email("Invalid email format").required(),
       password: string().required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: email } = useField("email");
-    const { value: password } = useField("password");
+    const {value: email} = useField("email");
+    const {value: password} = useField("password");
 
     return {
       email,

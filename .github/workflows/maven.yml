@@ -7,10 +7,10 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ main ]   
 
 jobs:     
-  testAndPublish:
+  test:
     runs-on: self-hosted
     steps:
     #- name: delete database
@@ -24,9 +24,4 @@ jobs:
         architecture: arm
         cache: maven
     - name: build artifact
-      run: mvn clean package
-    - name: deploy site
-      uses: JamesIves/github-pages-deploy-action@v4.2.5
-      with:
-        branch: gh-pages
-        folder: src/frontend/dist
+      run: mvn test 

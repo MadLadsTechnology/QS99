@@ -24,6 +24,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/h2-ui/**").permitAll()
+                .and().csrf().ignoringAntMatchers("/h2-ui/**")
+                .and().headers().frameOptions().sameOrigin();
+
+        http.csrf().disable()
+                .cors().and().authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
         // token endpoint is not protected
         http
                 .csrf().disable()

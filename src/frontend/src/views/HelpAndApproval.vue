@@ -34,7 +34,7 @@ export default {
 
   methods: {
     suspend() {
-      axios.post("http://localhost:8001/entry/qs/student/setIsGettingHelp", null, {
+      axios.post("http://localhost:8001/entry/setIsGettingHelp", null, {
         params: {
           entryId: this.entryId,
           isGettingHelp: false,
@@ -53,7 +53,7 @@ export default {
 
 
   async created() {
-    await axios.get("http://localhost:8001/user/qs/student/getUserFromSubject", {
+    await axios.get("http://localhost:8001/user/getUserFromSubject", {
       params: {
         email: this.studentId,
         subjectId: this.subjectId,

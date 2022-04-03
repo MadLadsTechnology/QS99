@@ -59,7 +59,7 @@ export default {
 
   async created() {
     await axios
-        .get("http://localhost:8001/queue/qs/student", {
+        .get("http://localhost:8001/queue", {
           params: {
             subjectId: this.subject.id,
           },

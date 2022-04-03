@@ -55,7 +55,7 @@ export default {
 
     //getting subjects of the user
     await axios
-        .get("http://localhost:8001/subject/qs/student/getByUser")
+        .get("http://localhost:8001/subject/getByUser")
         .then((response) => {
           this.allSubjects = response.data;
         });

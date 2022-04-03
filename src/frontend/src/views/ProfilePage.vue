@@ -56,7 +56,7 @@ export default {
     submit() {
 
       axios
-          .post("http://localhost:8001/user/qs/student/changePassword", null, {
+          .post("http://localhost:8001/user/changePassword", null, {
             params: {
               newPassword: this.newPassword,
               oldPassword: this.oldPassword,

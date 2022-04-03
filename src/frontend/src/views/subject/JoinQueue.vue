@@ -93,7 +93,7 @@ export default {
       console.log(this.exercises);
       axios
           .post(
-              "http://localhost:8001/queue/qs/student/addEntry",
+              "http://localhost:8001/queue/addEntry",
               {exercises: this.exercises},
               {
                 params: {

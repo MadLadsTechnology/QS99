@@ -41,6 +41,15 @@ public class ExerciseController {
     ExerciseSubListRepository exerciseSubListRepository;
 
 
+    /**
+     * Create a new exercise
+     * @param subjectId
+     * @param numberOfExercises
+     * @param numberOfMandatory
+     * @param authentication
+     * @return Returns if a creation was succesfull or not
+     */
+
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
@@ -65,6 +74,14 @@ public class ExerciseController {
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Deletes an exercise
+     * @param subjectId
+     * @param exerciseNumber
+     * @param authentication
+     * @return Returns if a deletion was successfully or not
+     */
+
     @DeleteMapping
     @Transactional
     @ResponseStatus(value = HttpStatus.OK)
@@ -79,6 +96,15 @@ public class ExerciseController {
         }
         return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    /**
+     * Approve an exercise
+     * @param subjectId
+     * @param exerciseNumber
+     * @param studentEmail
+     * @param authentication
+     * @return Returns whether it could approve an exercise or not
+     */
 
     @PostMapping("/approveExercise")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -101,8 +127,7 @@ public class ExerciseController {
                     exercise.addStudent(student);
                 }
                 exerciseRepository.save(exercise);
-
-                return new ResponseEntity<>(true, HttpStatus.CREATED);
+                return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 logger.info(authentication.getName() + " is not a student assistant in this subject");
             }
@@ -110,31 +135,49 @@ public class ExerciseController {
         return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
+    /**
+     * Get all exercises that belong to a user
+     * @param authentication
+     * @param subjectId
+     * @return Returns a list of all the exercises
+     */
+
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesByUser(Authentication authentication,
                                                                         @RequestParam("subjectId") final int subjectId) {
-        if (authentication != null) {
-            if (authentication.isAuthenticated()) {
-                Student student = studentRepository.findByEmailAddress(authentication.getName());
-                Subject subject = subjectRepository.findById(subjectId);
-                logger.info("Getting exercises for " + student.getEmailAddress() + " in subject " + subject.getSubjectCode());
-                ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
-                ArrayList<GetExerciseDTO> response = new ArrayList<>();
-                for (Exercise exercise : exercises) {
-                    if (student.getApprovedExercises().contains(exercise)) {
-                        GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, true);
-                        response.add(getExerciseDTO);
-                    } else {
-                        GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, false);
-                        response.add(getExerciseDTO);
+        try {
+            if (authentication != null) {
+                if (authentication.isAuthenticated()) {
+                    Student student = studentRepository.findByEmailAddress(authentication.getName());
+                    Subject subject = subjectRepository.findById(subjectId);
+                    logger.info("Getting exercises for " + student.getEmailAddress() + " in subject " + subject.getSubjectCode());
+                    ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
+                    ArrayList<GetExerciseDTO> response = new ArrayList<>();
+                    for (Exercise exercise : exercises) {
+                        if (student.getApprovedExercises().contains(exercise)) {
+                            GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, true);
+                            response.add(getExerciseDTO);
+                        } else {
+                            GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, false);
+                            response.add(getExerciseDTO);
+                        }
                     }
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 }
-                return new ResponseEntity<>(response, HttpStatus.OK);
             }
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
+
+    /**
+     * Get all exercises in a spesific subject
+     * @param authentication
+     * @param subjectId
+     * @return A list of exercises
+     */
 
     @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)

@@ -143,11 +143,11 @@ public class QueueController {
                         Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises");
                         ArrayList<Exercise> exercises = new ArrayList<>();
                         for(int exerciseNumber: exerciseIds){
-                            if(exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
+                            if(exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
                                 logger.info("Couldn't find the exercise");
                             } else {
 
-                                Exercise exercise = exerciseRepository.findDistinctBySubjectAndExerciseNumber(subject, exerciseNumber);
+                                Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
                                 exercises.add(exercise);
                                 logger.info("Exercise number: " + exercise.getId());
                             }

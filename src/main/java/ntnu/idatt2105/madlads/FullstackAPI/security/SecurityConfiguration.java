@@ -4,76 +4,83 @@ import ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization.JWTAuthoriz
 import ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization.JWTAuthorizationProfessorFilter;
 import ntnu.idatt2105.madlads.FullstackAPI.security.JWTAuthorization.JWTAuthorizationUserFilter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // token endpoint is not protected
-        //TODO: Make database console not accessible
-        http.authorizeRequests().antMatchers("/h2-ui/**").permitAll()
-            .and().csrf().ignoringAntMatchers("/h2-ui/**")
-            .and().headers().frameOptions().sameOrigin();
+    @Configuration
+    @Order(1)
+    static class DefaultWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-        http.csrf().disable()
-                .cors().and().authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
-
-        http.authorizeRequests().antMatchers("/user/login").permitAll()
-                .and().csrf().ignoringAntMatchers("/user/login")
-                .and().headers().frameOptions().sameOrigin();
-
-        //Student / Student Assistant
-        http
-                .csrf().disable()
-                .cors().and()
-                .addFilterAfter(new JWTAuthorizationUserFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/user/login").permitAll()
-                .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated()
-                .antMatchers(HttpMethod.POST,"/queue/addEntry").authenticated()
-                .antMatchers(HttpMethod.POST,"/user/registerAdmin").permitAll()
-                .antMatchers(HttpMethod.GET,"/queue/**").authenticated()
-                .antMatchers(HttpMethod.GET,"/exercise/**").authenticated();
-
-        //PROFESSOR
-        http
-                .csrf().disable()
-                .cors().and()
-                .addFilterAfter(new JWTAuthorizationProfessorFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/user/registerStudent").authenticated()
-                .antMatchers(HttpMethod.POST,"/user/registerStudentOLD").authenticated()
-                .antMatchers(HttpMethod.POST,"/user/registerMultipleUsers").authenticated()
-                .antMatchers(HttpMethod.POST,"/subject/create").authenticated()
-                .antMatchers(HttpMethod.POST,"/subject/addStudent").authenticated()
-                .antMatchers(HttpMethod.POST,"/subject/addStudentAssistant").authenticated()
-                .antMatchers(HttpMethod.POST,"/subject/addProfessor").authenticated()
-                .antMatchers(HttpMethod.GET,"/subject/**").authenticated()
-                .antMatchers(HttpMethod.POST,"/queue/setQueueStatus").authenticated()
-                .antMatchers(HttpMethod.POST,"/queue/create").authenticated()
-                .antMatchers(HttpMethod.POST,"/exercise/**").authenticated()
-                .antMatchers(HttpMethod.POST,"/user/login").authenticated()
-                .antMatchers(HttpMethod.GET,"/subject/getByUser").authenticated()
-                .antMatchers(HttpMethod.GET,"/queue/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/user/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/subject/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/entry/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/entry/**").authenticated();
-
-        //ADMIN
-        http
-                .csrf().disable()
-                .cors().and()
-                .addFilterAfter(new JWTAuthorizationAdminFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests().antMatchers("/**").authenticated();
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable().cors().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .antMatcher("/user/login")
+                    .authorizeRequests().anyRequest().permitAll();
+        }
     }
+
+
+    @Configuration
+    @Order(2)
+    static class DefaultWebSecurityConfig4 extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable().cors().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and()
+                    .antMatcher("/**/student/**")
+                    .addFilterBefore(new JWTAuthorizationUserFilter(), FilterSecurityInterceptor.class);
+        }
+    }
+
+    @Configuration
+    @Order(3)
+    static class DefaultWebSecurityConfig3 extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable().cors().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and()
+                    .antMatcher("/**/qs/**")
+                    .addFilterBefore(new JWTAuthorizationProfessorFilter(), FilterSecurityInterceptor.class);
+        }
+    }
+
+    @Configuration
+    @Order(4)
+    static class DefaultWebSecurityConfig2 extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable().cors().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and()
+                    .antMatcher("/**")
+                    .addFilterBefore(new JWTAuthorizationAdminFilter(), FilterSecurityInterceptor.class);
+        }
+    }
+
 }

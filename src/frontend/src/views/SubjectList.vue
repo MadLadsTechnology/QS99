@@ -1,5 +1,5 @@
 <template>
-  <div class="teacherToolbar" v-if="this.$store.getters.isProfessor">
+  <div v-if="this.$store.getters.isProfessor" class="teacherToolbar">
     <button @click="this.$router.push('/createSubject')">
       Create new subject
     </button>
@@ -9,9 +9,9 @@
     <h3>Active queues</h3>
     <div class="cardHolder">
       <SubjectCard
-        v-for="subject in subjects.active"
-        :key="parseInt(subject.id)"
-        :subject="subject"
+          v-for="subject in subjects.active"
+          :key="parseInt(subject.id)"
+          :subject="subject"
       />
     </div>
   </div>
@@ -21,9 +21,9 @@
 
     <div class="cardHolder">
       <SubjectCard
-        v-for="subject in subjects.inStudAss"
-        :key="parseInt(subject.id)"
-        :subject="subject"
+          v-for="subject in subjects.inStudAss"
+          :key="parseInt(subject.id)"
+          :subject="subject"
       />
     </div>
   </div>
@@ -33,16 +33,16 @@
 
     <div class="cardHolder">
       <SubjectCard
-        v-for="subject in subjects.inActive"
-        :key="parseInt(subject.id)"
-        :subject="subject"
+          v-for="subject in subjects.inActive"
+          :key="parseInt(subject.id)"
+          :subject="subject"
       />
     </div>
   </div>
 </template>
 <script>
 import SubjectCard from "../components/subject/SubjectCard";
-import { authComputed } from "@/store/helpers";
+import {authComputed} from "@/store/helpers";
 import axios from "axios";
 
 export default {
@@ -55,10 +55,10 @@ export default {
 
     //getting subjects of the user
     await axios
-      .get("http://localhost:8001/subject/getByUser")
-      .then((response) => {
-        this.allSubjects = response.data;
-      });
+        .get("http://localhost:8001/subject/qs/student/getByUser")
+        .then((response) => {
+          this.allSubjects = response.data;
+        });
   },
   data() {
     return {

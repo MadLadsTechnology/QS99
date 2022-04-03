@@ -1,29 +1,31 @@
 <template>
   <AddExercises
-    v-if="showAddExercises"
-    v-on:closeWindow="closeWindow"
-    v-bind:subject="currentSubject"
+      v-if="showAddExercises"
+      v-bind:subject="currentSubject"
+      v-on:closeWindow="closeWindow"
   />
   <AddUserToSubject
-    v-if="showAddSingleUser"
-    v-on:closeWindow="closeWindow"
-    v-bind:subject="currentSubject"
+      v-if="showAddSingleUser"
+      v-bind:subject="currentSubject"
+      v-on:closeWindow="closeWindow"
   />
   <AddMultipleUsersToSubject
-    v-if="showAddMultipleUsers"
-    v-on:closeWindowMultipleUsers="closeWindow"
-    v-bind:subject="currentSubject"
+      v-if="showAddMultipleUsers"
+      v-bind:subject="currentSubject"
+      v-on:closeWindowMultipleUsers="closeWindow"
   />
   <AddAssistantToSubject
-    v-if="showAddAssistant"
-    v-on:closeWindow="closeWindow"
-    v-bind:subject="currentSubject"
+      v-if="showAddAssistant"
+      v-bind:subject="currentSubject"
+      v-on:closeWindow="closeWindow"
   />
 
   <h3>All Subjects</h3>
 
   <router-link to="/createSubject"
-    ><button>Create a subject</button></router-link
+  >
+    <button>Create a subject</button>
+  </router-link
   >
 
   <table>
@@ -41,7 +43,7 @@
       <td>{{ object.subjectYear }}</td>
       <td>
         <router-link
-          :to="{
+            :to="{
             name: 'SubjectLayout',
             params: { id: object.id },
           }"
@@ -56,7 +58,7 @@
           Add multiple students
         </button>
         <button
-          @click="showSingleAssistantWindow(object.id, object.subjectCode)"
+            @click="showSingleAssistantWindow(object.id, object.subjectCode)"
         >
           Add student assistant
         </button>
@@ -75,7 +77,7 @@ import AddUserToSubject from "@/components/AddUserToSubject";
 import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
 import AddExercises from "@/components/AddExercises";
 import AddAssistantToSubject from "@/components/AddAssistantToSubject";
-import { authComputed } from "@/store/helpers";
+import {authComputed} from "@/store/helpers";
 import axios from "axios";
 
 export default {
@@ -128,12 +130,14 @@ export default {
       this.showAddAssistant = false;
     },
 
-    deleteSubject(subject){
+    deleteSubject(subject) {
       let confirmAction = confirm("Are you sure to execute this action?");
       if (confirmAction) {
-        axios.delete("http://localhost:8001/subject", {params:{
-          subjectId: subject.id,
-          }})
+        axios.delete("http://localhost:8001/qs/subject", {
+          params: {
+            subjectId: subject.id,
+          }
+        })
         location.reload()
       }
     },
@@ -142,10 +146,10 @@ export default {
     document.title = "QS99 - Students";
     //getting subjects of the user
     await axios
-      .get("http://localhost:8001/subject/getAllSubject")
-      .then((response) => {
-        this.subjects = response.data;
-      });
+        .get("http://localhost:8001/subject/getAllSubject")
+        .then((response) => {
+          this.subjects = response.data;
+        });
   },
   data() {
     return {

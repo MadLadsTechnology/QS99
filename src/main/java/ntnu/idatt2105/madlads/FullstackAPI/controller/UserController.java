@@ -59,22 +59,23 @@ public class UserController {
      * @throws InvalidKeySpecException
      */
     @PostMapping(value = "/login")
+    @CrossOrigin
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Log in", description = "Logs a user in")
     public ResponseEntity<UserLoginDTO> login(@RequestParam("email") final String email,
-                                                            @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+                                              @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         QSUser foundUser = userRepository.getDistinctByEmailAddress(email);
 
         if (foundUser != null) {
             if (email.equals(foundUser.getEmailAddress()) && PasswordHashing.validatePassword(password, foundUser.getPassword())) {
                 String role = "";
-                if (userRepository.getDistinctByEmailAddress(email) instanceof Student){
-                    role="ROLE_USER";
-                }else if (userRepository.getDistinctByEmailAddress(email) instanceof Professor){
-                    role="ROLE_PROFESSOR";
-                }else{
-                    role="ROLE_ADMIN";
+                if (userRepository.getDistinctByEmailAddress(email) instanceof Student) {
+                    role = "ROLE_USER";
+                } else if (userRepository.getDistinctByEmailAddress(email) instanceof Professor) {
+                    role = "ROLE_PROFESSOR";
+                } else {
+                    role = "ROLE_ADMIN";
                 }
                 UserLoginDTO user = new UserLoginDTO(foundUser, generateToken(email, role));
                 logger.info("Logged in successfully");
@@ -104,7 +105,7 @@ public class UserController {
                                              @RequestParam("email") final String email,
                                              @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
-        if (userRepository.getDistinctByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null) {
             try {
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser QSUser = userRepository
@@ -114,10 +115,11 @@ public class UserController {
             } catch (Exception e) {
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
+
 
     /**
      * UNUSED
@@ -131,12 +133,12 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "UNUSED", description = "UNUSED")
     public ResponseEntity<Student> createStudentOLD(@RequestParam("firstname") final String firstname,
-                                              @RequestParam("lastname") final String lastname,
-                                              @RequestParam("email") final String email,
-                                              @RequestParam("password") final String password) {
+                                                    @RequestParam("lastname") final String lastname,
+                                                    @RequestParam("email") final String email,
+                                                    @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
 
-        if (userRepository.getDistinctByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null) {
             try {
                 logger.info("trying to register student");
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
@@ -151,7 +153,7 @@ public class UserController {
                 logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -163,7 +165,7 @@ public class UserController {
      * @param email
      * @return A student object
      */
-    @PostMapping("/registerStudent")
+    @PostMapping("/qs/registerStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Creates a new student", description = "Creates a new student")
     public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
@@ -171,7 +173,7 @@ public class UserController {
                                                  @RequestParam("email") final String email) {
         logger.info("email: " + email + " password: ");
 
-        if (userRepository.getDistinctByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null) {
             try {
                 logger.info("trying to register student");
                 String password = generateCommonLangPassword();
@@ -188,7 +190,7 @@ public class UserController {
                 logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -205,12 +207,12 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Unused", description = "Unused")
     public ResponseEntity<Professor> createProfessorOLD(@RequestParam("firstname") final String firstname,
-                                                 @RequestParam("lastname") final String lastname,
-                                                 @RequestParam("email") final String email,
-                                                 @RequestParam("password") final String password) {
+                                                        @RequestParam("lastname") final String lastname,
+                                                        @RequestParam("email") final String email,
+                                                        @RequestParam("password") final String password) {
         logger.info("email: " + email + " password: " + password);
 
-        if (userRepository.getDistinctByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null) {
             try {
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
@@ -222,7 +224,7 @@ public class UserController {
                 logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -235,14 +237,14 @@ public class UserController {
      * @return
      */
 
-    @PostMapping("/registerProfessor")
+    @PostMapping("/qs/registerProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
                                                      @RequestParam("lastname") final String lastname,
                                                      @RequestParam("email") final String email) {
         logger.info("email: " + email);
 
-        if (userRepository.getDistinctByEmailAddress(email) == null){
+        if (userRepository.getDistinctByEmailAddress(email) == null) {
             try {
                 String password = generateCommonLangPassword();
                 sendEmail(email, "This is your password to QS: " + password);
@@ -256,7 +258,7 @@ public class UserController {
                 logger.info(e.getMessage());
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }else{
+        } else {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -272,16 +274,16 @@ public class UserController {
     @Transactional
     @Operation(summary = "Delete a user", description = "Deletes a user from the subject")
     public ResponseEntity<Boolean> deleteUser(Authentication authentication,
-                                             @RequestParam("email") final String email){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+                                              @RequestParam("email") final String email) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 QSUser foundUser = userRepository.getDistinctByEmailAddress(email);
-                if(foundUser != null){
-                    if(email.equals(foundUser.getEmailAddress())){
-                        if(foundUser instanceof Student){
+                if (foundUser != null) {
+                    if (email.equals(foundUser.getEmailAddress())) {
+                        if (foundUser instanceof Student) {
                             Student student = studentRepository.findByEmailAddress(email);
                             ArrayList<Integer> subjectIDs = student.getStudentSubjects();
-                            for(int id: subjectIDs){
+                            for (int id : subjectIDs) {
                                 Subject subject = subjectRepository.findById(id);
                                 student.removeStudentSubject(subject);
                             }
@@ -306,7 +308,7 @@ public class UserController {
      * @param authentication
      * @return A boolean of whether registration was successfull
      */
-    @PostMapping("/registerMultipleUsers")
+    @PostMapping("/qs/registerMultipleUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Add multiple users", description = "Adds multiple users")
     public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers, Authentication authentication){
@@ -321,12 +323,12 @@ public class UserController {
                     listSplitProperly.add(temp);
                 }
 
-                for (String[] strings: listSplitProperly){
-                    String email =strings[2];
+                for (String[] strings : listSplitProperly) {
+                    String email = strings[2];
                     String firstname = strings[0];
-                    String lastname =strings[1];
-                    if (userRepository.getDistinctByEmailAddress(strings[2]) == null){
-                        if (userRepository.getDistinctByEmailAddress(email) == null){
+                    String lastname = strings[1];
+                    if (userRepository.getDistinctByEmailAddress(strings[2]) == null) {
+                        if (userRepository.getDistinctByEmailAddress(email) == null) {
                             try {
                                 logger.info("trying to register student");
                                 String hashedPassword = PasswordHashing.generatePasswordHash("Test");
@@ -337,10 +339,10 @@ public class UserController {
                             } catch (Exception e) {
                                 logger.info(e.getMessage());
                             }
-                        }else{
+                        } else {
                             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
                         }
-                    }else{
+                    } else {
                         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
                     }
                 }
@@ -364,7 +366,7 @@ public class UserController {
             if(authentication.isAuthenticated()){
                 ArrayList<QSUser> users = (ArrayList<QSUser>) userRepository.findAll();
                 ArrayList<UserDTO> userDto = new ArrayList<>();
-                for(QSUser user : users){
+                for (QSUser user : users) {
                     UserDTO studentDTO = new UserDTO(user);
                     userDto.add(studentDTO);
                 }
@@ -381,7 +383,7 @@ public class UserController {
      * @return A list of users
      */
 
-    @GetMapping("/getAllUsersFromSubject")
+    @GetMapping("/qs/student/getAllUsersFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get all students from a subject", description = "Get all students from a given subject")
     public ResponseEntity<ArrayList<UserDTO>> getAllStudentsFromSubject(@RequestParam("subjectId") int subjectId, Authentication authentication){
@@ -390,8 +392,8 @@ public class UserController {
                 Subject subject = subjectRepository.findById(subjectId);
                 ArrayList<UserDTO> userDTOs = new ArrayList<>();
                 ArrayList<QSUser> usersInSubject = new ArrayList<>(subject.getStudents());
-                for (QSUser user: usersInSubject){
-                    if(user instanceof Student){
+                for (QSUser user : usersInSubject) {
+                    if (user instanceof Student) {
                         Student student = studentRepository.findByEmailAddress(user.getEmailAddress());
                         userDTOs.add(new UserDTO(student, exerciseRepository.findExerciseBySubject(subject)));
                     } else {
@@ -412,7 +414,7 @@ public class UserController {
      * @return List of users
      */
 
-    @GetMapping("/getUserFromSubject")
+    @GetMapping("/qs/student/getUserFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get users from a subject", description = "Adds an exercise to a given subject")
     public ResponseEntity<UserDTO> getUserFromSubject(@RequestParam("subjectId") int subjectId, @RequestParam("email") String email, Authentication authentication){
@@ -420,7 +422,7 @@ public class UserController {
             if (authentication.isAuthenticated()){
                 Student student = studentRepository.findByEmailAddress(email);
                 Subject subject = subjectRepository.findById(subjectId);
-                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || authentication.getAuthorities().contains("ROLE_ADMIN")|| authentication.getAuthorities().contains("ROLE_PROFESSOR")){
+                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || authentication.getAuthorities().contains("ROLE_ADMIN") || authentication.getAuthorities().contains("ROLE_PROFESSOR")) {
                     UserDTO user = new UserDTO(student, exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)));
                     return new ResponseEntity<>(user, HttpStatus.OK);
                 }
@@ -439,14 +441,14 @@ public class UserController {
      * @throws InvalidKeySpecException
      */
 
-    @PostMapping ("/changePassword")
+    @PostMapping("/qs/student/changePassword")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Change password", description = "Change password of your own user")
     public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("oldPassword") String oldPassword, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        if(authentication!=null){
-            if(authentication.isAuthenticated()){
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 QSUser user = userRepository.getDistinctByEmailAddress(authentication.getName());
-                if (PasswordHashing.validatePassword(oldPassword, user.getPassword())){
+                if (PasswordHashing.validatePassword(oldPassword, user.getPassword())) {
                     user.setPassword(PasswordHashing.generatePasswordHash(newPassword));
                     userRepository.save(user);
                     return new ResponseEntity<>(true, HttpStatus.OK);

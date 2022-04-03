@@ -23,7 +23,6 @@ public class JWTAuthorizationFilter {
     private final static String HEADER = "Authorization";
 
 
-
     public static void doFiltering(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String role) throws IOException {
         Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
         try {
@@ -32,34 +31,39 @@ public class JWTAuthorizationFilter {
             // expects JWT in the header
             String authenticationHeader = request.getHeader(HEADER);
             final String PREFIX = "Bearer ";
-
             // check Authorization header exists
-            if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX)){
+            if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX)) {
                 SecurityContextHolder.clearContext();
             } else {
 
                 // get token and claims
                 String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
                 Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwtToken);
-                String gottenRole = claims.getBody().get("authorities").toString().replace("[","").replace("]","");
-                if(gottenRole.equals(role)){
-                    logger.info("Authenticated with Role User");
-                    if (claims.getBody().get("authorities") != null) {
-                        // setup Spring authentication
-                        List<String> authorities = (List) claims.getBody().get("authorities");
-                        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getBody().getSubject(), null,
-                                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                    } else {
-                        SecurityContextHolder.clearContext();
-                    }
+                String gottenRole = claims.getBody().get("authorities").toString().replace("[", "").replace("]", "");
+                logger.info("gotten role: " + gottenRole + " wanted role" + role);
+
+                if (gottenRole.equals(role)) {
+                    logger.info("Authenticated with" + role);
+
+                    // setup Spring authentication
+                    List<String> authorities = (List) claims.getBody().get("authorities");
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getBody().getSubject(), null,
+                            authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+
+
+                } else {
+                    logger.info("I got to the else");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 }
                 // perform necessary checks
             }
+            logger.info("just passing by");
             filterChain.doFilter(request, response);
+
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         } catch (ServletException | IOException e) {
             e.printStackTrace();
         }

@@ -5,18 +5,18 @@
       <h1>Add student assistant to {{ subject.code }}</h1>
 
       <BaseInput
-        label="Email"
-        type="email"
-        v-model.lazy="email"
-        :error="errors.email"
+          v-model.lazy="email"
+          :error="errors.email"
+          label="Email"
+          type="email"
       />
       <button :disabled="!isValid" type="submit">Submit</button>
     </form>
   </div>
 </template>
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, string } from "yup";
+import {useField, useForm} from "vee-validate";
+import {object, string} from "yup";
 import axios from "axios";
 
 export default {
@@ -40,18 +40,18 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post("http://localhost:8001/subject/addStudentAssistant", null, {
-          params: {
-            subjectId: this.subject.id,
-            email: this.email,
-          },
-        })
-        .then(() => {
-          this.closeWindow();
-        })
-        .catch((err) => {
-          alert(err);
-        });
+          .post("http://localhost:8001/subject/qs/addStudentAssistant", null, {
+            params: {
+              subjectId: this.subject.id,
+              email: this.email,
+            },
+          })
+          .then(() => {
+            this.closeWindow();
+          })
+          .catch((err) => {
+            alert(err);
+          });
     },
 
     closeWindow() {
@@ -64,11 +64,11 @@ export default {
     const validationSchema = object({
       email: string().email("Invalid email format").required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: email } = useField("email");
+    const {value: email} = useField("email");
 
     return {
       email,

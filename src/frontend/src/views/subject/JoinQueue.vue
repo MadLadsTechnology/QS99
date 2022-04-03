@@ -1,53 +1,53 @@
 <template>
   <div>
-    <form class="loginForm" v-if="!!assignments" @submit.prevent="submit()">
+    <form v-if="!!assignments" class="loginForm" @submit.prevent="submit()">
       <h1>Get in the queue!</h1>
 
       <BaseInput
-        label="Room"
-        type="text"
-        v-model.lazy="room"
-        :error="errors.room"
+          v-model.lazy="room"
+          :error="errors.room"
+          label="Room"
+          type="text"
       />
       <BaseInput
-        label="Building"
-        type="text"
-        v-model.lazy="building"
-        :error="errors.building"
+          v-model.lazy="building"
+          :error="errors.building"
+          label="Building"
+          type="text"
       />
       <BaseInput
-        label="Table number"
-        type="number"
-        v-model.lazy="tableNumber"
-        :error="errors.tableNumber"
+          v-model.lazy="tableNumber"
+          :error="errors.tableNumber"
+          label="Table number"
+          type="number"
       />
 
       <div class="checkBoxHolder">
         <div v-for="assignment in assignments" v-bind:key="assignment">
           <input
-            type="checkbox"
-            :id="assignment.id"
-            :disabled="assignment.approved"
-            :value="assignment.id"
-            v-model="exercises"
+              :id="assignment.id"
+              v-model="exercises"
+              :disabled="assignment.approved"
+              :value="assignment.id"
+              type="checkbox"
           />
           <label :for="assignment.id">{{ assignment.exerciseNumber }}</label>
         </div>
       </div>
 
       <input
-        type="radio"
-        id="one"
-        value="help"
-        checked="checked"
-        v-model="helpType"
+          id="one"
+          v-model="helpType"
+          checked="checked"
+          type="radio"
+          value="help"
       />
       <label for="one">Help</label>
-      <br />
-      <input type="radio" id="two" value="approval" v-model="helpType" />
+      <br/>
+      <input id="two" v-model="helpType" type="radio" value="approval"/>
       <label for="two">Approval</label>
 
-      <br />
+      <br/>
       <button :disabled="!isValid" type="submit">Submit</button>
 
       <p v-if="error">{{ error }}</p>
@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, string, number } from "yup";
+import {useField, useForm} from "vee-validate";
+import {number, object, string} from "yup";
 import axios from "axios";
 
 export default {
@@ -73,17 +73,17 @@ export default {
 
   created() {
     axios
-      .get("http://localhost:8001/exercise/getByUser", {
-        params: {
-          subjectId: parseInt(this.subject.id),
-        },
-      })
-      .then((response) => {
-        this.assignments = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .get("http://localhost:8001/exercise/qs/student/getByUser", {
+          params: {
+            subjectId: parseInt(this.subject.id),
+          },
+        })
+        .then((response) => {
+          this.assignments = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     document.title = "QS99 - Join queue";
   },
 
@@ -92,26 +92,26 @@ export default {
     submit() {
       console.log(this.exercises);
       axios
-        .post(
-          "http://localhost:8001/queue/addEntry",
-          { exercises: this.exercises },
-          {
-            params: {
-              room: this.room,
-              building: this.building,
-              tableNumber: this.tableNumber,
-              type: this.helpType,
-              subjectId: this.subject.id,
-            },
-          }
-        )
-        .then(() => {
-          this.$router.push("/subjects/:id/queue");
-        })
+          .post(
+              "http://localhost:8001/queue/qs/student/addEntry",
+              {exercises: this.exercises},
+              {
+                params: {
+                  room: this.room,
+                  building: this.building,
+                  tableNumber: this.tableNumber,
+                  type: this.helpType,
+                  subjectId: this.subject.id,
+                },
+              }
+          )
+          .then(() => {
+            this.$router.push("/subjects/:id/queue");
+          })
 
-        .catch((err) => {
-          console.log(err);
-        });
+          .catch((err) => {
+            console.log(err);
+          });
     },
   },
 
@@ -122,13 +122,13 @@ export default {
       building: string().required(),
       tableNumber: number().required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: room } = useField("room");
-    const { value: building } = useField("building");
-    const { value: tableNumber } = useField("tableNumber");
+    const {value: room} = useField("room");
+    const {value: building} = useField("building");
+    const {value: tableNumber} = useField("tableNumber");
 
     return {
       room,

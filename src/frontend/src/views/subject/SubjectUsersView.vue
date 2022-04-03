@@ -10,26 +10,28 @@
       <th v-if="!subject.isStudAss">Actions</th>
     </tr>
 
-    <tr  v-for="user in users" :key="user.emailAddress">
+    <tr v-for="user in users" :key="user.emailAddress">
 
       <td>{{ user.lastName }}</td>
       <td>{{ user.firstName }}</td>
       <td>{{ user.emailAddress }}</td>
       <td>{{ user.role }}</td>
-      <td >
+      <td>
         <div class="exerciseWrapper">
           <ExerciseBox
               v-for="exercise in user.exercises" :key="exercise"
               :exercise="exercise"
-              :subjectId="subject.id"
               :studentId="user.emailAddress"
+              :subjectId="subject.id"
 
           />
         </div>
 
       </td>
 
-      <td v-if="!subject.isStudAss"><button @click="removeUser(user)">Remove</button></td>
+      <td v-if="!subject.isStudAss">
+        <button @click="removeUser(user)">Remove</button>
+      </td>
     </tr>
 
   </table>
@@ -41,11 +43,11 @@
 import axios from "axios";
 import ExerciseBox from "@/components/ExerciseBox";
 
-export default{
+export default {
 
   name: "SubjectUsersView",
   props: ["subject"],
-  components:{
+  components: {
     ExerciseBox
   },
 
@@ -58,7 +60,7 @@ export default{
   methods: {
     async removeUser(user) {
       await axios
-          .delete("http://localhost:8001/subject/deleteUserFromSubject", {
+          .delete("http://localhost:8001/subject/qs/deleteUserFromSubject", {
             params: {
               subjectId: this.subject.id,
               emailAddress: user.emailAddress,
@@ -72,7 +74,7 @@ export default{
     },
     async removeExercise(exercise) {
       await axios
-          .delete("http://localhost:8001/exercise", {
+          .delete("http://localhost:8001/qs/exercise", {
             params: {
               subjectId: this.subject.id,
               exerciseNumber: exercise.exerciseNumber,
@@ -87,7 +89,7 @@ export default{
 
   async created() {
     await axios
-        .get("http://localhost:8001/user/getAllUsersFromSubject", {
+        .get("http://localhost:8001/user/qs/student/getAllUsersFromSubject", {
           params: {
             subjectId: parseInt(this.subject.id),
           },
@@ -103,7 +105,7 @@ export default{
 
 <style>
 
-.exerciseWrapper{
+.exerciseWrapper {
   display: flex;
   width: 100%;
   flex-wrap: wrap;

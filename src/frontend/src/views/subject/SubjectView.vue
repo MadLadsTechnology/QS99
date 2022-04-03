@@ -1,9 +1,9 @@
 <template>
 
   <ProfessorActions v-if="!this.$store.getters.isStudent"
-      :subject="subject"
+                    :subject="subject"
   />
-  <div class="container" v-if="!!subject">
+  <div v-if="!!subject" class="container">
 
     <h1>{{ subject.subjectCode }}</h1>
 
@@ -12,23 +12,31 @@
     </h4>
 
     <div class="nav">
-      <router-link :to="{ name: 'SubjectQueue' }"><div>Queue</div></router-link>
+      <router-link :to="{ name: 'SubjectQueue' }">
+        <div>Queue</div>
+      </router-link>
 
       <router-link :to="{ name: 'SubjectDetails' }"
-        ><div>Details</div></router-link
+      >
+        <div>Details</div>
+      </router-link
       >
 
       <router-link v-if="!this.$store.getters.isStudent || subject.isStudAss" :to="{ name: 'subjectUsers' }"
-      ><div>Users</div></router-link
+      >
+        <div>Users</div>
+      </router-link
       >
 
       <router-link v-else :to="{ name: 'SubjectAssignments' }"
-        ><div>Assignments</div></router-link
+      >
+        <div>Assignments</div>
+      </router-link
       >
 
 
     </div>
-    <router-view :subject="subject" />
+    <router-view :subject="subject"/>
   </div>
 </template>
 
@@ -47,17 +55,17 @@ export default {
   },
   async created() {
     await axios
-      .get("http://localhost:8001/subject/getSubject", {
-        params: {
-          subjectId: parseInt(this.id),
-        },
-      })
-      .then((response) => {
-        this.subject = response.data;
-      })
-      .catch((err) => {
-        alert(err);
-      });
+        .get("http://localhost:8001/subject/qs/student/getSubject", {
+          params: {
+            subjectId: parseInt(this.id),
+          },
+        })
+        .then((response) => {
+          this.subject = response.data;
+        })
+        .catch((err) => {
+          alert(err);
+        });
 
     document.title = "QS99 - " + this.subject.subjectCode;
   },
@@ -68,6 +76,7 @@ export default {
 .container {
   text-align: center;
 }
+
 .nav {
   display: flex;
   flex-direction: row;
@@ -76,6 +85,7 @@ export default {
   width: 50%;
   min-width: 200px;
 }
+
 .nav div {
   width: 100px;
 }

@@ -4,28 +4,28 @@
       <h1>Create a subject</h1>
 
       <BaseInput
-        label="Subject code"
-        type="text"
-        v-model.lazy="code"
-        :error="errors.email"
+          v-model.lazy="code"
+          :error="errors.email"
+          label="Subject code"
+          type="text"
       />
       <BaseInput
-        label="Subject name"
-        type="text"
-        v-model.lazy="name"
-        :error="errors.firstname"
+          v-model.lazy="name"
+          :error="errors.firstname"
+          label="Subject name"
+          type="text"
       />
       <BaseInput
-        label="Description"
-        type="text"
-        v-model.lazy="description"
-        :error="errors.email"
+          v-model.lazy="description"
+          :error="errors.email"
+          label="Description"
+          type="text"
       />
       <BaseInput
-        label="Year of lecturing"
-        type="text"
-        v-model="year"
-        :error="errors.password"
+          v-model="year"
+          :error="errors.password"
+          label="Year of lecturing"
+          type="text"
       />
 
       <button :disabled="!isValid" type="submit">Submit</button>
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, string } from "yup";
+import {useField, useForm} from "vee-validate";
+import {object, string} from "yup";
 import axios from "axios";
 
 export default {
@@ -55,21 +55,21 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post("http://localhost:8001/subject/create", null, {
-          params: {
-            subjectName: this.name,
-            subjectCode: this.code,
-            subjectDescription: this.description,
-            year: this.year,
-          },
-        })
-        .then(() => {
-          this.$router.push("/admin/subjects");
-        })
+          .post("http://localhost:8001/subject/qs/create", null, {
+            params: {
+              subjectName: this.name,
+              subjectCode: this.code,
+              subjectDescription: this.description,
+              year: this.year,
+            },
+          })
+          .then(() => {
+            this.$router.push("/admin/subjects");
+          })
 
-        .catch((err) => {
-          console.log(err);
-        });
+          .catch((err) => {
+            console.log(err);
+          });
     },
   },
 
@@ -81,14 +81,14 @@ export default {
       description: string().required(),
       year: string().required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: name } = useField("name");
-    const { value: code } = useField("code");
-    const { value: description } = useField("description");
-    const { value: year } = useField("year");
+    const {value: name} = useField("name");
+    const {value: code} = useField("code");
+    const {value: description} = useField("description");
+    const {value: year} = useField("year");
 
     return {
       name,
@@ -101,10 +101,10 @@ export default {
   computed: {
     isValid() {
       if (
-        this.errors.name ||
-        this.errors.code ||
-        this.errors.description ||
-        this.errors.year
+          this.errors.name ||
+          this.errors.code ||
+          this.errors.description ||
+          this.errors.year
       ) {
         return false;
       } else {

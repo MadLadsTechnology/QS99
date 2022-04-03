@@ -1,5 +1,6 @@
 <template>
-  <button v-if="this.$store.getters.isStudent && !subject.isStudAss" :disabled="inQueue" @click="this.$router.push('JoinQueue')">
+  <button v-if="this.$store.getters.isStudent && !subject.isStudAss" :disabled="inQueue"
+          @click="this.$router.push('JoinQueue')">
     Join queue
   </button>
 
@@ -13,8 +14,8 @@
       <th>Table</th>
       <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
-    <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry.gettingHelp)" >
-      <td>{{ index+1 }}</td>
+    <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry.gettingHelp)">
+      <td>{{ index + 1 }}</td>
       <td>{{ entry.lastName }}</td>
       <td>{{ entry.firstName }}</td>
       <td>
@@ -22,7 +23,7 @@
           {{ assignment }},
         </text>
       </td>
-      <td  v-if="subject.isStudAss">
+      <td v-if="subject.isStudAss">
         <button @click="helpAndApprove(entry)">{{ entry.type }}</button>
       </td>
       <td v-else>
@@ -40,41 +41,45 @@ export default {
 
   async created() {
     await axios
-      .get("http://localhost:8001/queue", {
-        params: {
-          subjectId: this.subject.id,
-        },
-      })
+        .get("http://localhost:8001/queue/qs/student", {
+          params: {
+            subjectId: this.subject.id,
+          },
+        })
 
-      .then((response) => {
-        console.log(response.data);
-        this.queue = response.data;
-        this.queue.some((element) => {
-          if (element.studentId === this.$store.state.user.emailAddress) {
-            this.inQueue = true;
-          }
+        .then((response) => {
+          console.log(response.data);
+          this.queue = response.data;
+          this.queue.some((element) => {
+            if (element.studentId === this.$store.state.user.emailAddress) {
+              this.inQueue = true;
+            }
+          });
         });
-      });
   },
 
   methods: {
 
-    helpAndApprove(entry){
-      axios.post("http://localhost:8001/entry/setIsGettingHelp", null, {params: {
-        entryId: entry.entryId,
+    helpAndApprove(entry) {
+      axios.post("http://localhost:8001/entry/qs/student/setIsGettingHelp", null, {
+        params: {
+          entryId: entry.entryId,
           isGettingHelp: true,
-        }})
-      this.$router.push({ name: 'helpAndApprove',
+        }
+      })
+      this.$router.push({
+        name: 'helpAndApprove',
         params: {
           studentId: entry.studentId,
           subjectId: this.subject.id,
           entryId: entry.entryId
-      }})
+        }
+      })
 
     },
 
     getClass(isGettingHelp) {
-      if(isGettingHelp == true){
+      if (isGettingHelp == true) {
         return "gettingHelp"
       }
       return "";
@@ -82,9 +87,7 @@ export default {
 
   },
 
-  computed:{
-
-  },
+  computed: {},
 
   data() {
     return {
@@ -96,7 +99,7 @@ export default {
 </script>
 
 <style>
-.gettingHelp{
+.gettingHelp {
   background-color: lightgreen;
 }
 </style>

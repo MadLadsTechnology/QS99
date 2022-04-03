@@ -1,18 +1,18 @@
 <template>
   <AddExercises
-    v-if="showAddExercises"
-    v-on:closeWindow="closeWindow"
-    v-bind:subject="subject"
-/>
+      v-if="showAddExercises"
+      v-bind:subject="subject"
+      v-on:closeWindow="closeWindow"
+  />
   <AddUserToSubject
       v-if="showAddSingleUser"
-      v-on:closeWindow="closeWindow"
       v-bind:subject="subject"
+      v-on:closeWindow="closeWindow"
   />
   <AddMultipleUsersToSubject
       v-if="showAddMultipleUsers"
-      v-on:closeWindowMultipleUsers="closeWindow"
       v-bind:subject="subject"
+      v-on:closeWindowMultipleUsers="closeWindow"
   />
 
   <button @click="showSingleUserWindow(id, subject.subjectCode)">
@@ -33,15 +33,15 @@ import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
 import AddExercises from "@/components/AddExercises";
 import axios from "axios";
 
-export default{
+export default {
 
   components: {
     AddUserToSubject,
     AddMultipleUsersToSubject,
     AddExercises,
   },
-  props:{
-    subject:{
+  props: {
+    subject: {
       type: Object,
       required: true,
     }
@@ -78,7 +78,7 @@ export default{
     },
     async removeUser(user) {
       await axios
-          .delete("http://localhost:8001/subject/deleteUserFromSubject", {
+          .delete("http://localhost:8001/subject/qs/deleteUserFromSubject", {
             params: {
               subjectId: this.subject.id,
               emailAddress: user.emailAddress,
@@ -92,7 +92,7 @@ export default{
     },
     async removeExercise(exercise) {
       await axios
-          .delete("http://localhost:8001/exercise", {
+          .delete("http://localhost:8001/qs/exercise", {
             params: {
               subjectId: this.id,
               exerciseNumber: exercise.exerciseNumber,

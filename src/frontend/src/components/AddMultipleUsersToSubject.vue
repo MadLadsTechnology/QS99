@@ -5,8 +5,8 @@
       <h1>Add multiple users to {{ subject.code }}</h1>
 
       <textarea
-        v-model="users"
-        placeholder="Paste emails separated by new lines"
+          v-model="users"
+          placeholder="Paste emails separated by new lines"
       >
       </textarea>
       <button :disabled="users == null" @click="submit">Submit</button>
@@ -38,21 +38,21 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post(
-          "http://localhost:8001/subject/addUsers",
-          { data: this.users },
-          {
-            params: {
-              subjectId: this.subject.id,
-            },
-          }
-        )
-        .then(() => {
-          this.closeWindow();
-        })
-        .catch((err) => {
-          alert(err);
-        });
+          .post(
+              "http://localhost:8001/subject/qs/addUsers",
+              {data: this.users},
+              {
+                params: {
+                  subjectId: this.subject.id,
+                },
+              }
+          )
+          .then(() => {
+            this.closeWindow();
+          })
+          .catch((err) => {
+            alert(err);
+          });
     },
 
     closeWindow() {
@@ -70,6 +70,7 @@ export default {
   height: 100%;
   background-color: white;
 }
+
 .window {
   position: absolute;
   background-color: antiquewhite;

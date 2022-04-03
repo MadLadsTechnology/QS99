@@ -1,6 +1,6 @@
 <template>
-  <div @click="approve" class="box" :class="getClass(exercise.approved)">
-    {{this.exercise.exerciseNumber}}
+  <div :class="getClass(exercise.approved)" class="box" @click="approve">
+    {{ this.exercise.exerciseNumber }}
   </div>
 
 </template>
@@ -23,22 +23,23 @@ export default {
     studentId: {
       required: true,
     },
-},
-  methods:{
+  },
+  methods: {
 
-    approve(){
-      axios.post("http://localhost:8001/exercise/approveExercise", null, {
+    approve() {
+      axios.post("http://localhost:8001/exercise/qs/student/approveExercise", null, {
         params: {
           subjectId: this.subjectId,
           exerciseNumber: this.exercise.exerciseNumber,
           studentEmail: this.studentId,
-        }}).then(location.reload())
+        }
+      }).then(location.reload())
 
 
     },
 
-    getClass(approved){
-      if(approved == true){
+    getClass(approved) {
+      if (approved == true) {
         return "approved"
       }
       return "";
@@ -52,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-.box{
+.box {
   background-color: red;
   font-weight: bold;
   border-radius: 3px;
@@ -65,10 +66,11 @@ export default {
 
 }
 
-.approved{
+.approved {
   background-color: green;
 }
-.box:hover{
+
+.box:hover {
   cursor: pointer;
   background-color: #2c3e50;
 }

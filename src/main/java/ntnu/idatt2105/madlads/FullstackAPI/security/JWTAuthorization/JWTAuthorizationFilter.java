@@ -40,7 +40,8 @@ public class JWTAuthorizationFilter {
                 String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
                 Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwtToken);
                 String gottenRole = claims.getBody().get("authorities").toString().replace("[", "").replace("]", "");
-                logger.info("gotten role: " + gottenRole);
+                logger.info("gotten role: " + gottenRole + " wanted role" + role);
+
                 if (gottenRole.equals(role)) {
                     logger.info("Authenticated with" + role);
 

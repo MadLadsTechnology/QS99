@@ -23,7 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable()
+            http.csrf().disable().cors().and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .antMatcher("/user/login")
@@ -31,8 +31,43 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         }
     }
 
+
     @Configuration
     @Order(2)
+    static class DefaultWebSecurityConfig4 extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable().cors().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and()
+                    .antMatcher("/**/student/**")
+                    .addFilterBefore(new JWTAuthorizationUserFilter(), FilterSecurityInterceptor.class);
+        }
+    }
+
+    @Configuration
+    @Order(3)
+    static class DefaultWebSecurityConfig3 extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable().cors().and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests().anyRequest().authenticated()
+                    .and()
+                    .antMatcher("/**/qs/**")
+                    .addFilterBefore(new JWTAuthorizationProfessorFilter(), FilterSecurityInterceptor.class);
+        }
+    }
+
+    @Configuration
+    @Order(4)
     static class DefaultWebSecurityConfig2 extends WebSecurityConfigurerAdapter {
 
         @Override
@@ -45,40 +80,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .and()
                     .antMatcher("/**")
                     .addFilterBefore(new JWTAuthorizationAdminFilter(), FilterSecurityInterceptor.class);
-        }
-    }
-
-    @Configuration
-    @Order(3)
-    static class DefaultWebSecurityConfig3 extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                    .authorizeRequests().anyRequest().authenticated()
-                    .and()
-                    .antMatcher("/qs/**")
-                    .addFilterBefore(new JWTAuthorizationProfessorFilter(), FilterSecurityInterceptor.class);
-        }
-    }
-
-    @Configuration
-    @Order(4)
-    static class DefaultWebSecurityConfig4 extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                    .authorizeRequests().anyRequest().authenticated()
-                    .and()
-                    .antMatcher("/qs/student/**")
-                    .addFilterBefore(new JWTAuthorizationUserFilter(), FilterSecurityInterceptor.class);
         }
     }
 

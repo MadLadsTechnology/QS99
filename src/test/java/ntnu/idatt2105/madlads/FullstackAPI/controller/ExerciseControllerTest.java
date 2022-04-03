@@ -28,6 +28,7 @@ class ExerciseControllerTest {
          tokenAdmin = cts.getTokenAdmin();
          tokenStudent = cts.getTokenStudent();
          tokenProfessor = cts.getTokenProfessor();
+         cts.deleteDatabase();
     }
 
     @Test

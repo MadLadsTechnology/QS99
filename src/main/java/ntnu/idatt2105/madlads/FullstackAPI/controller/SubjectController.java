@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetSubjectsStudassCheckDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.SubjectDTO;
@@ -62,10 +63,6 @@ public class SubjectController {
     @Autowired
     EntryRepository entryRepository;
 
-    public SubjectRepository getSubjectRepository() {
-        return subjectRepository;
-    }
-
     QueueController queueController = new QueueController();
 
     /**
@@ -77,6 +74,7 @@ public class SubjectController {
      * @param authentication
      * @return HTTP status and the subject if it was created.
      */
+    @Operation(summary = "Create a subject", description = "Creates a new subject and creates a queue for it aswell")
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Subject> createSubject(@RequestParam("subjectName") final String subjectName,
@@ -107,6 +105,7 @@ public class SubjectController {
      * @param authentication
      * @return
      */
+    @Operation(summary = "Add user to a subject", description = "Adds a given user to a given subject")
     @PostMapping("/addUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addUser(@RequestParam("subjectId") final int subjectId,
@@ -115,9 +114,11 @@ public class SubjectController {
     ) {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
-                try {
-                    QSUser user = userRepository.getDistinctByEmailAddress(email);
-                    Subject subject = subjectRepository.findById(subjectId);
+                QSUser user = userRepository.getDistinctByEmailAddress(email);
+                Subject subject = subjectRepository.findById(subjectId);
+                if(subject == null){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }else{
                     logger.info("Trying to add user to subject: " + subject.getSubjectCode());
                     if (user instanceof Student){
                         boolean response = studentRepository.findByEmailAddress(email).addStudentSubject(subject);
@@ -139,19 +140,11 @@ public class SubjectController {
                             logger.info("Professor already registered");
                             return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
                         }
-                    } else {
-                        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
                     }
-
-                }catch(Exception e){
-                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
-            } else {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
             }
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+       return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -161,6 +154,7 @@ public class SubjectController {
      * @param authentication
      * @return
      */
+    @Operation(summary = "Add a student assistant", description = "Adds an a given student as a student assistant to a given subject")
     @PostMapping("/addStudentAssistant")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudentAssistant(@RequestParam("subjectId") final int subjectId,
@@ -169,9 +163,11 @@ public class SubjectController {
 
     ) {
         if (authentication != null) {
-            try {
-                if (authentication.isAuthenticated()) {
-                    Subject subject = subjectRepository.findById(subjectId);
+            if (authentication.isAuthenticated()) {
+                Subject subject = subjectRepository.findById(subjectId);
+                if(subject == null){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }else{
                     logger.info("Adding studentassistant to subject: " + subject.getSubjectCode());
                     boolean response = studentRepository.findByEmailAddress(email).addAssistantSubject(subject);
                     if(response){
@@ -183,11 +179,7 @@ public class SubjectController {
                         return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE);
                     }
                 }
-            } catch(Exception e){
-                logger.info(e.getMessage());
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-
         }
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
@@ -197,11 +189,14 @@ public class SubjectController {
      * @param authentication
      * @return
      */
+    @Operation(summary = "Add users to subject", description = "Adds multiple users to a given subject")
     @PostMapping("/addUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> addStudents(@RequestParam("subjectId") int subjectId, @RequestBody Map<String, String> payload, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (authentication != null) {
             if (authentication.isAuthenticated()){
+
+
                 String[] list = payload.get("data").split("\n");
                 Subject subject = subjectRepository.findById(subjectId);
                 ArrayList<String[]> listSplitProperly = new ArrayList<>();
@@ -258,12 +253,15 @@ public class SubjectController {
      */
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Get all subjects of a user", description = "Gets all subject from a given user")
     public ResponseEntity<ArrayList<GetSubjectsStudassCheckDTO>> getSubjectsByUser(Authentication authentication) {
         if (authentication != null) {
             String email = authentication.getName();
 
             logger.info("Trying to get subjects for " + email);
-            try {
+            if (userRepository.getDistinctByEmailAddress(email) == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
                 QSUser user = userRepository.getDistinctByEmailAddress(email);
                 ArrayList<Integer> subjectIds;
                 Student student=null;
@@ -286,18 +284,36 @@ public class SubjectController {
                 }
                 logger.info("Sending all subjects related to " + email);
                 return new ResponseEntity<>(subjects, HttpStatus.OK);
-
-            } catch (Exception e) {
-                logger.info(e.getMessage());
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-
         }
         else{
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
+    /**
+     * Method for getting a subject by its ID.
+     * @param subjectId
+     * @param authentication
+     * @return
+     */
+    @Operation(summary = "UNUSED", description = "UNUSED")
+    @GetMapping("/admin/getSubject")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<SubjectDTO> getSubjectAdmin (@RequestParam("subjectId") int subjectId, Authentication authentication){
+        if (authentication!=null){
+            if (authentication.isAuthenticated()){
+                Subject subject;
+                if ((subject = subjectRepository.findById(subjectId))!=null){
+                    SubjectDTO subjectDTO = new SubjectDTO(subject);
+                    return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @Operation(summary = "Get a subject", description = "Gets a given subject")
     @GetMapping("/getSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<GetSubjectsStudassCheckDTO> getSubject (@RequestParam("subjectId") int subjectId, Authentication authentication){
@@ -333,7 +349,8 @@ public class SubjectController {
      * @param authentication
      * @return a list of the subjects.
      */
-    @GetMapping("/getAllSubjects")
+    @Operation(summary = "Get all subjects", description = "Gets all subjects that exist")
+    @GetMapping("/getAllSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetSubjectsDTO>> getAllSubject (Authentication authentication){
         if (authentication != null) {
@@ -356,62 +373,51 @@ public class SubjectController {
      * @param subjectId
      * @return
      */
+    @Operation(summary = "Delete a subject", description = "Deletes a given subject")
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     public ResponseEntity<Boolean> deleteSubject(Authentication authentication,
                                               @RequestParam("subjectId") final int subjectId){
         if (authentication!=null) {
-            try{
-                if (authentication.isAuthenticated()) {
-                    Subject subject = subjectRepository.findById(subjectId);
-                    if (subject != null) {
-                        ArrayList<Student> students = new ArrayList<>(subject.getStudents());
-                        ArrayList<Professor> professors = new ArrayList<>(subject.getProfessors());
-                        ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
-                        //We need to remove all elements connected to the student
-                        for(Student student: students){
-                            for(Exercise exercise: exercises){
-                                try{
-                                    //Remove approved exercises from student
-                                    student.removeExercise(exercise);
-                                } catch(Exception e) {
-                                    logger.info("Couldn't remove, because student didn't have exercise approved");
-                                }
+            if (authentication.isAuthenticated()) {
+                Subject subject = subjectRepository.findById(subjectId);
+                if (subject != null) {
+                    ArrayList<Student> students = new ArrayList<>(subject.getStudents());
+                    ArrayList<Professor> professors = new ArrayList<>(subject.getProfessors());
+                    ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
+                    //We need to remove all elements connected to the student
+                    for(Student student: students){
+                        for(Exercise exercise: exercises){
+                            try{
+                                //Remove approved exercises from student
+                                student.removeExercise(exercise);
+                            } catch(Exception e) {
+                                logger.info("Couldn't remove, because student didn't have exercise approved");
                             }
-                            student.setEntry(null);
-                            student.removeStudentSubject(subject); //Remove subject from all students
-                            student.removeAssistantSubject(subject); //Remove subject from all assistants
-                            studentRepository.save(student);
                         }
-                        for(Professor professor: professors){
-                            professor.removeProfessorSubject(subject); //Remove subject from all professors
-                        }
-                        entryRepository.deleteAllByQueue(queueRepository.findBySubject(subject)); //Delete all entries in the subject queue
-                        exerciseRepository.deleteAllBySubject(subject); //Delete all exercises in the subject
-                        queueRepository.deleteBySubject(subject); //Delete queue from subject
-                        subjectRepository.deleteById(subjectId); //Delete subject
-
-                        return new ResponseEntity<>(true, HttpStatus.OK);
+                        student.setEntry(null);
+                        student.removeStudentSubject(subject); //Remove subject from all students
+                        student.removeAssistantSubject(subject); //Remove subject from all assistants
+                        studentRepository.save(student);
                     }
-                    return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-                }
-            } catch (Exception e) {
-                logger.info(e.getMessage());
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-            }
+                    for(Professor professor: professors){
+                        professor.removeProfessorSubject(subject); //Remove subject from all professors
+                    }
+                    entryRepository.deleteAllByQueue(queueRepository.findBySubject(subject)); //Delete all entries in the subject queue
+                    exerciseRepository.deleteAllBySubject(subject); //Delete all exercises in the subject
+                    queueRepository.deleteBySubject(subject); //Delete queue from subject
+                    subjectRepository.deleteById(subjectId); //Delete subject
 
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            }
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
-    /**
-     * Method for deleting a single user from a subject
-     * @param subjectId
-     * @param emailAddress
-     * @param authentication
-     * @return
-     */
+    @Operation(summary = "Delete a user from a subject", description = "Deletes a given user from a given subject")
     @DeleteMapping("/deleteUserFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> removeUserFromSubject(@RequestParam("subjectId") int subjectId,@RequestParam("emailAddress") String emailAddress, Authentication authentication){

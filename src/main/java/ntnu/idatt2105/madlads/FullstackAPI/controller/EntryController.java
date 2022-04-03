@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
@@ -38,6 +39,7 @@ public class EntryController {
     @PostMapping("/setIsGettingHelp")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
+    @Operation(summary = "Set wheteher student isGettingHelp", description = "Needs the entry id and what you want to set it to")
     public ResponseEntity<Boolean> setIsGettingHelp(Authentication authentication,
                                                     @RequestParam("entryId") final Long entryId,
                                                     @RequestParam("isGettingHelp") final boolean isGettingHelp){
@@ -71,6 +73,7 @@ public class EntryController {
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
+    @Operation(summary = "Delete entry", description = "Deletes entry by an entryId")
     public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
                                                @RequestParam("entryId") final Long entryId
                                                ){

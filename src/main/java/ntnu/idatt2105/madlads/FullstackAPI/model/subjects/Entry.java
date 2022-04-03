@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 
 import javax.persistence.*;
@@ -13,22 +14,41 @@ public class Entry {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(name = "id", type = "number", format = "long", description = "The id of the object", required = true, example = "1")
     private Long id;
+
+    @Schema(name = "startTime", type = "date", format = "LocalDateTime", description = "Start time of the entry", required = true, example = "12:00 01.01.2000")
     private LocalDateTime startTime;
+
+    @Schema(name = "room", type = "number", format = "long", description = "The id of the object", required = true, example = "1")
     private String room;
+
     private String type;
+
+    @Schema(type = "string", format = "String", description = "The building", required = true, example = "Realfagsbygget")
     private String building;
+
+    @Schema(type = "number", description = "Number of the table", required = true, example = "2")
     private int tableNumber;
+
+    @Schema(type = "boolean", description = "Indicates whether the student ascoiated with this entry is getting help", required = true, example = "true")
     private boolean isGettingHelp;
+
+
     @ManyToOne
+    @Schema(type = "Student", description = "Student ascoiated with this entry", required = true)
     private Student student;
+
     @ManyToOne
+    @Schema(type = "Queue", description = "Which queue the entry is in", required = true)
     private Queue queue;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="entry_exercises",
             joinColumns = @JoinColumn(name = "entry_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name= "exercise_id", referencedColumnName = "id"))
+    @Schema(name = "exercises", type = "list", format = "collection", description = "A collection of all exercises", required = true)
     private Collection<Exercise> exercises;
 
     public Entry(LocalDateTime startTime, String room,  String building, int tableNumber, String type, Student student, Queue queue, Collection<Exercise> exercises) {

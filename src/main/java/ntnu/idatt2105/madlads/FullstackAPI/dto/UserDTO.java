@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,15 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
+    @Schema(type = "string", description = "Users email", required = true, example = "test@test.no")
     private String emailAddress;
+    @Schema(type = "string", description = "Users first name", required = true, example = "Ola")
     private String firstName;
+    @Schema(type = "string", description = "Users last name", required = true, example = "Nordmann")
     private String lastName;
+    @Schema(type = "string", description = "Users type", required = true, example = "Professor")
     private String role;
+    @Schema(type = "List", description = "All exercises", required = true)
     private ArrayList<GetExerciseByStudentDTO> exercises;
 
     public UserDTO(Student student, List<Exercise> exercises){

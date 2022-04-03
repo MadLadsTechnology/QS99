@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetEntryDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
@@ -56,6 +57,7 @@ public class QueueController {
      * @param queueRepository_
      * @return the http response depending on if the queue was successfully created, and the queue as an object
      */
+    @Operation(summary = "Create a new queue ", description = "Only used when creating a subject")
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Queue> createQueue(@RequestParam("subjectId") final int subjectId,
@@ -88,6 +90,7 @@ public class QueueController {
      * @param authentication
      * @return the http response and a boolean depending on if the status was changed or not
      */
+    @Operation(summary = "Set status of the queue", description = "Sets status of a given queue to either true or false")
     @PostMapping("/setQueueStatus")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> setQueueStatus (@RequestParam("isActive") boolean isActive, @RequestParam("subjectId") int id, Authentication authentication){
@@ -112,6 +115,7 @@ public class QueueController {
      *               the user, the exercises and where you are
      * @return the http response depending on if the entry was created or not, and the entry as an object
      */
+    @Operation(summary = "Add entry to a queue", description = "Adds an entry to a queue")
     @PostMapping("/addEntry")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<GetEntryDTO> addEntryToQueue(Authentication authentication,
@@ -175,6 +179,7 @@ public class QueueController {
      * @param id
      * @return the http response and a boolean depending on if the entry was deleted
      */
+    @Operation(summary = "Delete an entry", description = "Deletes a given entry from the queue")
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
@@ -190,6 +195,7 @@ public class QueueController {
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
+    @Operation(summary = "Gets all entries", description = "Gets all entries in a given subject")
     @GetMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetEntryDTO>> getEntriesBySubject(Authentication authentication,

@@ -1,10 +1,9 @@
 <template>
-  <div @click="approve" class="box" :class="getClass(exercise.approved)">
-    {{this.exercise.exerciseNumber}}
+  <div :class="getClass(exercise.approved)" class="box" @click="toggleApprove">
+    {{ this.exercise.exerciseNumber }}
   </div>
 
 </template>
-
 <script>
 
 import axios from "axios";
@@ -20,31 +19,37 @@ export default {
       type: Object,
       required: true,
     },
-    studentId: {
+    student: {
       required: true,
     },
-},
-  methods:{
+  },
+  methods: {
 
-    approve(){
-      axios.post("http://localhost:8001/exercise/approveExercise", null, {
-        params: {
-          subjectId: this.subjectId,
-          exerciseNumber: this.exercise.exerciseNumber,
-          studentEmail: this.studentId,
-        }}).then(location.reload())
+    toggleApprove() {
 
+      let message = "Are you sure you want to approve exercise " + this.exercise.exerciseNumber + " for " + this.student.firstName + "?"
 
+      if (!this.exercise.approved) {
+        message = "Are you sure you remove the approval of exercise " + this.exercise.exerciseNumber + " for " + this.student.firstName + "?"
+      }
+      if (confirm(message)) {
+        axios.post("http://localhost:8001/exercise/approveExercise", null, {
+          params: {
+            subjectId: this.subjectId,
+            exerciseNumber: this.exercise.exerciseNumber,
+            studentEmail: this.student.emailAddress,
+            isApproved: !this.exercise.approved,
+          }
+        }).then(location.reload())
+      }
     },
 
-    getClass(approved){
-      if(approved == true){
+    getClass(approved) {
+      if (approved == true) {
         return "approved"
       }
       return "";
     }
-
-
   },
 
 
@@ -52,7 +57,7 @@ export default {
 </script>
 
 <style scoped>
-.box{
+.box {
   background-color: red;
   font-weight: bold;
   border-radius: 3px;
@@ -65,10 +70,11 @@ export default {
 
 }
 
-.approved{
+.approved {
   background-color: green;
 }
-.box:hover{
+
+.box:hover {
   cursor: pointer;
   background-color: #2c3e50;
 }

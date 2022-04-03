@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.subjects;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Professor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import org.hibernate.annotations.OnDelete;
@@ -14,21 +15,29 @@ public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(type = "number", description = "Id of the object", required = true, example = "2")
     private int id;
+    @Schema(type = "string", description = "Name of the subject", required = true, example = "Fullstack")
     private String subjectName;
+    @Schema(type = "string", description = "Code of the subject", required = true, example = "IDATT2105")
     private String subjectCode;
+    @Schema(type = "string", description = "Description of the subject", required = true, example = "Dette er fullstack faget")
     private String subjectDescription;
+    @Schema(type = "number", description = "Year of the subject", required = true, example = "2022")
     private int subjectYear;
     @ManyToMany(mappedBy = "studentSubjects", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Schema(type = "set", description = "All students in given subject", required = true)
     private Set<Student> students = new HashSet<>();
 
     @ManyToMany(mappedBy = "professorSubjects", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Schema(type = "set", description = "All professors in given subject", required = true)
     private Set<Professor> professors = new HashSet<>();
 
     @ManyToMany(mappedBy = "assistantSubjects", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Schema(type = "set", description = "All studentassistants in given subject", required = true)
     private Set<Student> assistants = new HashSet<>();
 
     public Subject(String subjectCode,String subjectName, String subjectDescription, int subjectYear) {

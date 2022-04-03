@@ -10,26 +10,28 @@
       <th v-if="!subject.isStudAss">Actions</th>
     </tr>
 
-    <tr  v-for="user in users" :key="user.emailAddress">
+    <tr v-for="user in users" :key="user.emailAddress">
 
       <td>{{ user.lastName }}</td>
       <td>{{ user.firstName }}</td>
       <td>{{ user.emailAddress }}</td>
       <td>{{ user.role }}</td>
-      <td >
+      <td>
         <div class="exerciseWrapper">
           <ExerciseBox
               v-for="exercise in user.exercises" :key="exercise"
               :exercise="exercise"
+              :student="user"
               :subjectId="subject.id"
-              :studentId="user.emailAddress"
 
           />
         </div>
 
       </td>
 
-      <td v-if="!subject.isStudAss"><button @click="removeUser(user)">Remove</button></td>
+      <td v-if="!subject.isStudAss">
+        <button @click="removeUser(user)">Remove</button>
+      </td>
     </tr>
 
   </table>
@@ -41,11 +43,11 @@
 import axios from "axios";
 import ExerciseBox from "@/components/ExerciseBox";
 
-export default{
+export default {
 
   name: "SubjectUsersView",
   props: ["subject"],
-  components:{
+  components: {
     ExerciseBox
   },
 
@@ -57,18 +59,19 @@ export default{
 
   methods: {
     async removeUser(user) {
-      await axios
-          .delete("http://localhost:8001/subject/deleteUserFromSubject", {
-            params: {
-              subjectId: this.subject.id,
-              emailAddress: user.emailAddress,
-            },
-          })
-          .then((response) => {
-            if (response) {
-              location.reload();
-            }
-          });
+      if (confirm("Are you sure you want to remove " + user.emailAddress + " from subject " + this.subject.subjectCode))
+        await axios
+            .delete("http://localhost:8001/subject/deleteUserFromSubject", {
+              params: {
+                subjectId: this.subject.id,
+                emailAddress: user.emailAddress,
+              },
+            })
+            .then((response) => {
+              if (response) {
+                location.reload();
+              }
+            });
     },
     async removeExercise(exercise) {
       await axios
@@ -103,7 +106,7 @@ export default{
 
 <style>
 
-.exerciseWrapper{
+.exerciseWrapper {
   display: flex;
   width: 100%;
   flex-wrap: wrap;

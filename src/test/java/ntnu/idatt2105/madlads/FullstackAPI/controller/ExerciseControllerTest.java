@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.io.IOException;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,12 +25,12 @@ class ExerciseControllerTest {
     MockMvc mockMvc;
 
     @BeforeAll
-    static void before() {
-         CommonTestService cts = new CommonTestService();
-         tokenAdmin = cts.getTokenAdmin();
-         tokenStudent = cts.getTokenStudent();
-         tokenProfessor = cts.getTokenProfessor();
-         cts.deleteDatabase();
+    static void before() throws IOException {
+        CommonTestService cts = new CommonTestService();
+        tokenAdmin = cts.getTokenAdmin();
+        tokenStudent = cts.getTokenStudent();
+        tokenProfessor = cts.getTokenProfessor();
+        cts.deleteDatabase();
     }
 
     @Test
@@ -36,8 +38,8 @@ class ExerciseControllerTest {
         mockMvc.perform(post("http://localhost:8001/exercise")
                 .header("authorization", "Bearer " + tokenAdmin)
                 .param("subjectId", "1")
-                .param("numberOfExercises","2")
-                .param("numberOfMandatory","1")).andExpect(status().isCreated());
+                .param("numberOfExercises", "2")
+                .param("numberOfMandatory", "1")).andExpect(status().isCreated());
     }
 
     @Test
@@ -45,8 +47,8 @@ class ExerciseControllerTest {
         mockMvc.perform(post("http://localhost:8001/exercise/approveExercise")
                 .header("authorization", "Bearer " + tokenProfessor)
                 .param("subjectId", "1")
-                .param("exerciseNumber","1")
-                .param("studentEmail","adsads@dsaasd.no")).andExpect(status().isOk());
+                .param("exerciseNumber", "1")
+                .param("studentEmail", "adsads@dsaasd.no")).andExpect(status().isOk());
     }
 
     @Test
@@ -54,21 +56,21 @@ class ExerciseControllerTest {
         mockMvc.perform(delete("http://localhost:8001/exercise")
                 .header("authorization", "Bearer " + tokenAdmin)
                 .param("subjectId", "1")
-                .param("exerciseNumber","1")).andExpect(status().isOk());
+                .param("exerciseNumber", "1")).andExpect(status().isOk());
     }
 
     @Test
     void getExercisesByUser() throws Exception {
         mockMvc.perform(get("http://localhost:8001/exercise/getByUser")
                 .header("authorization", "Bearer " + tokenStudent)
-                .param("subjectId","1")).andExpect(status().isNotFound());
+                .param("subjectId", "1")).andExpect(status().isNotFound());
     }
 
     @Test
     void getExercisesBySubject() throws Exception {
         mockMvc.perform(get("http://localhost:8001/exercise/getByUser")
                 .header("authorization", "Bearer " + tokenStudent)
-                .param("subjectId","1")).andExpect(status().isNotFound());
+                .param("subjectId", "1")).andExpect(status().isNotFound());
     }
 
     @Test

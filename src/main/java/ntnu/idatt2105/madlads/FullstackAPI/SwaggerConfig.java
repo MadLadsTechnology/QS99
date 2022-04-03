@@ -10,36 +10,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-    /*private JwtConfig jwtConfig;
-
-    private ApiKey apiKey() {
-        return new ApiKey(jwtConfig.getPrefix(), jwtConfig.getHeader(), "header");
-    }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(defaultAuth()).build();
-    }
-
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference(jwtConfig.getPrefix(), authorizationScopes));
-    }*/
 
     @Bean
     public GroupedOpenApi publicAPI() {
         return GroupedOpenApi.builder()
                 .group("public")
                 .pathsToMatch("/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi adminAPI() {
-        return GroupedOpenApi.builder()
-                .group("admin")
-                .pathsToMatch("/admin/**")
                 .build();
     }
 

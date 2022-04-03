@@ -113,8 +113,8 @@ class SubjectControllerTest {
 
     @Test
     void removeUserFromSubject() throws Exception {
-        mockMvc.perform(delete("http://localhost:8001/deleteUserFromSubject")
-                .header("authorization", "Bearer " + tokenAdmin)
+        mockMvc.perform(delete("http://localhost:8001/subject/deleteUserFromSubject")
+                .header("authorization", "Bearer " + tokenStudent)
                 .param("subjectId", "1")
                 .param("emailAddress", "test@email.com")).andExpect(status().isNotFound());
     }

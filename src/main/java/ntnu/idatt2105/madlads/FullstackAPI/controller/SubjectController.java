@@ -114,8 +114,8 @@ public class SubjectController {
                                                Authentication authentication
     ) {
         if (authentication != null) {
-            try {
-                if (authentication.isAuthenticated()){
+            if (authentication.isAuthenticated()){
+                try {
                     QSUser user = userRepository.getDistinctByEmailAddress(email);
                     Subject subject = subjectRepository.findById(subjectId);
                     logger.info("Trying to add user to subject: " + subject.getSubjectCode());
@@ -142,11 +142,12 @@ public class SubjectController {
                     } else {
                         return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
                     }
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+
+                }catch(Exception e){
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
-            }catch(Exception e){
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

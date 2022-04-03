@@ -5,24 +5,24 @@
       <h1>Add exercises to {{ subject.code }}</h1>
 
       <BaseInput
-        label="Number of exercises"
-        type="number"
-        v-model.lazy="count"
-        :error="errors.count"
+          v-model.lazy="count"
+          :error="errors.count"
+          label="Number of exercises"
+          type="number"
       />
       <BaseInput
-        label="Number of mandatory"
-        type="number"
-        v-model.lazy="mandatory"
-        :error="errors.mandatory"
+          v-model.lazy="mandatory"
+          :error="errors.mandatory"
+          label="Number of mandatory"
+          type="number"
       />
       <button :disabled="!isValid" type="submit">Submit</button>
     </form>
   </div>
 </template>
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, number } from "yup";
+import {useField, useForm} from "vee-validate";
+import {number, object} from "yup";
 import axios from "axios";
 
 export default {
@@ -46,19 +46,19 @@ export default {
     //Method for submitting form
     submit() {
       axios
-        .post("http://localhost:8001/exercise", null, {
-          params: {
-            subjectId: this.subject.id,
-            numberOfExercises: this.count,
-            numberOfMandatory: this.mandatory,
-          },
-        })
-        .then(() => {
-          this.closeWindow();
-        })
-        .catch((err) => {
-          alert(err);
-        });
+          .post("http://localhost:8001/qs/exercise", null, {
+            params: {
+              subjectId: this.subject.id,
+              numberOfExercises: this.count,
+              numberOfMandatory: this.mandatory,
+            },
+          })
+          .then(() => {
+            this.closeWindow();
+          })
+          .catch((err) => {
+            alert(err);
+          });
     },
 
     closeWindow() {
@@ -72,12 +72,12 @@ export default {
       count: number().min(1).required(),
       mandatory: number().min(1).required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: count } = useField("count");
-    const { value: mandatory } = useField("mandatory");
+    const {value: count} = useField("count");
+    const {value: mandatory} = useField("mandatory");
 
     return {
       count,

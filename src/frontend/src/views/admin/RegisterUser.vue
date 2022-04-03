@@ -5,33 +5,33 @@
 
       <div class="nameInputs">
         <BaseInput
-          label="Last name"
-          type="lastname"
-          v-model.lazy="lastname"
-          :error="errors.lastname"
+            v-model.lazy="lastname"
+            :error="errors.lastname"
+            label="Last name"
+            type="lastname"
         />
         <BaseInput
-          label="First name"
-          type="text"
-          v-model.lazy="firstname"
-          :error="errors.firstname"
+            v-model.lazy="firstname"
+            :error="errors.firstname"
+            label="First name"
+            type="text"
         />
       </div>
 
       <BaseInput
-        label="Email"
-        type="email"
-        v-model.lazy="email"
-        :error="errors.email"
+          v-model.lazy="email"
+          :error="errors.email"
+          label="Email"
+          type="email"
       />
 
-      <div class="radioButtons" v-if="this.$store.getters.isAdmin">
+      <div v-if="this.$store.getters.isAdmin" class="radioButtons">
         <div>
-          <input type="radio" id="professor" value="Professor" v-model="this.userType">
+          <input id="professor" v-model="this.userType" type="radio" value="Professor">
           <label for="professor">Professor</label>
         </div>
         <div>
-          <input type="radio" id="student" value="Student" v-model="this.userType" checked>
+          <input id="student" v-model="this.userType" checked type="radio" value="Student">
           <label for="student">Student</label>
         </div>
       </div>
@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, string } from "yup";
+import {useField, useForm} from "vee-validate";
+import {object, string} from "yup";
 import axios from "axios";
 
 export default {
@@ -63,26 +63,26 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
-      let url = "http://localhost:8001/user/registerStudent";
+      let url = "http://localhost:8001/user/qs7registerStudent";
       console.log(this.userType);
       if (this.userType === "Professor") {
-        url = "http://localhost:8001/user/registerProfessor";
+        url = "http://localhost:8001/user/qs/registerProfessor";
       }
       axios
-        .post(url, null, {
-          params: {
-            lastname: this.lastname,
-            firstname: this.firstname,
-            email: this.email,
-          },
-        })
-        .then(() => {
-          this.$router.push("/admin/users");
-        })
-        .catch((err) => {
-          console.log(err);
-          alert("User already exists")
-        });
+          .post(url, null, {
+            params: {
+              lastname: this.lastname,
+              firstname: this.firstname,
+              email: this.email,
+            },
+          })
+          .then(() => {
+            this.$router.push("/admin/users");
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("User already exists")
+          });
     },
   },
 
@@ -93,13 +93,13 @@ export default {
       firstname: string().required(),
       email: string().email("Invalid email format").required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: lastname } = useField("lastname");
-    const { value: firstname } = useField("firstname");
-    const { value: email } = useField("email");
+    const {value: lastname} = useField("lastname");
+    const {value: firstname} = useField("firstname");
+    const {value: email} = useField("email");
 
     return {
       lastname,
@@ -127,6 +127,7 @@ export default {
   width: 100%;
   gap: 20px;
 }
+
 .radioButtons {
   display: flex;
   gap: 50px;

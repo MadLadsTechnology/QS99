@@ -1,12 +1,12 @@
 <template>
-  <h1> Currently assisting {{object.firstName}}, {{object.lastName}}</h1>
-
+  <h1> Currently assisting {{ object.firstName }}, {{ object.lastName }}</h1>
 
 
   <div class="exercises">
     <h3>Exercises</h3>
     <h5>Click the exercise you want to approve</h5>
-    <ExerciseBox v-for="exercise in object.exercises" :key="exercise" :subjectId="subjectId" :studentId="studentId" :exercise="exercise"/>
+    <ExerciseBox v-for="exercise in object.exercises" :key="exercise" :exercise="exercise" :studentId="studentId"
+                 :subjectId="subjectId"/>
   </div>
 
   <button @click="suspend">Suspend</button>
@@ -21,35 +21,39 @@ import ExerciseBox from "@/components/ExerciseBox";
 
 export default {
   name: "HelpAndApprove",
-  props:["subjectId", "studentId", "entryId"],
-  components:{
+  props: ["subjectId", "studentId", "entryId"],
+  components: {
     ExerciseBox,
   },
 
-  data(){
-    return{
-      object:null,
+  data() {
+    return {
+      object: null,
     }
   },
 
   methods: {
-    suspend(){
-      axios.post("http://localhost:8001/entry/setIsGettingHelp", null, {params:{
+    suspend() {
+      axios.post("http://localhost:8001/entry/qs/student/setIsGettingHelp", null, {
+        params: {
           entryId: this.entryId,
           isGettingHelp: false,
-        }}).then(this.$router.push("/subjects/" + this.subjectId + "/queue"))
+        }
+      }).then(this.$router.push("/subjects/" + this.subjectId + "/queue"))
     },
-    done(){
-      axios.delete("http://localhost:8001/entry", {params:{
+    done() {
+      axios.delete("http://localhost:8001/entry", {
+        params: {
           entryId: this.entryId,
-        }}).then(
-            this.$router.push("/subjects/" + this.subjectId + "/queue"))
+        }
+      }).then(
+          this.$router.push("/subjects/" + this.subjectId + "/queue"))
     },
   },
 
 
-  async created(){
-   await axios.get("http://localhost:8001/user/getUserFromSubject", {
+  async created() {
+    await axios.get("http://localhost:8001/user/qs/student/getUserFromSubject", {
       params: {
         email: this.studentId,
         subjectId: this.subjectId,
@@ -66,7 +70,7 @@ export default {
 </script>
 
 <style scoped>
-.exercises{
+.exercises {
   display: flex;
   margin: auto;
   width: 100%;

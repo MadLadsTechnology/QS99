@@ -1,42 +1,42 @@
 <template>
 
-  <h1>Hello {{ user.firstName }}  {{user.lastName}} </h1>
+  <h1>Hello {{ user.firstName }} {{ user.lastName }} </h1>
 
-  <h3>Email:{{user.emailAddress}}</h3>
+  <h3>Email:{{ user.emailAddress }}</h3>
 
-    <form class="loginForm" @submit.prevent="submit()">
-      <h3>Change your password</h3>
-      <div class="passwordInputs">
-        <BaseInput
-            label="Old password"
-            type="password"
-            v-model.lazy="oldPassword"
-            :error="errors.lastname"
-        />
-        <BaseInput
-            label="New password"
-            type="password"
-            v-model.lazy="newPassword"
-            :error="errors.firstname"
-        />
+  <form class="loginForm" @submit.prevent="submit()">
+    <h3>Change your password</h3>
+    <div class="passwordInputs">
+      <BaseInput
+          v-model.lazy="oldPassword"
+          :error="errors.lastname"
+          label="Old password"
+          type="password"
+      />
+      <BaseInput
+          v-model.lazy="newPassword"
+          :error="errors.firstname"
+          label="New password"
+          type="password"
+      />
 
-        <BaseInput
-            label="Confirm new password"
-            type="password"
-            v-model.lazy="confirmPassword"
-            :error="errors.email"
-        />
-        </div>
+      <BaseInput
+          v-model.lazy="confirmPassword"
+          :error="errors.email"
+          label="Confirm new password"
+          type="password"
+      />
+    </div>
 
-      <button :disabled="!isValid" type="submit">Submit</button>
+    <button :disabled="!isValid" type="submit">Submit</button>
 
-    </form>
+  </form>
 
 </template>
 
 <script>
-import { useField, useForm } from "vee-validate";
-import { object, string } from "yup";
+import {useField, useForm} from "vee-validate";
+import {object, string} from "yup";
 import axios from "axios";
 
 export default {
@@ -56,7 +56,7 @@ export default {
     submit() {
 
       axios
-          .post("http://localhost:8001/user/changePassword", null, {
+          .post("http://localhost:8001/user/qs/student/changePassword", null, {
             params: {
               newPassword: this.newPassword,
               oldPassword: this.oldPassword,
@@ -78,13 +78,13 @@ export default {
       newPassword: string().required(),
       confirmPassword: string().required(),
     });
-    const { errors } = useForm({
+    const {errors} = useForm({
       validationSchema,
     });
 
-    const { value: oldPassword } = useField("oldPassword");
-    const { value: newPassword } = useField("newPassword");
-    const { value: confirmPassword } = useField("confirmPassword");
+    const {value: oldPassword} = useField("oldPassword");
+    const {value: newPassword} = useField("newPassword");
+    const {value: confirmPassword} = useField("confirmPassword");
 
     return {
       oldPassword,
@@ -112,6 +112,7 @@ export default {
   width: 100%;
   gap: 20px;
 }
+
 .radioButtons {
   display: flex;
   gap: 50px;

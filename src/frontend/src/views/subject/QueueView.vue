@@ -59,7 +59,7 @@ export default {
 
   async created() {
     await axios
-        .get("http://localhost:8001/queue", {
+        .get("http://localhost:8001/queue/qs/student", {
           params: {
             subjectId: this.subject.id,
           },
@@ -98,7 +98,7 @@ export default {
 
     },
     helpAndApprove(entry) {
-      axios.post("http://localhost:8001/entry/setIsGettingHelp", null, {
+      axios.post("http://localhost:8001/entry/qs/student/setIsGettingHelp", null, {
         params: {
           entryId: entry.entryId,
           isGettingHelp: true,

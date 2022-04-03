@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ public class ExerciseController {
 
     /**
      * Create a new exercise
+     *
      * @param subjectId
      * @param numberOfExercises
      * @param numberOfMandatory
@@ -51,7 +53,8 @@ public class ExerciseController {
      * @return Returns if a creation was succesfull or not
      */
 
-    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Add exercise ", description = "Adds an exercise to a given subject")
     public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
@@ -78,13 +81,16 @@ public class ExerciseController {
 
     /**
      * Deletes an exercise
+     *
      * @param subjectId
      * @param exerciseNumber
      * @param authentication
      * @return Returns if a deletion was successfully or not
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Delete an exercise", description = "Deletes an exercise from the subject")
-    @DeleteMapping
+    @DeleteMapping()
     @Transactional
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Boolean> deleteExercise(@RequestParam("subjectId") int subjectId,
@@ -101,14 +107,17 @@ public class ExerciseController {
 
     /**
      * Approve an exercise
+     *
      * @param subjectId
      * @param exerciseNumber
      * @param studentEmail
      * @param authentication
      * @return Returns whether it could approve an exercise or not
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Approve an exercise", description = "Approve a given exercise in a given subject")
-    @PostMapping("/approveExercise")
+    @PostMapping("approveExercise")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> approveExercise(@RequestParam("subjectId") int subjectId,
                                                    @RequestParam("exerciseNumber") int exerciseNumber,
@@ -139,11 +148,13 @@ public class ExerciseController {
 
     /**
      * Get all exercises that belong to a user
+     *
      * @param authentication
      * @param subjectId
      * @return Returns a list of all the exercises
      */
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Get exercise per user", description = "Gets all exercises for a user within one subject")
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -177,11 +188,13 @@ public class ExerciseController {
 
     /**
      * Get all exercises in a spesific subject
+     *
      * @param authentication
      * @param subjectId
      * @return A list of exercises
      */
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Get all exercises in a subject", description = "Gets all exercises given a subject")
     @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)

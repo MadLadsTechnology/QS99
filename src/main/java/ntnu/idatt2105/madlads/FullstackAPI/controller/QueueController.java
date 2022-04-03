@@ -5,9 +5,6 @@ import ntnu.idatt2105.madlads.FullstackAPI.dto.GetEntryDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.QueueRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Queue;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,12 +49,15 @@ public class QueueController {
 
     /**
      * Create a queue, is always called when a subject is created
+     *
      * @param subjectId
      * @param isActive
      * @param subjectRepository_
      * @param queueRepository_
      * @return the http response depending on if the queue was successfully created, and the queue as an object
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @Operation(summary = "Create a new queue ", description = "Only used when creating a subject")
     @PostMapping("/create")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -66,16 +67,15 @@ public class QueueController {
                                              QueueRepository queueRepository_) {
         logger.info("subjectId: " + subjectId + " isActive: " + isActive);
         Subject subject = subjectRepository_.findById(subjectId);
-        if(subject == null){
+        if (subject == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else if(queueRepository_.findBySubject(subject) != null ){
+        } else if (queueRepository_.findBySubject(subject) != null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }else{
+        } else {
             try {
-            Queue queue = queueRepository_
-                    .save(new Queue(subject, isActive));
-            return new ResponseEntity<>(queue, HttpStatus.CREATED);
+                Queue queue = queueRepository_
+                        .save(new Queue(subject, isActive));
+                return new ResponseEntity<>(queue, HttpStatus.CREATED);
             } catch (Exception e) {
                 logger.info(e.getMessage());
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,19 +85,22 @@ public class QueueController {
 
     /**
      * Sets the queue status to active or inactive (isActive to true or false)
+     *
      * @param isActive
      * @param id
      * @param authentication
      * @return the http response and a boolean depending on if the status was changed or not
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Set status of the queue", description = "Sets status of a given queue to either true or false")
     @PostMapping("/setQueueStatus")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> setQueueStatus (@RequestParam("isActive") boolean isActive, @RequestParam("subjectId") int id, Authentication authentication){
-        if (authentication!=null){
-            if (authentication.isAuthenticated()){
+    public ResponseEntity<Boolean> setQueueStatus(@RequestParam("isActive") boolean isActive, @RequestParam("subjectId") int id, Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
                 Subject su;
-                if ((su = subjectRepository.findById(id))!=null){
+                if ((su = subjectRepository.findById(id)) != null) {
                     Queue queue = queueRepository.findBySubject(su);
                     queue.setActive(isActive);
                     queueRepository.save(queue);
@@ -110,25 +113,28 @@ public class QueueController {
 
     /**
      * Method for adding an entry to a queue
+     *
      * @param authentication
-     * @param payload data needed for creating an entry, including the subject,
-     *               the user, the exercises and where you are
+     * @param payload        data needed for creating an entry, including the subject,
+     *                       the user, the exercises and where you are
      * @return the http response depending on if the entry was created or not, and the entry as an object
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Add entry to a queue", description = "Adds an entry to a queue")
     @PostMapping("/addEntry")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<GetEntryDTO> addEntryToQueue(Authentication authentication,
-                                                 @RequestParam("room") final String room,
-                                                 @RequestParam("building") final String building,
-                                                 @RequestParam("tableNumber") final int tableNumber,
-                                                 @RequestParam("type") final String type,
-                                                 @RequestParam("subjectId") final int subjectId,
-                                                 @RequestBody Map<String, Object> payload){
+                                                       @RequestParam("room") final String room,
+                                                       @RequestParam("building") final String building,
+                                                       @RequestParam("tableNumber") final int tableNumber,
+                                                       @RequestParam("type") final String type,
+                                                       @RequestParam("subjectId") final int subjectId,
+                                                       @RequestBody Map<String, Object> payload) {
         logger.info("Trying to add an entry...");
-        if(authentication!=null){
-            if(authentication.isAuthenticated()){
-                if(subjectRepository.findById(subjectId) != null && studentRepository.findByEmailAddress(authentication.getName()) != null){
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
+                if (subjectRepository.findById(subjectId) != null && studentRepository.findByEmailAddress(authentication.getName()) != null) {
                     LocalDateTime now = LocalDateTime.now();
 
                     Subject subject = subjectRepository.findById(subjectId);
@@ -137,17 +143,17 @@ public class QueueController {
                     logger.info(student.getFirstName());
                     Queue queue = queueRepository.findBySubject(subject);
                     Collection<Entry> entries = entryRepository.findDistinctByQueue(queue);
-                    for(Entry entry: entries){
-                        if(entry.getStudent().equals(student)){
+                    for (Entry entry : entries) {
+                        if (entry.getStudent().equals(student)) {
                             logger.info("Student already in queue");
                             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
                         }
                     }
-                    if(queue.getStatus() && subject.getStudents().contains(student)) {
+                    if (queue.getStatus() && subject.getStudents().contains(student)) {
                         Collection<Integer> exerciseIds = (Collection<Integer>) payload.get("exercises");
                         ArrayList<Exercise> exercises = new ArrayList<>();
-                        for(int exerciseNumber: exerciseIds){
-                            if(exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber) == null){
+                        for (int exerciseNumber : exerciseIds) {
+                            if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber) == null) {
                                 logger.info("Couldn't find the exercise");
                             } else {
 
@@ -156,7 +162,7 @@ public class QueueController {
                                 logger.info("Exercise number: " + exercise.getId());
                             }
                         }
-                        Entry entry = entryRepository.save(new Entry( now, room, building, tableNumber, type, student, queue, exercises ));
+                        Entry entry = entryRepository.save(new Entry(now, room, building, tableNumber, type, student, queue, exercises));
                         GetEntryDTO getEntryDTO = new GetEntryDTO(entry);
                         logger.info("entryid: " + entry.getId());
 
@@ -175,18 +181,21 @@ public class QueueController {
 
     /**
      * Delete an entry. Can be called by a student assistant
+     *
      * @param authentication
      * @param id
      * @return the http response and a boolean depending on if the entry was deleted
      */
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Delete an entry", description = "Deletes a given entry from the queue")
-    @DeleteMapping
+    @DeleteMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
-                                               @RequestParam("entryId") final Long id){
-        if(authentication!=null){
-            if(authentication.isAuthenticated()){
-                if(entryRepository.findEntryById(id) != null){
+                                               @RequestParam("entryId") final Long id) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
+                if (entryRepository.findEntryById(id) != null) {
                     entryRepository.delete(entryRepository.findEntryById(id));
                     return new ResponseEntity<>(true, HttpStatus.OK);
                 }
@@ -195,19 +204,21 @@ public class QueueController {
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Gets all entries", description = "Gets all entries in a given subject")
-    @GetMapping
+    @GetMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetEntryDTO>> getEntriesBySubject(Authentication authentication,
-                                                                        @RequestParam("subjectId") final int subjectId){
+                                                                      @RequestParam("subjectId") final int subjectId) {
         if (authentication != null && authentication.isAuthenticated()) {
             Subject subject;
-            if(subjectRepository.findById(subjectId) != null ){
+            if (subjectRepository.findById(subjectId) != null) {
                 subject = subjectRepository.findById(subjectId);
                 Queue queue = queueRepository.findBySubject(subject);
                 Collection<Entry> entries = entryRepository.findDistinctByQueue(queue);
                 ArrayList<GetEntryDTO> entryDTOS = new ArrayList<>();
-                for(Entry entry: entries){
+                for (Entry entry : entries) {
                     GetEntryDTO getEntryDTO = new GetEntryDTO(entry);
                     entryDTOS.add(getEntryDTO);
                 }

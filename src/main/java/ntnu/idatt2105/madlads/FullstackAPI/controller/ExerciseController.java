@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetExerciseDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseSubListRepository;
@@ -54,6 +55,7 @@ public class ExerciseController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Add exercise ", description = "Adds an exercise to a given subject")
     public ResponseEntity<ExerciseSubList> addExerciseSublist(@RequestParam("subjectId") final int subjectId,
                                                @RequestParam("numberOfExercises") final int numberOfExercises,
                                                @RequestParam("numberOfMandatory") final int numberOfMandatory,
@@ -83,7 +85,7 @@ public class ExerciseController {
      * @param authentication
      * @return Returns if a deletion was successfully or not
      */
-
+    @Operation(summary = "Delete an exercise", description = "Deletes an exercise from the subject")
     @DeleteMapping
     @Transactional
     @ResponseStatus(value = HttpStatus.OK)
@@ -107,7 +109,7 @@ public class ExerciseController {
      * @param authentication
      * @return Returns whether it could approve an exercise or not
      */
-
+    @Operation(summary = "Approve an exercise", description = "Approve a given exercise in a given subject")
     @PostMapping("/approveExercise")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Boolean> approveExercise(@RequestParam("subjectId") int subjectId,
@@ -138,6 +140,7 @@ public class ExerciseController {
      * @return Returns a list of all the exercises
      */
 
+    @Operation(summary = "Get exercise per user", description = "Gets all exercises for a user within one subject")
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesByUser(Authentication authentication,
@@ -175,6 +178,7 @@ public class ExerciseController {
      * @return A list of exercises
      */
 
+    @Operation(summary = "Get all exercises in a subject", description = "Gets all exercises given a subject")
     @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesBySubject(Authentication authentication,

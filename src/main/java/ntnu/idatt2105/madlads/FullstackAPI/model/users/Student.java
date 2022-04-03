@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
@@ -20,6 +21,7 @@ public class Student extends QSUser {
             joinColumns = {@JoinColumn(name = "student_id")},
             inverseJoinColumns = {@JoinColumn(name = "subject_id")}
     )
+    @Schema(type = "Set", description = "All subjects the student has", required = true)
     private Set<Subject> studentSubjects = new HashSet<>();
 
     //List of all subjects the student is an assistant in.
@@ -29,14 +31,17 @@ public class Student extends QSUser {
             joinColumns = {@JoinColumn(name = "student_id")},
             inverseJoinColumns = {@JoinColumn(name = "subject_id")}
     )
+    @Schema(type = "Set", description = "All subject this student is assistant in", required = true)
     private Set<Subject> assistantSubjects = new HashSet<>();
 
     //List of all approved exercises of a student across all subjects.
     @ManyToMany(mappedBy = "students", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Schema(type = "Set", description = "All exercises this student has approved", required = true)
     private Set<Exercise> approvedExercises = new HashSet<>();
 
     @ManyToOne
+    @Schema(type = "Entry", description = "Any entries in a queue linked to this student", required = true)
     private Entry entry;
 
     public Student(QSUser user) {

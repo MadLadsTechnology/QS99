@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.model.users;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class Professor extends QSUser {
             joinColumns = {@JoinColumn(name = "professor_id")},
             inverseJoinColumns = {@JoinColumn(name = "subject_id")}
     )
+    @Schema(type = "Set", description = "All students ascoiated with this professor", required = true)
     private Set<Subject> professorSubjects = new HashSet<>();
 
     public Professor(QSUser user) {

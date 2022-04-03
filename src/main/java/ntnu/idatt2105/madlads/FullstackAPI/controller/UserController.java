@@ -1,5 +1,6 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.UserLoginDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
@@ -49,8 +50,17 @@ public class UserController {
     @Autowired
     ExerciseRepository exerciseRepository;
 
+    /**
+     * Login endpoint, logs a user in
+     * @param email
+     * @param password
+     * @return A token
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     @PostMapping(value = "/login")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Log in", description = "Logs a user in")
     public ResponseEntity<UserLoginDTO> login(@RequestParam("email") final String email,
                                                             @RequestParam("password") final String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
@@ -78,9 +88,17 @@ public class UserController {
     }
 
 
-
+    /**
+     * Register an admin
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @param password
+     * @return a QSUser object
+     */
     @PostMapping("/registerAdmin")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Registers an admin", description = "Registers an admin")
     public ResponseEntity<QSUser> createUser(@RequestParam("firstname") final String firstname,
                                              @RequestParam("lastname") final String lastname,
                                              @RequestParam("email") final String email,
@@ -100,8 +118,18 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
+
+    /**
+     * UNUSED
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @param password
+     * @return
+     */
     @PostMapping("/registerStudentOLD")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "UNUSED", description = "UNUSED")
     public ResponseEntity<Student> createStudentOLD(@RequestParam("firstname") final String firstname,
                                               @RequestParam("lastname") final String lastname,
                                               @RequestParam("email") final String email,
@@ -128,8 +156,16 @@ public class UserController {
         }
     }
 
+    /**
+     * Register a student
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @return A student object
+     */
     @PostMapping("/registerStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Creates a new student", description = "Creates a new student")
     public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
                                                  @RequestParam("lastname") final String lastname,
                                                  @RequestParam("email") final String email) {
@@ -157,8 +193,17 @@ public class UserController {
         }
     }
 
+    /**
+     * UNUSED
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @param password
+     * @return UNUSED
+     */
     @PostMapping("/registerProfessorOLD")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Unused", description = "Unused")
     public ResponseEntity<Professor> createProfessorOLD(@RequestParam("firstname") final String firstname,
                                                  @RequestParam("lastname") final String lastname,
                                                  @RequestParam("email") final String email,
@@ -182,6 +227,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Registers a new professor Sends email with password to given emailaddress
+     * @param firstname
+     * @param lastname
+     * @param email
+     * @return
+     */
 
     @PostMapping("/registerProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -209,9 +261,16 @@ public class UserController {
         }
     }
 
+    /**
+     * Deletes a user
+     * @param authentication
+     * @param email
+     * @return a boolean of whether it was successfull or not
+     */
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
+    @Operation(summary = "Delete a user", description = "Deletes a user from the subject")
     public ResponseEntity<Boolean> deleteUser(Authentication authentication,
                                              @RequestParam("email") final String email){
         if (authentication!=null){
@@ -241,8 +300,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
+    /**
+     * Register multiple users
+     * @param allUsers
+     * @param authentication
+     * @return A boolean of whether registration was successfull
+     */
     @PostMapping("/registerMultipleUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Add multiple users", description = "Adds multiple users")
     public ResponseEntity<Boolean> registerMultipleUsers(@RequestBody String allUsers, Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
@@ -284,9 +350,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Get all users that exists
+     * @param authentication
+     * @return All users
+     */
 
     @GetMapping("/getAllUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Get all users", description = "Gets all users that exist")
     public ResponseEntity<ArrayList<UserDTO>> getAllStudents(Authentication authentication){
         if(authentication!=null){
             if(authentication.isAuthenticated()){
@@ -302,8 +374,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Gets all users from a given subject
+     * @param subjectId
+     * @param authentication
+     * @return A list of users
+     */
+
     @GetMapping("/getAllUsersFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Get all students from a subject", description = "Get all students from a given subject")
     public ResponseEntity<ArrayList<UserDTO>> getAllStudentsFromSubject(@RequestParam("subjectId") int subjectId, Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
@@ -324,8 +404,17 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Get all users from given subject
+     * @param subjectId
+     * @param email
+     * @param authentication
+     * @return List of users
+     */
+
     @GetMapping("/getUserFromSubject")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Get users from a subject", description = "Adds an exercise to a given subject")
     public ResponseEntity<UserDTO> getUserFromSubject(@RequestParam("subjectId") int subjectId, @RequestParam("email") String email, Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
@@ -340,8 +429,19 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Change password
+     * @param newPassword
+     * @param oldPassword
+     * @param authentication
+     * @return A boolean to indicate success or failure
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+
     @PostMapping ("/changePassword")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Change password", description = "Change password of your own user")
     public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("oldPassword") String oldPassword, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if(authentication!=null){
             if(authentication.isAuthenticated()){

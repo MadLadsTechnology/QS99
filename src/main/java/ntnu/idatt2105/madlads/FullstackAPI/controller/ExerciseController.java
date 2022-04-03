@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
@@ -62,19 +64,19 @@ public class ExerciseController {
                 return new ResponseEntity<>(exerciseSubList, HttpStatus.CREATED);
             }
         }
-        return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @DeleteMapping
     @Transactional
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Boolean> deleteExercise(@RequestParam("subjectId") int subjectId,
                                                   @RequestParam("exerciseNumber") int exerciseNumber,
                                                   Authentication authentication){
         if (authentication!=null){
             if (authentication.isAuthenticated()){
                 exerciseRepository.deleteBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), exerciseNumber);
-                return new ResponseEntity<>(true, HttpStatus.CREATED);
+                return new ResponseEntity<>(true, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -91,6 +93,9 @@ public class ExerciseController {
             if (authentication.isAuthenticated() || subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))) {
                 Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
                 exercise.addStudent(studentRepository.findByEmailAddress(studentEmail));
+                logger.warn(""+studentRepository.findByEmailAddress(studentEmail));
+                ArrayList<Student> d = (ArrayList<Student>) exercise.getStudents().stream().collect(Collectors.toList());
+                logger.warn(String.valueOf(d.get(0)));
                 exerciseRepository.save(exercise);
                 return new ResponseEntity<>(true, HttpStatus.CREATED);
             } else {

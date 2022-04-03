@@ -97,7 +97,7 @@ public class ExerciseController {
                 ArrayList<Student> d = (ArrayList<Student>) exercise.getStudents().stream().collect(Collectors.toList());
                 logger.warn(String.valueOf(d.get(0)));
                 exerciseRepository.save(exercise);
-                return new ResponseEntity<>(true, HttpStatus.CREATED);
+                return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 logger.info(authentication.getName() + " is not a student assistant in this subject");
             }
@@ -108,28 +108,33 @@ public class ExerciseController {
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesByUser(Authentication authentication,
-                                                                        @RequestParam("subjectId") final int subjectId){
-        if (authentication!=null) {
-            if (authentication.isAuthenticated()) {
-                Student student = studentRepository.findByEmailAddress(authentication.getName());
-                Subject subject = subjectRepository.findById(subjectId);
-                logger.info("Getting exercises for " + student.getEmailAddress() + " in subject " + subject.getSubjectCode());
-                ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
-                ArrayList<GetExerciseDTO> response = new ArrayList<>();
-                for(Exercise exercise: exercises){
-                    if(student.getApprovedExercises().contains(exercise)){
-                        GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, true);
-                        response.add(getExerciseDTO);
-                    } else {
-                        GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, false);
-                        response.add(getExerciseDTO);
+                                                                        @RequestParam("subjectId") final int subjectId) {
+        try {
+            if (authentication != null) {
+                if (authentication.isAuthenticated()) {
+                    Student student = studentRepository.findByEmailAddress(authentication.getName());
+                    Subject subject = subjectRepository.findById(subjectId);
+                    logger.info("Getting exercises for " + student.getEmailAddress() + " in subject " + subject.getSubjectCode());
+                    ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
+                    ArrayList<GetExerciseDTO> response = new ArrayList<>();
+                    for (Exercise exercise : exercises) {
+                        if (student.getApprovedExercises().contains(exercise)) {
+                            GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, true);
+                            response.add(getExerciseDTO);
+                        } else {
+                            GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, false);
+                            response.add(getExerciseDTO);
+                        }
                     }
+                    return new ResponseEntity<>(response, HttpStatus.OK);
                 }
-                return new ResponseEntity<>(response, HttpStatus.OK);
             }
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
+
 
     @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)

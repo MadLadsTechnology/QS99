@@ -39,6 +39,6 @@ jobs:
       - run: cd ..
       - run: ls -la
       - run: scp -r ../QS99 app@46.9.75.116:~/QS99
-      - run: ssh app@localhost make -C QS99 deploy
+      - run: ssh app@46.9.75.116 make -C QS99 deploy
       
       

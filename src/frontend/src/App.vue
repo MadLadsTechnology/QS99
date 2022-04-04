@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default {
   created() {
-    let ip = "46.9.75.116"
+    let ip = "localhost"
     console.log(process.env.IP)
     if (process.env.IP){
         ip = process.env.IP

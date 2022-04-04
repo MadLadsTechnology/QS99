@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,8 +21,9 @@ public class UserService {
 
     /**
      * Generates am authorization token for a user
+     *
      * @param userId
-     * @param role the role which specifies the users permissions
+     * @param role   the role which specifies the users permissions
      * @return
      */
     public static String generateToken(String userId, String role) {

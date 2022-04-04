@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
-import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.ExerciseSubList;
 
 @Data
 @NoArgsConstructor

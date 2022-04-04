@@ -3,7 +3,9 @@ import Subjects from "../views/SubjectList.vue";
 import SubjectLayout from "../views/subject/BaseSubjectView.vue";
 import SubjectDetails from "../views/subject/DetailsView.vue";
 import SubjectQueue from "../views/subject/Queue/QueueView.vue";
+import StudentSubjectAssignments from "../views/subject/StudentAssignmentsView.vue";
 import SubjectAssignments from "../views/subject/AssignmentsView.vue";
+
 import SubjectUsersView from "../views/subject/UsersInSubject";
 import JoinQueue from "../views/subject/Queue/JoinQueue.vue";
 
@@ -51,8 +53,13 @@ const routes = [
         component: SubjectDetails,
       },
       {
+        path: "studentAssignments",
+        name: "StudentSubjectAssignments",
+        component: StudentSubjectAssignments,
+      },
+      {
         path: "assignments",
-        name: "SubjectAssignments",
+        name: "assignments",
         component: SubjectAssignments,
       },
       {

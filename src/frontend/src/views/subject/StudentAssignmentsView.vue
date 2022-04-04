@@ -1,13 +1,17 @@
 <template>
 
-
-  <h3>Number of exercises: {{ exerciseCount }}</h3>
-  <h5 v-for="sublist in assignments" :key="parseInt(sublist.id)">
-    {{ sublist.numberOfMandatory }} exercises are mandatory in
-    {{ sublist.exercises[0] }} ...
-    {{ sublist.exercises[sublist.exercises.length - 1] }}
-  </h5>
-
+  <h1 v-if="subjectApproved">The subject is passed</h1>
+  <h1 v-else>Not passed</h1>
+  <table v-for="(sublist, index) in assignments" :key="parseInt(index)">
+    <tr>
+      <td colspan="2">Mandatory: {{ sublist.numberOfMandatory }}</td>
+    </tr>
+    <tr v-for="(exercise, index) in sublist.exercises" :key="parseInt(index)">
+      <td>{{ index }}</td>
+      <td v-if="exercise">✅</td>
+      <td v-else>⛔️</td>
+    </tr>
+  </table>
 
 </template>
 
@@ -24,8 +28,6 @@ export default {
   async created() {
     document.title = "QS99 - Subjects";
 
-    //getting subjects assigments
-
     if (this.hasPrivileges) {
       await axios.get("/user/getAllUsersFromSubject", {
         params: {
@@ -36,7 +38,7 @@ export default {
       })
     }
     await axios
-        .get("/exercise/getBySubject", {
+        .get("/exercise/getByUser", {
           params: {
             subjectId: parseInt(this.subject.id),
           },
@@ -47,7 +49,6 @@ export default {
           }
         });
   },
-
 
   data() {
     return {
@@ -64,28 +65,48 @@ export default {
       return false;
     },
 
-    exerciseCount: function () {
-      let count = 0;
-
+    subjectApproved: function () {
+      let isApproved = true;
       if (this.assignments) {
         this.assignments.forEach(sublist => {
-          count += sublist.exercises.length;
-        });
-
-        return count;
+          let count = 0;
+          for (let index in sublist.exercises) {
+            if (sublist.exercises[index]) {
+              count += 1;
+            }
+          }
+          if (count < sublist.numberOfMandatory) {
+            isApproved = false;
+          }
+        })
       }
-      return null;
 
+      return isApproved;
     }
+
   }
 };
 </script>
 
 <style scoped>
+
 table {
-  width: 200px;
-  margin: auto;
-  font-size: 200%;
+  width: 70%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: auto auto 50px;
+}
+
+th {
+  background-color: lightgray;
+}
+
+th,
+td {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: center;
+  width: 50%;
 }
 
 

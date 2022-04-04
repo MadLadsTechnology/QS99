@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.QSUser;
@@ -21,6 +21,7 @@ public class StartupService {
 
     /**
      * Creates an admin user when db starts
+     *
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeySpecException
      */

@@ -25,21 +25,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     UserRepository userRepository;
 
-
     public CustomAuthenticationProvider() {
         super();
     }
 
-
     @SneakyThrows
     @Override
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
-        // get user and password info from the request
         final String email = authentication.getName();
         final String password = authentication.getCredentials().toString();
         final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-        // check credentials
-        // NOTE: in a real-world scenario, one should do a database lookup for valid credentials instead of hardcoded check as here!
         QSUser foundUser = userRepository.getDistinctByEmailAddress(email);
 
         if (foundUser != null) {
@@ -59,8 +54,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             }
         }
         return null;
-
-
     }
 
     @Override

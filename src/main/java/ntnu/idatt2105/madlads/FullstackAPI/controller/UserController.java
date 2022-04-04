@@ -27,9 +27,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.generateCommonLangPassword;
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.sendEmail;
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.UserService.generateToken;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.UserService.generateToken;
 
 @RestController
 @EnableAutoConfiguration
@@ -254,6 +254,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @PostMapping("/registerProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Creates professor", description = "Creates a new ")
     public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
                                                      @RequestParam("lastname") final String lastname,
                                                      @RequestParam("email") final String email) {
@@ -453,7 +454,7 @@ public class UserController {
             if (authentication.isAuthenticated()) {
                 Student student = studentRepository.findByEmailAddress(email);
                 Subject subject = subjectRepository.findById(subjectId);
-                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))  || !(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Student)) {
+                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || !(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Student)) {
                     UserDTO user = new UserDTO(student, exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)));
                     return new ResponseEntity<>(user, HttpStatus.OK);
                 }

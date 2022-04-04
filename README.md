@@ -4,14 +4,15 @@
 
 Last build: ![example workflow](https://github.com/MadLadsTechnology/QS99/actions/workflows/maven.yml/badge.svg)
 
-An instance of this project is running here [qs.eivindharboe.no](http://qs.eivindharboe.no)
+**Application:** [**QS99**](http://qs.eivindharboe.no)
 
 Voluntary project in the subject IDATT2105 to improve our grade.
 
 ## Content
 1. [Introduction](#introduction)
-2. [Technology](#%EF%B8%8F-technologies--languages)
-3. [Functionality](#functionality)
+2. [Documentation](#documentation)
+3. [Technology](#%EF%B8%8F-technologies--languages)
+4. [Functionality](#functionality)
 5. [ER-diagram](#er-diagram)
 6. [REST-API](#rest-api)
 7. [Security](#security)
@@ -28,8 +29,16 @@ Create an alternative to QS, the queue system of subjects at NTNU. It's preferre
 compatible with a mobile.
 ## 🛠️ Technologies & Languages
 * Vue 3
+* Maven
+* Java
 * Spring Data JPA
 * H2 database
+
+## Documentation
+
+Swagger: [QS99API](http://qs.eivindharboe.no:8001/swagger-ui/index.html)
+
+JavaDoc: [JavaDoc](https://madladstechnology.github.io/QS99/)
 
 ## Functionality
 ### Student
@@ -60,24 +69,28 @@ compatible with a mobile.
 
 
 ## ER-diagram
-<img src="https://github.com/MadLadsTechnology/QS99/blob/main/src/main/resources/QS99.jpeg" alt="ER-Diagram"/>
+<img src="https://github.com/MadLadsTechnology/QS99/blob/main/src/main/resources/QS99.jpeg"/>
 
 ## REST-API
-Link to api: [QS99API](qs.eivindharboe.no:8001/swagger-ui/index.html)
+Link to api: [QS99API](http://qs.eivindharboe.no:8001/swagger-ui/index.html)
+
 Alternatively if you are running your own instance [QS99API localhost](http://localhost:8001/swagger-ui/index.html)
 
 ## Security
-QS99 is a safe and secure app //FYLL UT MER HER
+QS99 uses JWT-Tokens for authentication of users who are performing API-calls. A JWT-Token is given to a user whenever they log in. When a user logs in the backend performs a lookup to check if the email and password match an existing user. The password is salted and then hashed and store this way in the database. If the user exists and a correct password was given, we check what role this given user has. After this the backend uses a JWTSBuilder which we give email, role and sets a creation time and an expiration time. Now the user has a valid token that it can use to perform API calls.
+
+When a user performs an API call it sends its token in the header. The backend then extracts the needed information from the token, and checks if it has the needed role to perform the specific API call. This way we ensure that only those that have a valid token with the needed roles can perform the given API call. Each endpoint has specified what roles have access to that specific endpoint.
 
 ## CI/CD
 
 ### CI
-Continous integration is performed with Github Actions. On each push to the main branch a test suite is ran to ensure that new features work properly
+Continuous integration is performed with Github Actions. On each push to the main branch a test suite is ran to ensure that new features work properly
 Currently we have only implemented CI on the backend. Frontend CI was deemed unnecessary. 
 
 ### CD
 Continuous deployment is also performed via github actions. Every time there is a push to the main branch a deploy action is run. A Github runner checksout the repository and ssh'es into our own Raspberry Pi and then copies the repository and builds the entire project with the help of a makefile and docker containers. We chose this approach because we had an available Raspberry Pi and we could save some money on server hosting.
-Both the backend and the frontend are hosted on the Pi. The backend is a SpringBoot Rest API and the frontend is hosted on a basic nginx server
+Both the backend and the frontend are hosted on the Pi. The backend is a SpringBoot Rest API and the frontend is hosted on a basic nginx server.
+Javadoc is also published to github pages via its a github runner.
 
 ## Dependencies
 
@@ -113,7 +126,9 @@ Both the backend and the frontend are hosted on the Pi. The backend is a SpringB
 - Vuex
   - Used for state management
 - Router 
-  - Used for routing         
+  - Used for routing
+- Yarn
+  - Our package manager of choice         
 
 ## Future Work
 
@@ -121,8 +136,16 @@ Both the backend and the frontend are hosted on the Pi. The backend is a SpringB
 The admin page is currently not supported on mobile, and is the most underdeveloped page of all
 
 ### Refresh Tokens
+With refresh tokens we could save the user some hassle of login in each time a token expires. A user could be logged in indefinitely, without being timed out
+
+### Caching of choices
+If a student is always located in the same spot on the same table (Which is quite common) it is quite a chore to have to enter the same information each time. Therefore a caching of the recent choice could be a good addition to out solution.
+
+### Map of students
+Because of our severely limited time and resources we chose to not implement certain funcionality, the one that would have most impact especially for the Student Assistants would be to see where the student they are assisted is located. In the current implementation, an assistant can only read where they are located. 
 
 ### Performance
+The project evolved over time as we figured out what exact functionality we needed and because of our limited time. Therefore there are bound to be database lookups and server logic that is not particularly optimized. Some future work could therefore be to optimize these. We could see improvement in server-side performance
 
 
 ## Installation Manual
@@ -131,6 +154,7 @@ The admin page is currently not supported on mobile, and is the most underdevelo
 
 - Docker
 - Maven
+- Two available ports 80 and 8001
 
 ### Instructions 
 
@@ -151,7 +175,18 @@ sudo make -C QS99 deploy
 ```
 
 After the commands are ran, you will have two docker containers running, frontend on port 80 and backend running on port 8001
-You can access the frontend by going to the address: ```http://localhost```
+
+Check that you have two running containers with this command:
+
+```
+sudo docker container list
+```
+
+If you only see one or none running, you should check the build log. Maybe you already had a service running on one of the ports
+
+You can access the frontend by going to this address: http://localhost
+
+You can access swagger by going to this address: http://localhost:8001/swagger-ui/index.html
 
 ## Running Tests
 Clone the repo 
@@ -167,4 +202,5 @@ mvn clean test
 ```
 
 This will run all tests on the backend
+
 

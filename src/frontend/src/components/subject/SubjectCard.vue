@@ -28,7 +28,7 @@ export default {
       } else if (this.subject.isStudAss) {
         return "subjectUsers"
       }
-      return "SubjectAssignments";
+      return "StudentSubjectAssignments";
     },
   },
 };

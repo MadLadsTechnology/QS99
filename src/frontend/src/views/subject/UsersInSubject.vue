@@ -123,6 +123,7 @@ h4 {
   width: 50%;
   flex-wrap: wrap;
   flex-direction: row;
+  align-content: flex-start;
   gap: 2px;
 }
 

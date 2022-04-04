@@ -1,40 +1,31 @@
 <template>
 
-  <table v-if="!!users">
-    <tr>
-      <th>Last name</th>
-      <th>First name</th>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Exercises</th>
-      <th v-if="!subject.isStudAss">Actions</th>
-    </tr>
 
-    <tr v-for="user in users" :key="user.emailAddress">
+  <div v-for="user in users" :key="user.emailAddress" class="user">
 
-      <td>{{ user.lastName }}</td>
-      <td>{{ user.firstName }}</td>
-      <td>{{ user.emailAddress }}</td>
-      <td>{{ user.role }}</td>
-      <td>
-        <div class="exerciseWrapper">
-          <ExerciseBox
-              v-for="exercise in user.exercises" :key="exercise"
-              :exercise="exercise"
-              :student="user"
-              :subjectId="subject.id"
 
-          />
-        </div>
+    <div class="information">
+      <h4> {{ user.role }}</h4>
+      <text> {{ user.lastName }}</text>
+      <text> {{ user.firstName }}</text>
+      <button v-if="!subject.isStudAss" @click="removeUser(user)">Remove</button>
+    </div>
 
-      </td>
 
-      <td v-if="!subject.isStudAss">
-        <button @click="removeUser(user)">Remove</button>
-      </td>
-    </tr>
+    <div class="exerciseWrapper">
+      <ExerciseBox
+          v-for="exercise in user.exercises" :key="exercise"
+          :exercise="exercise"
+          :student="user"
+          :subjectId="subject.id"
 
-  </table>
+      />
+    </div>
+
+
+  </div>
+
+
 </template>
 
 <script>
@@ -106,15 +97,38 @@ export default {
 
 <style scoped>
 
-table {
-  width: 95%
+.user {
+  display: flex;
+  flex-direction: row;
+  background-color: lightgray;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 10px;
+  gap: 10px;
+}
+
+h4 {
+  margin: 0;
+}
+
+.information {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
 }
 
 .exerciseWrapper {
   display: flex;
-  width: 100%;
+  width: 50%;
   flex-wrap: wrap;
   flex-direction: row;
   gap: 2px;
 }
+
+button {
+  width: 100px;
+  margin: auto;
+}
+
 </style>

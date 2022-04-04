@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form v-if="!!assignments" class="loginForm" @submit.prevent="submit()">
+    <form v-if="!!assignments" class="form" @submit.prevent="submit()">
       <h1>Get in the queue!</h1>
 
       <BaseInput
@@ -25,13 +25,13 @@
       <div class="checkBoxHolder">
         <div v-for="assignment in assignments" v-bind:key="assignment">
           <input
-              :id="assignment.id"
+              :id="assignment.exerciseNumber"
               v-model="exercises"
-              :disabled="assignment.approved"
-              :value="assignment.id"
+              :disabled="assignment.isApproved"
+              :value="assignment.exerciseNumber"
               type="checkbox"
           />
-          <label :for="assignment.id">{{ assignment.exerciseNumber }}</label>
+          <label :for="assignment.exerciseNumber">{{ assignment.exerciseNumber }}</label>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export default {
   margin: auto;
 }
 
-.loginForm {
+.form {
   width: 70%;
   min-width: 300px;
   max-width: 600px;

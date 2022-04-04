@@ -1,27 +1,22 @@
 <template>
-  <div>
-    <form class="loginForm" @submit.prevent="submit()">
-      <h1>Log in</h1>
+  <form class="loginForm" @submit.prevent="submit()">
+    <h1>Log in</h1>
 
-      <BaseInput
-          v-model.lazy="email"
-          :error="errors.email"
-          label="Email"
-          type="email"
-      />
-      <BaseInput
-          v-model="password"
-          :error="errors.password"
-          label="Password"
-          type="password"
-      />
-      <button :disabled="!isValid" type="submit">Log in</button>
+    <BaseInput
+        v-model.lazy="email"
+        :error="errors.email"
+        label="Email"
+        type="email"
+    />
+    <BaseInput
+        v-model="password"
+        :error="errors.password"
+        label="Password"
+        type="password"
+    />
+    <button :disabled="!isValid" type="submit">Log in</button>
 
-      <br/>
-
-      <p v-if="error">{{ errors }}</p>
-    </form>
-  </div>
+  </form>
 </template>
 <script>
 import {useField, useForm} from "vee-validate";
@@ -55,7 +50,7 @@ export default {
             this.$router.push("/subjects");
           })
           .catch((err) => {
-            this.error = err;
+            alert(err);
           });
     },
   },
@@ -93,7 +88,17 @@ export default {
 
 <style scoped>
 .loginForm {
-  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
   margin: auto;
+  max-width: 400px;
+}
+
+button {
+  width: 150px;
+  margin: auto;
+  padding: 10px;
 }
 </style>

@@ -15,15 +15,23 @@
       v-on:closeWindowMultipleUsers="closeWindow"
   />
 
+  <AddAssistantToSubject
+      v-if="showAddAssistant"
+      v-bind:subject="currentSubject"
+      v-on:closeWindow="closeWindow"
+  />
   <div class="button-group">
-    <button @click="showSingleUserWindow(id, subject.subjectCode)">
+    <button @click="showSingleUserWindow(subject.id, subject.subjectCode)">
       Add user
     </button>
-    <button @click="showMultipleUserWindow(id, subject.subjectCode)">
+    <button @click="showMultipleUserWindow(subject.id, subject.subjectCode)">
       Add multiple users
     </button>
-    <button @click="showAddExercisesWindow(id, subject.subjectCode)">
+    <button @click="showAddExercisesWindow(subject.id, subject.subjectCode)">
       Add exercises
+    </button>
+    <button @click="showSingleAssistantWindow(subject.id, subject.subjectCode)">
+      Add student assistant
     </button>
   </div>
 
@@ -35,6 +43,7 @@ import AddUserToSubject from "@/components/PopUps/AddUserToSubject";
 import AddMultipleUsersToSubject from "@/components/PopUps/AddMultipleUsersToSubject";
 import AddExercises from "@/components/PopUps/AddExercises";
 import axios from "axios";
+import AddAssistantToSubject from "@/components/PopUps/AddAssistantToSubject";
 
 export default {
 
@@ -42,6 +51,7 @@ export default {
     AddUserToSubject,
     AddMultipleUsersToSubject,
     AddExercises,
+    AddAssistantToSubject,
   },
   props: {
     subject: {
@@ -61,10 +71,13 @@ export default {
       this.setCurrentSubject(id, subjectCode);
       this.showAddSingleUser = true;
       this.showAddMultipleUsers = false;
+      this.showAddAssistant = false;
+
     },
     showMultipleUserWindow(id, subjectCode) {
       this.setCurrentSubject(id, subjectCode);
       this.showAddSingleUser = false;
+      this.showAddAssistant = false;
       this.showAddMultipleUsers = true;
     },
     showAddExercisesWindow(id, subjectCode) {
@@ -72,10 +85,19 @@ export default {
       this.showAddSingleUser = false;
       this.showAddMultipleUsers = false;
       this.showAddExercises = true;
+      this.showAddAssistant = false;
+    },
+    showSingleAssistantWindow(id, subjectCode) {
+      this.setCurrentSubject(id, subjectCode);
+      this.showAddAssistant = true;
+      this.showAddSingleUser = false;
+      this.showAddMultipleUsers = false;
+      this.showAddExercises = false;
     },
     closeWindow() {
       this.showAddSingleUser = false;
       this.showAddMultipleUsers = false;
+      this.showAddAssistant = false;
       this.showAddExercises = false;
       location.reload();
     },
@@ -114,6 +136,7 @@ export default {
       showAddSingleUser: false,
       showAddMultipleUsers: false,
       showAddExercises: false,
+      showAddAssistant: false,
       currentSubject: null,
       assignments: [],
     };

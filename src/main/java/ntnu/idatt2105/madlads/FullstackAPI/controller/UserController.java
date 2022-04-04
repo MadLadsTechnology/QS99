@@ -254,6 +254,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
     @PostMapping("/registerProfessor")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Operation(summary = "Creates professor", description = "Creates a new ")
     public ResponseEntity<Professor> createProfessor(@RequestParam("firstname") final String firstname,
                                                      @RequestParam("lastname") final String lastname,
                                                      @RequestParam("email") final String email) {

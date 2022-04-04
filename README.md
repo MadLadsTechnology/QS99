@@ -204,7 +204,3 @@ mvn clean test
 This will run all tests on the backend
 
 
-##
-
-
-🦕 🦑 Heyo letsgo - //TODO: write this readme

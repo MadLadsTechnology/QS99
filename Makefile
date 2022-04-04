@@ -1,4 +1,4 @@
-deploy: backend_stop_service frontend_stop_service remove_preexisting_containers backend_build backend_start_service frontend_build frontend_start_service push_docker_containers
+deploy: backend_stop_service frontend_stop_service remove_preexisting_containers backend_build backend_start_service frontend_build frontend_start_service
 
 remove_preexisting_containers:
 	-docker rm backend
@@ -22,7 +22,4 @@ frontend_start_service:
 
 frontend_stop_service:
 	-docker stop frontend
-	
-push_docker_containers:
-	-docker push eposkk/frontend:latest
-	-docker push eposkk/backend:latest
+

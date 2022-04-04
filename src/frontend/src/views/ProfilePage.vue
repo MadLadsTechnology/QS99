@@ -4,7 +4,9 @@
 
   <h3>Email:{{ user.emailAddress }}</h3>
 
-  <form class="loginForm" @submit.prevent="submit()">
+  <button v-if="!changePassword" @click="this.changePassword = true">Change password</button>
+
+  <form v-if="changePassword" class="loginForm" @submit.prevent="submit()">
     <h3>Change your password</h3>
     <div class="passwordInputs">
       <BaseInput
@@ -22,7 +24,7 @@
       <BaseInput
           v-model.lazy="confirmPassword"
           :error="errors.email"
-          label="Confirm new password"
+          label="Confirm password"
           type="password"
       />
     </div>
@@ -47,6 +49,7 @@ export default {
     return {
       error: null,
       user: this.$store.state.user,
+      changePassword: false,
     };
   },
 

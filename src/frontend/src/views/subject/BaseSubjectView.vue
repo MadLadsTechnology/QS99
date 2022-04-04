@@ -81,13 +81,11 @@ h1 {
 
 .container {
   text-align: center;
-  background-color: #ddd1c7;
-  padding-top: 10px;
   margin: 20px auto auto;
   border-radius: 10px;
   min-height: 500px;
   width: 100%;
-  max-width: 900px;
+  max-width: 800px;
 }
 
 .nav {
@@ -98,7 +96,7 @@ h1 {
   min-width: 250px;
   max-width: 300px;
   border-bottom: solid;
-  margin: auto auto 20px;
+  margin: auto;
 }
 
 a {

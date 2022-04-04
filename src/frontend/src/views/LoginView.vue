@@ -93,9 +93,7 @@ export default {
 
 <style>
 .loginForm {
-  width: 70%;
-  min-width: 300px;
-  max-width: 600px;
+  width: 90%;
   margin: auto;
 }
 </style>

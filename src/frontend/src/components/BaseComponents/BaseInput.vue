@@ -56,17 +56,22 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
+  margin: 0;
   width: 100%;
 }
 
 label {
   text-align: left;
   margin: 0;
-  font-size: 100%;
+  font-size: 200%;
+  width: 100%;
 }
 
 input {
   padding: 10px;
+  font-size: 150%;
+  margin: 0;
+  width: 100%;
 }
 
 input:invalid {

@@ -97,7 +97,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .window {
   position: absolute;
   background-color: antiquewhite;

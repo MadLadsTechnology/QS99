@@ -29,7 +29,7 @@ export default {
 
       let message = "Are you sure you want to approve exercise " + this.exercise.exerciseNumber + " for " + this.student.firstName + "?"
 
-      if (!this.exercise.approved) {
+      if (this.exercise.approved) {
         message = "Are you sure you remove the approval of exercise " + this.exercise.exerciseNumber + " for " + this.student.firstName + "?"
       }
       if (confirm(message)) {

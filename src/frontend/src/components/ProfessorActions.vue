@@ -127,9 +127,7 @@ export default {
 .button-group {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
   justify-content: center;
-  width: 70%;
   margin: auto;
 }
 

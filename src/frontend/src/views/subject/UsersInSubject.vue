@@ -106,6 +106,10 @@ export default {
 
 <style scoped>
 
+table {
+  width: 95%
+}
+
 .exerciseWrapper {
   display: flex;
   width: 100%;

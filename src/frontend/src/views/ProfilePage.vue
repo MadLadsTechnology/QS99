@@ -111,7 +111,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .passwordInputs {
   display: flex;
   flex-direction: row;

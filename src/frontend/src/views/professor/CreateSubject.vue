@@ -120,7 +120,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loginForm {
   width: 70%;
   min-width: 300px;

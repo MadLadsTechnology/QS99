@@ -91,7 +91,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loginForm {
   width: 90%;
   margin: auto;

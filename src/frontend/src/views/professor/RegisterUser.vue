@@ -125,7 +125,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .nameInputs {
   display: flex;
   flex-direction: row;

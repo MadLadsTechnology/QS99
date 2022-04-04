@@ -3,6 +3,9 @@
           @click="this.$router.push('JoinQueue')">
     Join queue
   </button>
+  <button v-else @click="leaveQueue">
+    Leave queue
+  </button>
 
 
   <button v-if="!this.$store.getters.isStudent" @click="toggleQueue">
@@ -79,7 +82,21 @@ export default {
 
   methods: {
 
-
+    leaveQueue() {
+      for (const entry in this.queue) {
+        if (entry.studentId === this.$store.state.user.emailAddress) {
+          axios.delete("/queue", {
+            params: {
+              entryId: entry.entryId,
+            }
+          }).then(() => {
+            location.reload();
+          }).catch(error => {
+            alert(error)
+          })
+        }
+      }
+    },
     toggleQueue() {
       let toggle = true;
       if (this.subject.queueActive) {
@@ -138,13 +155,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .gettingHelp {
   background-color: lightgreen;
 }
 
 .thisUser {
-  background-color: lightgray;
+  background-color: #96ADC5;
 }
 
 table {
@@ -153,6 +170,10 @@ table {
   max-width: 800px;
   border-collapse: collapse;
 
+}
+
+th {
+  background-color: lightgray;
 }
 
 th,
@@ -166,6 +187,10 @@ td {
 button {
   margin: 20px;
   padding: 10px;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 </style>

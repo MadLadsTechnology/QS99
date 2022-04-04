@@ -26,7 +26,7 @@
       </router-link>
 
 
-      <button v-if="loggedIn" class="logOutBtn" @click="logOut()">Log out</button>
+      <h3 v-if="loggedIn" class="logOutBtn" @click="logOut()">Log out</h3>
 
     </div>
   </div>
@@ -38,8 +38,11 @@ import {authComputed} from "@/store/helpers";
 export default {
   methods: {
     async logOut() {
-      await this.$store.dispatch("logout");
-      await this.$router.push("/login");
+      if (confirm("Are you sure you want to log out?")) {
+        await this.$store.dispatch("logout");
+        await this.$router.push("/login");
+      }
+
     },
   },
   computed: {
@@ -66,6 +69,7 @@ router-link:hover {
 
 h3 {
   width: 100px;
+  color: white;
 }
 
 .nav {
@@ -79,17 +83,11 @@ h3 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 70px;
+  height: 60px;
   background-color: #2c3e50;
-  margin: 0;
   color: white;
   text-decoration: none;
-  align-items: center;
   padding-left: 10px;
-}
-
-h3 {
-  color: white;
 }
 
 a {
@@ -103,7 +101,7 @@ a {
 
 .logOutBtn {
   text-align: center;
-  text-decoration: none;
+  padding: 0;
 }
 
 .logOutBtn:hover {

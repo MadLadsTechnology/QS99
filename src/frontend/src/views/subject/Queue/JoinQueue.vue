@@ -153,7 +153,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .checkBoxHolder {
   display: flex;
   flex-wrap: wrap;

@@ -8,4 +8,4 @@ export default {
   props: ["subject"],
 };
 </script>
-<style></style>
+<style scoped></style>

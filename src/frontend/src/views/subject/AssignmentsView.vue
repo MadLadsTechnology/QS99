@@ -71,3 +71,7 @@ export default {
   }
 };
 </script>
+
+<table>
+
+</table>

@@ -86,20 +86,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.loginForm {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 80%;
-  margin: auto;
-  max-width: 400px;
-}
-
-.button {
-
-  width: 150px;
-  margin: auto;
-  padding: 10px;
-}
-</style>
+<style scoped src="@/styles/views/LoginView.css"/>

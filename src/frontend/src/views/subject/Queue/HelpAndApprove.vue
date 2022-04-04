@@ -71,23 +71,5 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped src="@/styles/views/subject/Queue/HelpAndApprove.css"/>
 
-.exerciseHolder {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
-}
-
-.buttons {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: center;
-  gap: 20px;
-
-  margin-top: 20px;
-}
-</style>

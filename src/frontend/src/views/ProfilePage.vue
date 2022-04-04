@@ -112,17 +112,4 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.passwordInputs {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 80%;
-  max-width: 500px;
-  margin: auto;
-  padding: 0;
-}
-
-
-</style>
+<style scoped src="@/styles/views/ProfilePage.css"/>

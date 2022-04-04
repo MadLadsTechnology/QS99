@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="loginForm" @submit.prevent="submit()">
+    <form class="form" @submit.prevent="submit()">
       <h1>Create a subject</h1>
 
       <BaseInput
@@ -29,7 +29,7 @@
       />
 
       <button :disabled="!isValid" type="submit">Submit</button>
-      
+
     </form>
   </div>
 </template>
@@ -119,11 +119,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.loginForm {
-  width: 70%;
-  min-width: 300px;
-  max-width: 600px;
-  margin: auto;
-}
-</style>
+<style scoped src="@/styles/views/professor/CreateSubject.css"/>
+

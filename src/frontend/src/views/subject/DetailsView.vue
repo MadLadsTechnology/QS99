@@ -12,10 +12,6 @@ export default {
   props: ["subject"],
 };
 </script>
-<style scoped>
-.container {
-  width: 80%;
-  max-width: 600px;
-}
 
-</style>
+<style scoped src="@/styles/views/subject/DetailsView.css"/>
+

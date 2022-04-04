@@ -100,17 +100,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.cardHolder {
-  width: 100%;
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-}
+<style scoped src="@/styles/views/SubjectList.css"/>
 
-.teacherToolbar {
-  margin-top: 20px;
-}
-
-</style>

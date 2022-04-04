@@ -88,26 +88,5 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped src="@/styles/views/subject/StudentAssignmentsView.css"/>
 
-table {
-  width: 70%;
-  max-width: 800px;
-  border-collapse: collapse;
-  margin: auto auto 50px;
-}
-
-th {
-  background-color: lightgray;
-}
-
-th,
-td {
-  border: 1px solid #999;
-  padding: 0.5rem;
-  text-align: center;
-  width: 50%;
-}
-
-
-</style>

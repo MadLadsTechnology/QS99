@@ -81,12 +81,5 @@ export default {
 };
 </script>
 
-<style scoped>
-table {
-  width: 200px;
-  margin: auto;
-  font-size: 200%;
-}
+<style scoped src="@/styles/views/subject/AssignmentsView.css"/>
 
-
-</style>

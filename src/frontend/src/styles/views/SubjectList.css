@@ -1,0 +1,12 @@
+
+.cardHolder {
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.teacherToolbar {
+    margin-top: 20px;
+}

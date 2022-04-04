@@ -11,7 +11,7 @@
             label="First name"
             type="text"
         />
-        
+
         <BaseInput
             v-model.lazy="lastname"
             :error="errors.lastname"
@@ -128,25 +128,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.nameInputs {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-  gap: 20px;
-}
+<style scoped src="@/styles/views/professor/RegisterUser.css"/>
 
-.radioButtons {
-  display: flex;
-  gap: 50px;
-  align-items: center;
-}
-
-.loginForm {
-  width: 70%;
-  min-width: 300px;
-  max-width: 600px;
-  margin: auto;
-}
-</style>

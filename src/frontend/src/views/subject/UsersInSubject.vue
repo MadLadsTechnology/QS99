@@ -95,41 +95,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-.user {
-  display: flex;
-  flex-direction: row;
-  background-color: lightgray;
-  border-radius: 5px;
-  margin: 5px;
-  padding: 10px;
-  gap: 10px;
-}
-
-h4 {
-  margin: 0;
-}
-
-.information {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  height: 100%;
-}
-
-.exerciseWrapper {
-  display: flex;
-  width: 50%;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-content: flex-start;
-  gap: 2px;
-}
-
-button {
-  width: 100px;
-  margin: auto;
-}
-
-</style>
+<style scoped src="@/styles/views/subject/UsersInSubject.css"/>

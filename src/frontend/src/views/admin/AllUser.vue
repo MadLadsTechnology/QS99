@@ -70,17 +70,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-table {
-  margin: auto;
-  width: 80%;
-  border-collapse: collapse;
-}
-
-td,
-th {
-  border: 1px solid #999;
-  padding: 0.5rem;
-  text-align: left;
-}
-</style>
+<style scoped src="@/styles/views/admin/AllUsers.css"/>

@@ -74,24 +74,31 @@ export default {
 </script>
 
 <style scoped>
+
+h1 {
+  margin: 20px;
+}
+
 .container {
   text-align: center;
   background-color: #ddd1c7;
-  padding: 20px;
-  margin: 20px auto;
+  padding-top: 10px;
+  margin: 20px auto auto;
   border-radius: 10px;
   min-height: 500px;
-  width: 90%;
+  width: 100%;
+  max-width: 900px;
 }
 
 .nav {
   display: flex;
   flex-direction: row;
-  margin: auto;
   justify-content: center;
-  width: 400px;
-  min-width: 200px;
+  width: 80%;
+  min-width: 250px;
+  max-width: 300px;
   border-bottom: solid;
+  margin: auto auto 20px;
 }
 
 a {
@@ -101,7 +108,8 @@ a {
 
 .nav div {
   padding: 10px;
-  width: 100px;
+  max-width: 100px;
+  min-width: 50px;
 }
 
 .router-link-active div {

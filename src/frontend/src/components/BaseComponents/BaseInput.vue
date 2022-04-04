@@ -57,11 +57,11 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 10px;
 }
 
 label {
   text-align: left;
+  margin: 0;
   font-size: 100%;
 }
 

@@ -19,7 +19,6 @@
           label="New password"
           type="password"
       />
-
       <BaseInput
           v-model.lazy="confirmPassword"
           :error="errors.email"
@@ -113,20 +112,11 @@ export default {
 .passwordInputs {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
-  gap: 20px;
+  margin: 0;
+  padding: 0;
 }
 
-.radioButtons {
-  display: flex;
-  gap: 50px;
-  align-items: center;
-}
 
-.loginForm {
-  width: 70%;
-  min-width: 300px;
-  max-width: 600px;
-  margin: auto;
-}
 </style>

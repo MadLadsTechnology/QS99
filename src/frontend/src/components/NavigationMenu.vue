@@ -73,18 +73,19 @@ h3 {
   flex-direction: row;
   justify-content: flex-end;
   width: 100%;
-  padding: 10px;
 }
 
 .container {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 30px;
+  justify-content: space-between;
   height: 70px;
   background-color: #2c3e50;
+  margin: 0;
   color: white;
   text-decoration: none;
+  align-items: center;
+  padding-left: 10px;
 }
 
 h3 {
@@ -98,7 +99,6 @@ a {
 
 .container img {
   width: 60px;
-  margin: 10px;
 }
 
 .logOutBtn {

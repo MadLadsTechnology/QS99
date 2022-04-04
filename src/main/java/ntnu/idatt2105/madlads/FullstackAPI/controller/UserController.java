@@ -187,7 +187,8 @@ public class UserController {
             try {
                 logger.info("trying to register student");
                 String password = generateCommonLangPassword();
-                sendEmail(email, "This is your password to QS: " + password);
+                sendEmail(email, "This is your password to QS: " + password + "\\n Remember to save this email, " +
+                        "and go to your profile and change your password!");
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                 Student student = userRepository.save(new Student(user));
@@ -263,7 +264,8 @@ public class UserController {
         if (userRepository.getDistinctByEmailAddress(email) == null) {
             try {
                 String password = generateCommonLangPassword();
-                sendEmail(email, "This is your password to QS: " + password);
+                sendEmail(email, "This is your password to QS: " + password + "\\n Remember to save this email, " +
+                        "and go to your profile and change your password!");
                 String hashedPassword = PasswordHashing.generatePasswordHash(password);
                 QSUser user = new QSUser(firstname, lastname, email, hashedPassword);
                 Professor professor = userRepository

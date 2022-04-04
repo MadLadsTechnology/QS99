@@ -12,6 +12,6 @@ describe('BaseInput', () => {
             },
         });
 
-        expect(wrapper.text()).toBe(label);
-    })
-})
+    expect(wrapper.text()).toBe(label);
+  });
+});

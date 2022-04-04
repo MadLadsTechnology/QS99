@@ -1,5 +1,4 @@
 <template>
-
   <div class="window">
     <button @click="closeWindow()">Close</button>
     <form class="loginForm" @submit.prevent="submit()">
@@ -92,5 +91,5 @@ export default {
 };
 </script>
 
-<style scoped src="@/styles/PopUp.css"/>
+<style scoped src="@/styles/components/PopUp.css"/>
 

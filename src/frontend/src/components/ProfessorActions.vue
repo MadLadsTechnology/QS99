@@ -148,22 +148,4 @@ export default {
 
 </script>
 
-<style scoped>
-.button-group {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  width: 90%;
-  margin: auto;
-}
-
-button {
-  width: 100px;
-  height: 40px;
-  padding: 5px;
-}
-
-button:hover {
-  cursor: pointer;
-}
-</style>
+<style scoped src="@/styles/components/ProfessorActions.css"/>

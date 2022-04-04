@@ -58,26 +58,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.box {
-  background-color: red;
-  font-weight: bold;
-  border-radius: 3px;
-  width: 25px;
-  height: 25px;
-  text-align: center;
-  border: solid black 1px;
-  color: white;
-  padding: 5px;
-
-}
-
-.approved {
-  background-color: green;
-}
-
-.box:hover {
-  cursor: pointer;
-  background-color: #2c3e50;
-}
-</style>
+<style scoped src="@/styles/components/ExerciseBox.css"/>

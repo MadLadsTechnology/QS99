@@ -7,6 +7,7 @@ import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.ExerciseSubList;
 import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class SubListBySubjectDTO {
     private Long subListID;
-    private Map<Long, Integer> exercises;
+    private List<Integer> exercises;
     private int numberOfMandatory;
 
     public SubListBySubjectDTO(ExerciseSubList subList, List<Exercise> exercisesOfSubList){
@@ -24,10 +25,10 @@ public class SubListBySubjectDTO {
         this.numberOfMandatory = subList.getNumberOfMandatory();
         this.exercises = getExercises(exercisesOfSubList);
     }
-    private Map<Long, Integer> getExercises(List<Exercise> exercises){
-        HashMap<Long, Integer> map = new HashMap<>();
+    private List<Integer> getExercises(List<Exercise> exercises){
+        ArrayList<Integer> map = new ArrayList<>();
         for(Exercise exercise: exercises){
-            map.put(exercise.getId(), exercise.getExerciseNumber());
+            map.add(exercise.getExerciseNumber());
         }
         return map;
     }

@@ -1,13 +1,11 @@
 <template>
-
-
   <table v-for="sublist in assignments" :key="parseInt(sublist.id)">
     <tr>
-      <td>{{ sublist.mandatoryCount }}</td>
+      <td colspan="2">{{ sublist.numberOfMandatory }} exercises are mandatory</td>
     </tr>
-    <tr v-for="exercise in sublist" :key="parseInt(exercise.id)">
-      <td>{{ exercise.exerciseNumber }}</td>
-      <td v-if="exercise.isApproved">✅</td>
+    <tr v-for="(exercise, index) in sublist.exercises" :key="parseInt(exercise.id)">
+      <td>{{ index }}</td>
+      <td v-if="exercise">✅</td>
       <td v-else>⛔️</td>
     </tr>
   </table>
@@ -84,7 +82,6 @@ export default {
 
 <style scoped>
 table {
-
   width: 200px;
   margin: auto;
   font-size: 200%;

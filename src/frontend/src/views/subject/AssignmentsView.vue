@@ -1,19 +1,12 @@
 <template>
 
-  <div>
-
-    Hello there
-
-    <table>
-      <tr v-for="assignment in assignments" :key="parseInt(assignment.id)">
-        <td>{{ assignment.exerciseNumber }}</td>
-        <td v-if="assignment.isApproved">✅</td>
-        <td v-else>⛔️</td>
-      </tr>
-
-    </table>
-
+  <div v-for="sublist in assignments" :key="parseInt(sublist.id)">
+    {{ sublist.numberOfMandatory }} exercises are mandatory in
+    {{ sublist.exercises }}
+    {{ sublist.exercises.length }}
   </div>
+
+
 </template>
 
 <script>
@@ -40,7 +33,19 @@ export default {
         this.students = response.data;
       })
     }
+    await axios
+        .get("/exercise/getBySubject", {
+          params: {
+            subjectId: parseInt(this.subject.id),
+          },
+        })
+        .then((response) => {
+          if (response.data.length > 0) {
+            this.assignments = response.data;
+          }
+        });
   },
+
 
   data() {
     return {
@@ -75,7 +80,6 @@ export default {
 
 <style scoped>
 table {
-
   width: 200px;
   margin: auto;
   font-size: 200%;

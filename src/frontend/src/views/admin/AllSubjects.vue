@@ -180,4 +180,9 @@ th {
   padding: 0.5rem;
   text-align: left;
 }
+
+button {
+  margin: 5px;
+  padding: 5px;
+}
 </style>

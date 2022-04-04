@@ -2,7 +2,7 @@
   <div class="window">
     <button @click="closeWindow()">Close</button>
     <form class="loginForm" @submit.prevent="submit()">
-      <h1>Add exercises to {{ subject.code }}</h1>
+      <h3>Add exercises to {{ subject.code }}</h3>
 
       <BaseInput
           v-model.lazy="count"
@@ -101,13 +101,7 @@ export default {
 };
 </script>
 
-<style scoped>
-.window {
-  position: absolute;
-  background-color: antiquewhite;
-  border: solid;
-  border-radius: 3px;
-  padding: 50px;
-  top: 123px;
-}
+<style scoped src="@/styles/PopUp.css">
+
 </style>
+

@@ -2,11 +2,11 @@
 
   <h1>Hello {{ user.firstName }} {{ user.lastName }} </h1>
 
-  <h3>Email:{{ user.emailAddress }}</h3>
+  <h3>{{ user.emailAddress }}</h3>
 
   <button v-if="!changePassword" @click="this.changePassword = true">Change password</button>
 
-  <form v-if="changePassword" class="loginForm" @submit.prevent="submit()">
+  <form v-if="changePassword" class="form" @submit.prevent="submit()">
     <h3>Change your password</h3>
     <div class="passwordInputs">
       <BaseInput
@@ -116,8 +116,9 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 100%;
-  margin: 0;
+  width: 80%;
+  max-width: 500px;
+  margin: auto;
   padding: 0;
 }
 

@@ -1,57 +1,62 @@
 <template>
-  <button v-if="this.$store.getters.isStudent && !subject.isStudAss && !inQueue && subject.queueActive"
-          @click="this.$router.push('JoinQueue')">
-    Join queue
-  </button>
-  <button v-if="this.$store.getters.isStudent && !subject.isStudAss && inQueue" @click="leaveQueue()">
-    Leave queue
-  </button>
+
+  <div v-if="!!subject">
 
 
-  <button v-if="!this.$store.getters.isStudent || subject.isStudAss" @click="toggleQueue">
-    <text v-if="subject.queueActive">
-      Deactivate queue
-    </text>
-    <text v-else>
-      Activate queue
-    </text>
-  </button>
+    <button v-if="this.$store.getters.isStudent && !subject.isStudAss && !inQueue && subject.queueActive"
+            @click="this.$router.push('JoinQueue')">
+      Join queue
+    </button>
+    <button v-if="this.$store.getters.isStudent && !subject.isStudAss && inQueue" @click="leaveQueue()">
+      Leave queue
+    </button>
 
-  <table v-if="!!queue && queue.length > 0 && subject.queueActive">
 
-    <tr>
-      <th>#</th>
-      <th colspan="2">User</th>
-      <th>Task(s)</th>
-      <th>Type</th>
-      <th>Room</th>
-    </tr>
-    <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry)">
-      <td>{{ index + 1 }}</td>
-      <td>{{ entry.lastName }}</td>
-      <td>{{ entry.firstName }}</td>
-      <td>
-        <text v-for="assignment in entry.exercises" v-bind:key="assignment">
-          {{ assignment }},
-        </text>
-      </td>
-      <td v-if="subject.isStudAss">
-        <button @click="helpAndApprove(entry)">{{ entry.type }}</button>
-      </td>
-      <td v-else>
-        {{ entry.type }}
-      </td>
-      <td>{{ entry.tableNumber }}</td>
-    </tr>
-  </table>
-  <div v-else>
-    <h3 v-if="this.subject.queueActive">
-      Queue is empty
-    </h3>
-    <h3 v-else>
-      Queue is not active
-    </h3>
+    <button v-if="!this.$store.getters.isStudent || subject.isStudAss" @click="toggleQueue">
+      <text v-if="subject.queueActive">
+        Deactivate queue
+      </text>
+      <text v-else>
+        Activate queue
+      </text>
+    </button>
 
+    <table v-if="!!queue && queue.length > 0 && subject.queueActive">
+
+      <tr>
+        <th>#</th>
+        <th colspan="2">User</th>
+        <th>Task(s)</th>
+        <th>Type</th>
+        <th>Room</th>
+      </tr>
+      <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry)">
+        <td>{{ index + 1 }}</td>
+        <td>{{ entry.lastName }}</td>
+        <td>{{ entry.firstName }}</td>
+        <td>
+          <text v-for="assignment in entry.exercises" v-bind:key="assignment">
+            {{ assignment }},
+          </text>
+        </td>
+        <td v-if="subject.isStudAss">
+          <button @click="helpAndApprove(entry)">{{ entry.type }}</button>
+        </td>
+        <td v-else>
+          {{ entry.type }}
+        </td>
+        <td>{{ entry.tableNumber }}</td>
+      </tr>
+    </table>
+    <div v-else>
+      <h3 v-if="this.subject.queueActive">
+        Queue is empty
+      </h3>
+      <h3 v-else>
+        Queue is not active
+      </h3>
+
+    </div>
   </div>
 </template>
 <script>
@@ -69,7 +74,6 @@ export default {
         })
 
         .then((response) => {
-          console.log(response.data);
           this.queue = response.data;
           this.queue.some((element) => {
             if (element.studentId === this.$store.state.user.emailAddress) {

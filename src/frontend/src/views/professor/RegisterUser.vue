@@ -129,6 +129,7 @@ export default {
 .nameInputs {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
   gap: 20px;
 }

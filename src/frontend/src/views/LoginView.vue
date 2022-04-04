@@ -14,7 +14,7 @@
         label="Password"
         type="password"
     />
-    <button :disabled="!isValid" type="submit">Log in</button>
+    <button :disabled="!isValid" class="button" type="submit">Log in</button>
 
   </form>
 </template>
@@ -96,7 +96,8 @@ export default {
   max-width: 400px;
 }
 
-button {
+.button {
+
   width: 150px;
   margin: auto;
   padding: 10px;

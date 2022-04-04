@@ -29,8 +29,7 @@
       />
 
       <button :disabled="!isValid" type="submit">Submit</button>
-
-      <p v-if="error">{{ error }}</p>
+      
     </form>
   </div>
 </template>
@@ -69,7 +68,7 @@ export default {
             },
           })
           .then(() => {
-            this.$router.push("/admin/subjects");
+            this.$router.push("/subjects");
           })
 
           .catch((err) => {

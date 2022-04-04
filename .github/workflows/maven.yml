@@ -27,19 +27,14 @@ jobs:
 #      run: mvn test 
 
   deploy:
-    env:
-      known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-      private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: configure ssh and deploy app
-        run: |
-          mkdir ~/.ssh
-          echo "$known_hosts" > ~/.ssh/known_hosts
-          echo "$private_key" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       - run: ssh app@46.9.75.116 rm -rf app/
       - run: scp -r QS99 app@46.9.75.116:~/
       - run: ssh app@localhost make -C QS99 deploy

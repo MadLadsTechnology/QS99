@@ -2,6 +2,8 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetExerciseDTO;
+import ntnu.idatt2105.madlads.FullstackAPI.dto.SubListBySubjectDTO;
+import ntnu.idatt2105.madlads.FullstackAPI.dto.SubListByUserDTO;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.ExerciseSubList;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @EnableAutoConfiguration
@@ -175,7 +178,7 @@ public class ExerciseController {
     @Operation(summary = "Get exercise per user", description = "Gets all exercises for a user within one subject")
     @GetMapping("/getByUser")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesByUser(Authentication authentication,
+    public ResponseEntity<ArrayList<SubListByUserDTO>> getExercisesByUser(Authentication authentication,
                                                                         @RequestParam("subjectId") final int subjectId) {
         try {
             if (authentication != null) {
@@ -184,15 +187,23 @@ public class ExerciseController {
                     Subject subject = subjectRepository.findById(subjectId);
                     logger.info("Getting exercises for " + student.getEmailAddress() + " in subject " + subject.getSubjectCode());
                     ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subject);
-                    ArrayList<GetExerciseDTO> response = new ArrayList<>();
+                    ArrayList<Long> subListIds = new ArrayList<>();
+                    ArrayList<SubListByUserDTO> response = new ArrayList<>();
                     for (Exercise exercise : exercises) {
-                        if (student.getApprovedExercises().contains(exercise)) {
-                            GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, true);
-                            response.add(getExerciseDTO);
-                        } else {
-                            GetExerciseDTO getExerciseDTO = new GetExerciseDTO(exercise, false);
-                            response.add(getExerciseDTO);
+                        Long id = exercise.getSubList().getId();
+                        if (!subListIds.contains(id)) {
+                            subListIds.add(id);
                         }
+                    }
+                    for(Long id: subListIds){
+                        ExerciseSubList subList = exerciseSubListRepository.findExerciseSubListById(id);
+                        SubListByUserDTO subListByUserDTO =
+                                new SubListByUserDTO(
+                                        subList,
+                                        student,
+                                        exerciseRepository.findExerciseBySubList(subList)
+                                );
+                        response.add(subListByUserDTO);
                     }
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 }
@@ -215,16 +226,26 @@ public class ExerciseController {
     @Operation(summary = "Get all exercises in a subject", description = "Gets all exercises given a subject")
     @GetMapping("/getBySubject")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<GetExerciseDTO>> getExercisesBySubject(Authentication authentication,
-                                                                           @RequestParam("subjectId") final int subjectId) {
+    public ResponseEntity<ArrayList<SubListBySubjectDTO>> getExercisesBySubject(Authentication authentication,
+                                                                                @RequestParam("subjectId") final int subjectId) {
         if (authentication != null) {
             if (authentication.isAuthenticated()) {
                 ArrayList<Exercise> exercises = (ArrayList<Exercise>) exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId));
-                ArrayList<GetExerciseDTO> exerciseDTOS = new ArrayList<>();
+                ArrayList<SubListBySubjectDTO> subListDTOS = new ArrayList<>();
+                ArrayList<Long> subListIds = new ArrayList<>();
                 for (Exercise exercise : exercises) {
-                    exerciseDTOS.add(new GetExerciseDTO(exercise, null));
+                    Long id = exercise.getSubList().getId();
+                    if (!subListIds.contains(id)) {
+                        subListIds.add(id);
+                    }
                 }
-                return new ResponseEntity<>(exerciseDTOS, HttpStatus.OK);
+                for(Long id: subListIds){
+                    ExerciseSubList subList = exerciseSubListRepository.findExerciseSubListById(id);
+                    List<Exercise> exercisesOfSubList = exerciseRepository.findExerciseBySubList(subList);
+                    SubListBySubjectDTO subListBySubjectDTO = new SubListBySubjectDTO(subList, exercisesOfSubList);
+                    subListDTOS.add(subListBySubjectDTO);
+                }
+                return new ResponseEntity<>(subListDTOS, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);

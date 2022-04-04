@@ -95,10 +95,11 @@ public class SubjectController {
 
                     //If a professor creates the subject, add the professor to the subject.
                     if(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Professor){
+                        logger.info("Adding " + authentication.getName() + " as Professor");
                         Professor professor = professorRepository.findByEmailAddress(authentication.getName());
-                        subjectRepository.findById(newSubject.getId()).addProfessor(professor);
+                        professor.addSubject(subjectRepository.findById(newSubject.getId()));
+                        subjectRepository.save(subjectRepository.findById(newSubject.getId()));
                     }
-
                     return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
                 } catch (Exception e) {
                     logger.info(e.getMessage());

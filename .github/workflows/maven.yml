@@ -35,8 +35,8 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-      - run: ssh app@46.9.75.116 rm -rf app/
-      - run: scp -r MadLadsTechnology app@46.9.75.116:~/
+      - run: ssh app@46.9.75.116 rm -rf QS99/
+      - run: scp -r . app@46.9.75.116:~/QS99
       - run: ssh app@localhost make -C QS99 deploy
       
       

@@ -23,15 +23,20 @@
       />
 
       <div class="checkBoxHolder">
-        <div v-for="assignment in assignments" v-bind:key="assignment">
-          <input
-              :id="assignment.exerciseNumber"
-              v-model="exercises"
-              :disabled="assignment.isApproved"
-              :value="assignment.exerciseNumber"
-              type="checkbox"
-          />
-          <label :for="assignment.exerciseNumber">{{ assignment.exerciseNumber }}</label>
+        <div v-for="(sublist, index) in assignments" v-bind:key="index">
+
+          <div v-for="(exercise, index) in sublist.exercises" :key="parseInt(index)">
+            <input
+                :id="index"
+                v-model="exercises"
+                :disabled="exercise"
+                :value="parseInt(index)"
+                type="checkbox"
+            />
+            <label :for="index">{{ index }}</label>
+
+          </div>
+
         </div>
       </div>
 
@@ -110,7 +115,7 @@ export default {
               }
           )
           .then(() => {
-            this.$router.push("/subjects/"+this.subject.id+"/queue");
+            this.$router.push("/subjects/" + this.subject.id + "/queue");
             console.log(this.exercises);
           })
 

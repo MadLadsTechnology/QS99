@@ -8,7 +8,12 @@ import axios from "axios";
 
 export default {
   created() {
-    axios.defaults.baseURL = "http://localhost:8001";
+    let ip = "46.9.75.116"
+    console.log(process.env.IP)
+    if (process.env.IP){
+        ip = process.env.IP
+    }
+    axios.defaults.baseURL = "http://"+ip+":8001";
     const userString = localStorage.getItem("user");
     if (userString) {
       const userData = JSON.parse(userString);

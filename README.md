@@ -134,6 +134,8 @@ Javadoc is also published to github pages via its a github runner.
   - Our package manager of choice         
 
 ## Future Work
+### More and better tests
+There are some tests we want to implement to make life easier, especially on the frontend. Due to a lack of time, we couldn't implement as many tests as we wanted.
 
 ### Better admin page
 The admin page is currently not designed for mobile.

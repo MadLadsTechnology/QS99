@@ -83,6 +83,9 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: Profile,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/register",
@@ -143,7 +146,7 @@ router.beforeEach((to, from, next) => {
   }
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!loggedIn) {
-      return next({ name: "login" });
+      return next("/login");
     } else if (publicPage && loggedIn && isAdmin) {
       return next("/subjects");
     } else if (adminPage && !isAdmin && loggedIn) {

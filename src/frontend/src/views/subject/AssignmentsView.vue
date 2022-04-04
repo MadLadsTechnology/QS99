@@ -1,10 +1,12 @@
 <template>
 
-  <div v-for="sublist in assignments" :key="parseInt(sublist.id)">
+
+  <h3>Number of exercises: {{ exerciseCount }}</h3>
+  <h5 v-for="sublist in assignments" :key="parseInt(sublist.id)">
     {{ sublist.numberOfMandatory }} exercises are mandatory in
-    {{ sublist.exercises }}
-    {{ sublist.exercises.length }}
-  </div>
+    {{ sublist.exercises[0] }} ...
+    {{ sublist.exercises[sublist.exercises.length - 1] }}
+  </h5>
 
 
 </template>
@@ -62,17 +64,18 @@ export default {
       return false;
     },
 
-    sublists: function () {
+    exerciseCount: function () {
+      let count = 0;
 
-      let sublistIds = []
+      if (this.assignments) {
+        this.assignments.forEach(sublist => {
+          count += sublist.exercises.length;
+        });
 
+        return count;
+      }
+      return null;
 
-      this.assignments.forEach(assignment => {
-        if (!sublistIds.contains(assignment.sublistId)) {
-          sublistIds.push(assignment.sublistId)
-        }
-      })
-      return "";
     }
   }
 };

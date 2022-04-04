@@ -1,9 +1,12 @@
 <template>
-  <table v-for="sublist in assignments" :key="parseInt(sublist.id)">
+
+  <h1 v-if="subjectApproved">The subject is passed</h1>
+  <h1 v-else>Not passed</h1>
+  <table v-for="(sublist, index) in assignments" :key="parseInt(index)">
     <tr>
-      <td colspan="2">{{ sublist.numberOfMandatory }} exercises are mandatory</td>
+      <td colspan="2">Mandatory: {{ sublist.numberOfMandatory }}</td>
     </tr>
-    <tr v-for="(exercise, index) in sublist.exercises" :key="parseInt(exercise.id)">
+    <tr v-for="(exercise, index) in sublist.exercises" :key="parseInt(index)">
       <td>{{ index }}</td>
       <td v-if="exercise">✅</td>
       <td v-else>⛔️</td>
@@ -24,8 +27,6 @@ export default {
   methods: {},
   async created() {
     document.title = "QS99 - Subjects";
-
-    //getting subjects assigments
 
     if (this.hasPrivileges) {
       await axios.get("/user/getAllUsersFromSubject", {
@@ -64,27 +65,48 @@ export default {
       return false;
     },
 
-    sublists: function () {
+    subjectApproved: function () {
+      let isApproved = true;
+      if (this.assignments) {
+        this.assignments.forEach(sublist => {
+          let count = 0;
+          for (let index in sublist.exercises) {
+            if (sublist.exercises[index]) {
+              count += 1;
+            }
+          }
+          if (count < sublist.numberOfMandatory) {
+            isApproved = false;
+          }
+        })
+      }
 
-      let sublistIds = []
-
-
-      this.assignments.forEach(assignment => {
-        if (!sublistIds.contains(assignment.sublistId)) {
-          sublistIds.push(assignment.sublistId)
-        }
-      })
-      return "";
+      return isApproved;
     }
+
   }
 };
 </script>
 
 <style scoped>
+
 table {
-  width: 200px;
-  margin: auto;
-  font-size: 200%;
+  width: 70%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: auto auto 50px;
+}
+
+th {
+  background-color: lightgray;
+}
+
+th,
+td {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: center;
+  width: 50%;
 }
 
 

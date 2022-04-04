@@ -10,12 +10,14 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Tests for endpoints in UserController (/user/**)
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {

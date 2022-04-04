@@ -163,47 +163,5 @@ export default {
 };
 </script>
 
-<style scoped>
-button {
-  margin: 20px;
-  padding: 10px;
-}
+<style scoped src="@/styles/views/subject/Queue/QueueView.css"/>
 
-.gettingHelp {
-  background-color: lightgreen;
-}
-
-.thisUser {
-  background-color: #96ADC5;
-}
-
-table {
-  width: 90%;
-  margin: auto;
-  max-width: 800px;
-  border-collapse: collapse;
-
-}
-
-table button {
-  margin: 0;
-}
-
-th {
-  background-color: lightgray;
-}
-
-th,
-td {
-  border: 1px solid #999;
-  padding: 0.5rem;
-  text-align: left;
-
-}
-
-
-button:hover {
-  cursor: pointer;
-}
-
-</style>

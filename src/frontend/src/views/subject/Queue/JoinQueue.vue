@@ -159,19 +159,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.checkBoxHolder {
-  display: flex;
-  flex-wrap: wrap;
-  width: 80%;
-  justify-content: center;
-  margin: auto;
-}
+<style scoped src="@/styles/views/subject/Queue/JoinQueue.css"/>
 
-.form {
-  width: 70%;
-  min-width: 300px;
-  max-width: 600px;
-  margin: auto;
-}
-</style>

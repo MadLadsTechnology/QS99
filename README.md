@@ -31,6 +31,7 @@ compatible with a mobile.
 * Vue 3
 * Maven
 * Java
+* Spring Boot
 * Spring Data JPA
 * H2 database
 
@@ -134,6 +135,8 @@ Javadoc is also published to github pages via its a github runner.
   - Our package manager of choice         
 
 ## Future Work
+### More and better tests
+There are some tests we want to implement to make life easier, especially on the frontend. Due to a lack of time, we couldn't implement as many tests as we wanted.
 
 ### Better admin page
 The admin page is currently not designed for mobile.
@@ -159,9 +162,9 @@ The project evolved over time as we figured out what exact functionality we need
 - Maven
 - Two available ports 80 and 8001
 
-### Instructions 
+### Instructions Method 1
 
-To build and run the entire project you can use a Docker container(Easiest in a linux environment)
+To build and run the entire project you can use the make file to build two docker containers(Easiest in a linux environment)
 
 You will need to have docker installed!
 
@@ -180,6 +183,39 @@ sudo make -C QS99 deploy
 After the commands are ran, you will have two docker containers running, frontend on port 80 and backend running on port 8001
 
 Check that you have two running containers with this command:
+
+```
+sudo docker container list
+```
+
+If you only see one or none running, you should check the build log. Maybe you already had a service running on one of the ports
+
+You can access the frontend by going to this address: http://localhost
+
+You can access swagger by going to this address: http://localhost:8001/swagger-ui/index.html
+
+### Instructions Method 2
+
+Another way is to pull the two docker containers from docker hub and start them
+
+```
+sudo docker pull eposkk/frontend
+```
+```
+sudo docker pull eposkk/backend
+```
+
+Then start the containers by running
+
+```
+docker run -d --name frontend -p 80:80 eposkk/frontend
+```
+
+```
+docker run -d --name backend -p 8001:8001 eposkk/backend
+```
+
+And check that they are running
 
 ```
 sudo docker container list

@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

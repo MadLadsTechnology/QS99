@@ -1,13 +1,9 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 

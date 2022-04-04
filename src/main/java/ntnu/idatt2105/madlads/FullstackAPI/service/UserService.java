@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.generateCommonLangPassword;
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.sendEmail;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
 
 /**
  * Controller for api calls related to subjects

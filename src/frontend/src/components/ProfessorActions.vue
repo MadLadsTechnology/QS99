@@ -153,6 +153,7 @@ export default {
   display: flex;
   gap: 10px;
   justify-content: center;
+  width: 90%;
   margin: auto;
 }
 

@@ -64,17 +64,19 @@ public class ExerciseController {
                                                               Authentication authentication) {
         if (authentication != null) {
             if (authentication.isAuthenticated()) {
-                int startNumber = exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)).size();
-                ExerciseSubList exerciseSubList = exerciseSubListRepository.save(new ExerciseSubList(numberOfMandatory));
-                for (int i = startNumber; i < startNumber + numberOfExercises; i++) {
-                    if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), i + 1) == null) {
-                        Exercise exercise = new Exercise(subjectRepository.findById(subjectId), i + 1, exerciseSubList);
-                        exerciseRepository.save(exercise);
-                    } else {
-                        logger.info("Exercise already exist");
+                if (subjectRepository.findById(subjectId)!=null){
+                    int startNumber = exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)).size();
+                    ExerciseSubList exerciseSubList = exerciseSubListRepository.save(new ExerciseSubList(numberOfMandatory));
+                    for (int i = startNumber; i < startNumber + numberOfExercises; i++) {
+                        if (exerciseRepository.findExerciseBySubjectAndExerciseNumber(subjectRepository.findById(subjectId), i + 1) == null) {
+                            Exercise exercise = new Exercise(subjectRepository.findById(subjectId), i + 1, exerciseSubList);
+                            exerciseRepository.save(exercise);
+                        } else {
+                            logger.info("Exercise already exist");
+                        }
                     }
+                    return new ResponseEntity<>(exerciseSubList, HttpStatus.CREATED);
                 }
-                return new ResponseEntity<>(exerciseSubList, HttpStatus.CREATED);
             }
         }
         return new ResponseEntity<>(null, HttpStatus.UNPROCESSABLE_ENTITY);

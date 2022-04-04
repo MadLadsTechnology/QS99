@@ -37,5 +37,8 @@ button {
   -webkit-appearance: none;
   border-radius: 5px;
   padding: 10px;
+  border: solid black 1px;
+  color: black;
+  margin: 0;
 }
 </style>

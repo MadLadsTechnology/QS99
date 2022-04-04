@@ -4,6 +4,9 @@
       <button @click="closeWindow()">Close</button>
       <h3>Add multiple users to {{ subject.code }}</h3>
 
+      <h5>Send a list on the form "lastname firstname email" separated by new lines</h5>
+      <h5>Existing users will be added, if the user doesnt exist it will be created as a student and added.</h5>
+
       <textarea
           v-model="users"
           placeholder="Paste emails separated by new lines"

@@ -63,8 +63,8 @@ export default {
   background-color: red;
   font-weight: bold;
   border-radius: 3px;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   text-align: center;
   border: solid black 1px;
   color: white;

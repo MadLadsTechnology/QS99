@@ -1,13 +1,9 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -18,8 +14,9 @@ import java.util.stream.Collectors;
 public class CommonService {
     /**
      * Send email with user credentials
+     *
      * @param toMail
-     * @param text content of the email
+     * @param text   content of the email
      */
     public static void sendEmail(String toMail, String text) {
         EmailService emailService = new EmailService(toMail, text);
@@ -28,6 +25,7 @@ public class CommonService {
 
     /**
      * Checking if the email is in email-format
+     *
      * @param email
      * @return
      */
@@ -38,6 +36,7 @@ public class CommonService {
 
     /**
      * Generates a password when registering a user.
+     *
      * @return
      */
     public static String generateCommonLangPassword() {

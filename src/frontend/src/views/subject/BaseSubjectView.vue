@@ -28,7 +28,13 @@
         </router-link
         >
 
-        <router-link v-else :to="{ name: 'SubjectAssignments' }"
+        <router-link v-else :to="{ name: 'StudentSubjectAssignments' }"
+        >
+          <div>Assignments</div>
+        </router-link
+        >
+
+        <router-link v-if="!this.$store.getters.isStudent || subject.isStudAss" :to="{ name: 'assignments' }"
         >
           <div>Assignments</div>
         </router-link
@@ -92,9 +98,9 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 80%;
-  min-width: 250px;
-  max-width: 300px;
+  width: 85%;
+  min-width: 270px;
+  max-width: 325px;
   border-bottom: solid;
   margin: auto;
 }

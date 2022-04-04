@@ -1,4 +1,4 @@
-package ntnu.idatt2105.madlads.FullstackAPI.serviceOLD;
+package ntnu.idatt2105.madlads.FullstackAPI.service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -8,7 +8,7 @@ import java.util.Properties;
 /**
  * Class for servies related to sending an email
  */
-public class EmailService extends Thread{
+public class EmailService extends Thread {
 
     private final String toMail;
     private final String text;
@@ -22,7 +22,7 @@ public class EmailService extends Thread{
      * Generates an email, and sends it with wanted context
      * Runs as an own thread to avoid extra waiting time for the user.
      */
-    public void run(){
+    public void run() {
         String from = "QS99Madlads@gmail.com";
         String host = "smtp.gmail.com";
         Properties properties = System.getProperties();

@@ -3,7 +3,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.UserService;
+import ntnu.idatt2105.madlads.FullstackAPI.service.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.generateCommonLangPassword;
-import static ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.CommonService.sendEmail;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.generateCommonLangPassword;
+import static ntnu.idatt2105.madlads.FullstackAPI.service.CommonService.sendEmail;
 
 /**
  * Controller for api calls related to subjects
@@ -94,7 +94,7 @@ public class SubjectController {
                     queueController.createQueue(newSubject.getId(), true, subjectRepository, queueRepository);
 
                     //If a professor creates the subject, add the professor to the subject.
-                    if(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Professor){
+                    if (userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Professor) {
                         logger.info("Adding " + authentication.getName() + " as Professor");
                         Professor professor = professorRepository.findByEmailAddress(authentication.getName());
                         professor.addSubject(subjectRepository.findById(newSubject.getId()));

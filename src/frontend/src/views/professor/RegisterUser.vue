@@ -4,18 +4,21 @@
       <h1>Register a new user</h1>
 
       <div class="nameInputs">
-        <BaseInput
-            v-model.lazy="lastname"
-            :error="errors.lastname"
-            label="Last name"
-            type="lastname"
-        />
+
         <BaseInput
             v-model.lazy="firstname"
             :error="errors.firstname"
             label="First name"
             type="text"
         />
+        
+        <BaseInput
+            v-model.lazy="lastname"
+            :error="errors.lastname"
+            label="Last name"
+            type="lastname"
+        />
+
       </div>
 
       <BaseInput

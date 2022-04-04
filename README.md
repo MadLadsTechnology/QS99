@@ -60,6 +60,8 @@ JavaDoc: [JavaDoc](https://madladstechnology.github.io/QS99/)
 * Register and delete students and professors from subject
 * Create and delete subjects
 * Add and remove students and professors from a subject
+* Add students with a list in the form: "lastname firstname email" separated by new lines
+   * If a student doesnt exist a user is made and an email with password is sent.   
 * Add and remove student assistants from a subject
 * Add and remove exercises from a subject
 ### Admin

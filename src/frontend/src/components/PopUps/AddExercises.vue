@@ -101,7 +101,5 @@ export default {
 };
 </script>
 
-<style scoped src="@/styles/PopUp.css">
-
-</style>
+<style scoped src="@/styles/components/PopUp.css"/>
 

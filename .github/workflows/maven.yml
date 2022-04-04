@@ -36,6 +36,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: configure ssh and deploy app
         run: |
+          rm -rf ~/.ssh
           mkdir ~/.ssh
           echo "$known_hosts" > ~/.ssh/known_hosts
           echo "$private_key" > ~/.ssh/id_rsa

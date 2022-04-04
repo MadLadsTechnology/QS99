@@ -1,9 +1,6 @@
 <template>
 
-  <div v-if="hasPrivileges">
-
-  </div>
-  <div v-else>
+  <div>
 
     <table>
       <tr>

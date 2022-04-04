@@ -2,7 +2,9 @@
   <div class="container">
     <router-link to="/">
       <img alt="Logo" src="../assets/logo.png"
-      /></router-link>
+      />
+    </router-link>
+
 
     <div v-if="loggedIn">
 
@@ -12,22 +14,19 @@
 
         </router-link>
 
-        <h3>|</h3>
         <router-link :to="{ name: 'allSubjects' }">
           <h3>Subjects</h3>
         </router-link>
       </div>
 
-      <router-link v-else class="routerLink" to="/subjects">
+      <router-link v-else to="/subjects">
         <h3>Subjects</h3></router-link
       >
     </div>
 
     <router-link class="profileLink" to="/Profile">
       <div v-if="loggedIn" class="userInformation">
-        <h3 class="role">{{ this.$store.state.user.role }}:</h3>
-        <h3>{{ this.$store.state.user.emailAddress }}</h3>
-
+        <h3 class="role">Settings</h3>
       </div>
     </router-link>
     <button v-if="loggedIn" class="logOutBtn" @click="logOut()">Log out</button>
@@ -51,31 +50,38 @@ export default {
 </script>
 
 <style scoped>
-.adminPanel {
+
+.router-link-active {
+  background-color: white;
+  color: black;
+}
+
+.pageSelection {
   display: flex;
-  gap: 30px;
+  height: 70px;
 }
 
-.profileLink {
-  margin-left: auto;
-}
+.pageSelection h3 {
+  width: 80px;
+  padding: 5px
 
-.role {
-  font-style: italic;
-  margin-right: 0;
 }
 
 .container {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: right;
   gap: 30px;
-  height: 10px;
+  height: 70px;
   background-color: #2c3e50;
   color: white;
   margin: 0;
-  padding: 30px;
+
   text-decoration: none;
+}
+
+h3 {
+  color: white;
 }
 
 a {
@@ -87,22 +93,10 @@ a {
   width: 50px;
 }
 
-nav li.router-link-active {
-  background-color: black;
-}
-
-.userInformation {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  margin-left: auto;
-  height: 40px;
-}
-
 .logOutBtn {
   text-align: center;
   text-decoration: none;
+  margin-left: 30px;
 }
 
 .logOutBtn:hover {

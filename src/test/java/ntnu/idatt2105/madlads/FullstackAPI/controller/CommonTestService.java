@@ -46,7 +46,7 @@ public class CommonTestService {
         if (os.contains("Windows")) {
             shell = "powershell.exe";
         } else if (os.contains("Linux")) {
-            shell = "";
+            shell = "/bin/bash";
         }
 
         ProcessBuilder builder = new ProcessBuilder(shell, "rm ~/data/*");

@@ -168,7 +168,38 @@ The project evolved over time as we figured out what exact functionality we need
 - Maven
 - Two available ports 80 and 8001
 
-### Instructions Method 1
+### Instruction method 1
+
+Clone the project
+
+##### Backend: 
+In the project folder:
+```
+mvn spring-boot:run 
+``` 
+##### Frontend
+In the project folder:
+
+```
+cd src/frontend 
+```
+```
+yarn 
+```
+```
+yarn serve
+```
+Now the application will be accessible from 
+```
+http://localhost:8080
+```
+To be able to use the application, the default admin user is:
+
+username: ``` admin@admin.no```
+password: ```password```
+
+
+### Instructions Method 2
 
 To build and run the entire project you can use the make file to build two docker containers(Easiest in a linux environment)
 
@@ -200,7 +231,7 @@ You can access the frontend by going to this address: http://localhost
 
 You can access swagger by going to this address: http://localhost:8001/swagger-ui/index.html
 
-### Instructions Method 2
+### Instructions Method 3
 
 Another way is to pull the two docker containers from docker hub and start them
 

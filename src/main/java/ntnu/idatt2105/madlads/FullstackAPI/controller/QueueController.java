@@ -198,32 +198,6 @@ public class QueueController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Delete an entry. Can be called by a student assistant
-     *
-     * @param authentication
-     * @param id
-     * @return the http response and a boolean depending on if the entry was deleted
-     */
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
-    @Operation(summary = "Delete an entry", description = "Deletes a given entry from the queue")
-    @DeleteMapping()
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Boolean> deleteEntry(Authentication authentication,
-                                               @RequestParam("entryId") final Long id) {
-        if (authentication != null) {
-            if (authentication.isAuthenticated()) {
-                if (entryRepository.findEntryById(id) != null) {
-                    entryRepository.delete(entryRepository.findEntryById(id));
-                    return new ResponseEntity<>(true, HttpStatus.OK);
-                }
-                return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-            }
-        }
-        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-    }
-
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
     @Operation(summary = "Gets all entries", description = "Gets all entries in a given subject")
     @GetMapping()

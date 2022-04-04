@@ -39,7 +39,7 @@ export default {
     submit() {
       axios
           .post(
-              "/addUsers",
+              "/user/addUsers",
               {data: this.users},
               {
                 params: {

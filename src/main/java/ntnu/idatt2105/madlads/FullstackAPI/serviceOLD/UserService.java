@@ -13,9 +13,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Class for services related to a user
+ */
 public class UserService {
     public static String keyStr = "testsecrettestsecrettestsecrettestsecrettestsecret";
 
+    /**
+     * Generates am authorization token for a user
+     * @param userId
+     * @param role the role which specifies the users permissions
+     * @return
+     */
     public static String generateToken(String userId, String role) {
 
         Key key = Keys.hmacShaKeyFor(keyStr.getBytes(StandardCharsets.UTF_8));

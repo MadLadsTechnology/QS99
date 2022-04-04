@@ -11,17 +11,35 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Class for common services
+ * Like sending and email with generated password
+ */
 public class CommonService {
+    /**
+     * Send email with user credentials
+     * @param toMail
+     * @param text content of the email
+     */
     public static void sendEmail(String toMail, String text) {
         EmailService emailService = new EmailService(toMail, text);
         emailService.start();
     }
 
+    /**
+     * Checking if the email is in email-format
+     * @param email
+     * @return
+     */
     public static boolean regexEmail(String email) {
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
         return pattern.matcher(email).matches();
     }
 
+    /**
+     * Generates a password when registering a user.
+     * @return
+     */
     public static String generateCommonLangPassword() {
         String upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true);
         String lowerCaseLetters = RandomStringUtils.random(2, 97, 122, true, true);

@@ -59,9 +59,13 @@
 import {useField, useForm} from "vee-validate";
 import {number, object, string} from "yup";
 import axios from "axios";
+import BaseInput from "@/components/BaseComponents/BaseInput";
 
 export default {
   props: ["subject"],
+  components: {
+    BaseInput,
+  },
   data() {
     return {
       error: null,

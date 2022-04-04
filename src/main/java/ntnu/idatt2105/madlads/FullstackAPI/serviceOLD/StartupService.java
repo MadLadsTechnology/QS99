@@ -10,12 +10,20 @@ import javax.annotation.PostConstruct;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * Class for services related to the startup of the server and db
+ */
 @Component
 public class StartupService {
 
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * Creates an admin user when db starts
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     @PostConstruct
     public void createAdminUser() throws NoSuchAlgorithmException, InvalidKeySpecException {
         //TODO: CHANGE PASSWORD OF ADMIN!!!!

@@ -31,9 +31,31 @@ compatible with a mobile.
 
 ## Functionality
 ### Student
+* Log in
+* Change Password
+* View all (and one) users from a subject
+* View all subjects participating in (or by ID)
+* Add and delete entry from queue
+* View all entries in a queue
+* View all exercises in their subjects (and by specific subject)
 ### Student assistant
+* All functionality of a student
+* Set a queue active/inactive
+* Approve exercise for student
+* Set status of an entry
 ### Professor
+* All functionality of students and student assistants
+* Register and delete students and professors
+* Create and delete subjects
+* Add and remove students and professors from a subject
+* Add and remove student assistants from a subject
+* Create a new queue !!!!Skal denne stå her?!!!!
+* Add and remove exercises from a subject
 ### Admin
+* All functionality of students, student assistants and professors
+* Register admin users
+* View all users and subjects in the database
+
 
 ## ER-diagram
 ## REST-API

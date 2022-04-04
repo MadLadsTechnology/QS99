@@ -3,8 +3,10 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.EntryRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.UserRepository;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Entry;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
+import ntnu.idatt2105.madlads.FullstackAPI.model.users.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -25,9 +27,11 @@ public class EntryController {
     EntryRepository entryRepository;
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
-    @PostMapping("/qs/student/setIsGettingHelp")
+    @PostMapping("/setIsGettingHelp")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     @Operation(summary = "Set wheteher student isGettingHelp", description = "Needs the entry id and what you want to set it to")
@@ -36,12 +40,20 @@ public class EntryController {
                                                     @RequestParam("isGettingHelp") final boolean isGettingHelp) {
         Entry entry = entryRepository.findEntryById(entryId);
         Subject subject = entry.getQueue().getSubject();
-        if (authentication != null && (authentication.isAuthenticated() ||
-                subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())))
-        ) {
-            entry.setGettingHelp(isGettingHelp);
-            entryRepository.save(entry);
-            return new ResponseEntity<>(entry.isGettingHelp(), HttpStatus.OK);
+        if (authentication != null && authentication.isAuthenticated()) {
+            if(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Student) {
+                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))) {
+                    entry.setGettingHelp(isGettingHelp);
+                    entryRepository.save(entry);
+                    return new ResponseEntity<>(entry.isGettingHelp(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+                }
+            } else {
+                entry.setGettingHelp(isGettingHelp);
+                entryRepository.save(entry);
+                return new ResponseEntity<>(entry.isGettingHelp(), HttpStatus.OK);
+            }
         } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }

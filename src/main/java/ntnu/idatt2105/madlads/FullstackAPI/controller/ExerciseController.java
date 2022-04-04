@@ -2,10 +2,7 @@ package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import ntnu.idatt2105.madlads.FullstackAPI.dto.GetExerciseDTO;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.ExerciseSubListRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.StudentRepository;
-import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.SubjectRepository;
+import ntnu.idatt2105.madlads.FullstackAPI.model.repositories.*;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Exercise;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.ExerciseSubList;
 import ntnu.idatt2105.madlads.FullstackAPI.model.subjects.Subject;
@@ -41,6 +38,9 @@ public class ExerciseController {
 
     @Autowired
     ExerciseSubListRepository exerciseSubListRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     /**
@@ -127,23 +127,38 @@ public class ExerciseController {
         if (authentication != null) {
             Subject subject = subjectRepository.findById(subjectId);
 
-            if (authentication.isAuthenticated() || subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))) {
-
-                Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
-
-                Student student = studentRepository.findByEmailAddress(studentEmail);
-                if (exercise.getStudents().contains(student) && !isApproved) {
-                    exercise.removeStudent(student);
-                } else if (!exercise.getStudents().contains(student) && isApproved) {
-                    exercise.addStudent(student);
+            if (authentication.isAuthenticated()) {
+                if(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Student) {
+                    if(subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))){
+                        return getBooleanResponseEntity(exerciseNumber, subject, studentEmail, isApproved);
+                    } else {
+                        return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+                    }
+                } else {
+                    return getBooleanResponseEntity(exerciseNumber, subject, studentEmail, isApproved);
                 }
-                exerciseRepository.save(exercise);
-                return new ResponseEntity<>(true, HttpStatus.OK);
             } else {
                 logger.info(authentication.getName() + " is not a student assistant in this subject");
             }
         }
         return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+    }
+
+    private ResponseEntity<Boolean> getBooleanResponseEntity( int exerciseNumber, Subject subject, String studentEmail, boolean isApproved) {
+        Exercise exercise = exerciseRepository.findExerciseBySubjectAndExerciseNumber(subject, exerciseNumber);
+        try {
+            Student student = studentRepository.findByEmailAddress(studentEmail);
+            if (exercise.getStudents().contains(student) && !isApproved) {
+                exercise.removeStudent(student);
+            } else if (!exercise.getStudents().contains(student) && isApproved) {
+                exercise.addStudent(student);
+            }
+            exerciseRepository.save(exercise);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        }
+
     }
 
     /**

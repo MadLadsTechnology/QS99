@@ -5,4 +5,4 @@ ntnu.idatt2105.madlads.FullstackAPI.model.repositories
 ntnu.idatt2105.madlads.FullstackAPI.model.subjects
 ntnu.idatt2105.madlads.FullstackAPI.model.users
 ntnu.idatt2105.madlads.FullstackAPI.security
-ntnu.idatt2105.madlads.FullstackAPI.serviceOLD
+ntnu.idatt2105.madlads.FullstackAPI.service

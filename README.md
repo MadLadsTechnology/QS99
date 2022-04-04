@@ -31,6 +31,7 @@ compatible with a mobile.
 * Vue 3
 * Maven
 * Java
+* Spring Boot
 * Spring Data JPA
 * H2 database
 

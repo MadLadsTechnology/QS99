@@ -229,11 +229,12 @@ public class SubjectController {
                     String lastName = strings[0];
                     String firstName = strings[1];
                     String email = strings[2].trim();
-                    QSUser user = userRepository.getDistinctByEmailAddress(email);
 
                     if (!pattern.matcher(email).matches()) {
                         return new ResponseEntity<>(false, HttpStatus.UNPROCESSABLE_ENTITY);
                     }
+
+                    QSUser user = userRepository.getDistinctByEmailAddress(email);
 
                     if (user == null) {
                         String password = generateCommonLangPassword();
@@ -241,14 +242,15 @@ public class SubjectController {
                         user = new Student(new QSUser(firstName, lastName, email, hashedPassword));
                         studentRepository.save((Student) user);
                         logger.info("Sent email to:" + email);
-                        sendEmail(email, "Your password to QS is:  " + password);
+                        sendEmail(email, "Your password to QS is:  " + password +"\\n Remember to save this email, " +
+                                "and go to your profile and change your password!");
                     }
                     logger.info("user: " + user);
                     if (user instanceof Student) {
-                        if (!((Student) user).getStudentSubjects().contains(subjectId)) {
-                            ((Student) user).addStudentSubject(subject);
-                        } else {
-                            Student newStudent = new Student();
+                        boolean response = studentRepository.findByEmailAddress(email).addStudentSubject(subject);
+                        if (response) {
+                            logger.info(subject.toString());
+                            subjectRepository.save(subject);
                         }
                     } else if (user instanceof Professor) {
                         if (!subject.getProfessors().contains(user)) {

@@ -44,29 +44,30 @@ JavaDoc: [JavaDoc](https://madladstechnology.github.io/QS99/)
 ### Student
 * Log in
 * Change Password
-* View all (and one) users from a subject
 * View all subjects participating in (or by ID)
 * Add and delete entry from queue
 * View all entries in a queue
 * View all exercises in their subjects (and by specific subject)
+* See if subject is passed based on exercises
 ### Student assistant
 * All functionality of a student
+* View all users from a subject
 * Set a queue active/inactive
 * Approve exercise for student
-* Set status of an entry
+* Set status of an entry (help/approve)
 ### Professor
 * All functionality of students and student assistants
-* Register and delete students and professors
+* Register and delete students and professors from subject
 * Create and delete subjects
 * Add and remove students and professors from a subject
+* Add students with a list in the form: "lastname firstname email" separated by new lines
+   * If a student doesnt exist a user is made and an email with password is sent.   
 * Add and remove student assistants from a subject
-* Create a new queue !!!!Skal denne stå her?!!!!
 * Add and remove exercises from a subject
 ### Admin
 * All functionality of students, student assistants and professors
 * Register admin users
 * View all users and subjects in the database
-
 
 ## ER-diagram
 <img src="https://github.com/MadLadsTechnology/QS99/blob/main/src/main/resources/QS99.jpeg"/>
@@ -79,7 +80,7 @@ Alternatively if you are running your own instance [QS99API localhost](http://lo
 ## Security
 QS99 uses JWT-Tokens for authentication of users who are performing API-calls. A JWT-Token is given to a user whenever they log in. When a user logs in the backend performs a lookup to check if the email and password match an existing user. The password is salted and then hashed and store this way in the database. If the user exists and a correct password was given, we check what role this given user has. After this the backend uses a JWTSBuilder which we give email, role and sets a creation time and an expiration time. Now the user has a valid token that it can use to perform API calls.
 
-When a user performs an API call it sends its token in the header. The backend then extracts the needed information from the token, and checks if it has the needed role to perform the specific API call. This way we ensure that only those that have a valid token with the needed roles can perform the given API call. Each endpoint has specified what roles have access to that specific endpoint.
+When a user performs an API call it sends its token in the header. The backend then extracts the needed information from the token, and checks if it has the needed role to perform the specific API call. This way we ensure that only those that have a valid token with the needed roles can perform the given API call. Each endpoint has specified what roles have access to it.
 
 ## CI/CD
 
@@ -123,6 +124,8 @@ Javadoc is also published to github pages via its a github runner.
   - Used for formatting in development
 - Yup
   - Used for form validation
+- Jest
+  - Used for testing frontend
 - Vuex
   - Used for state management
 - Router 
@@ -133,7 +136,7 @@ Javadoc is also published to github pages via its a github runner.
 ## Future Work
 
 ### Better admin page
-The admin page is currently not supported on mobile, and is the most underdeveloped page of all
+The admin page is currently not designed for mobile.
 
 ### Refresh Tokens
 With refresh tokens we could save the user some hassle of login in each time a token expires. A user could be logged in indefinitely, without being timed out

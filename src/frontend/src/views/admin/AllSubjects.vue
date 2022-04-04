@@ -52,7 +52,7 @@
         </router-link>
 
         <button @click="showSingleUserWindow(object.id, object.subjectCode)">
-          Add student
+          Add user
         </button>
         <button @click="showMultipleUserWindow(object.id, object.subjectCode)">
           Add multiple students

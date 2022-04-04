@@ -102,7 +102,6 @@ export default {
 
 <style scoped>
 .cardHolder {
-  margin-top: 40px;
   width: 100%;
   flex-wrap: wrap;
   display: flex;
@@ -113,4 +112,5 @@ export default {
 .teacherToolbar {
   margin-top: 20px;
 }
+
 </style>

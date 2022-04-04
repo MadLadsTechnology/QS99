@@ -3,6 +3,7 @@
     <button @click="closeWindow()">Close</button>
     <form class="loginForm" @submit.prevent="submit()">
       <h3>Add user to {{ subject.code }}</h3>
+      <h5>Note: Must be an existing student or professor</h5>
 
       <BaseInput
           v-model.lazy="email"

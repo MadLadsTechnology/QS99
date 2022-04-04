@@ -2,7 +2,9 @@
 
   <h1>Hello {{ user.firstName }} {{ user.lastName }} </h1>
 
-  <h3>{{ user.emailAddress }}</h3>
+  <h3>You are registered as a {{ user.role }}</h3>
+
+  <h3>Your mail is: {{ user.emailAddress }}</h3>
 
   <button v-if="!changePassword" @click="this.changePassword = true">Change password</button>
 

@@ -26,5 +26,5 @@ public class GetExerciseByStudentDTO {
     }
     private boolean isApproved(Exercise exercise, Student student){
         return student.getApprovedExercises().contains(exercise);
-    };
+    }
 }

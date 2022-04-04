@@ -39,7 +39,7 @@
             {{ assignment }},
           </text>
         </td>
-        <td v-if="subject.isStudAss">
+        <td v-if="subject.isStudAss || !this.$store.getters.isStudent">
           <button @click="helpAndApprove(entry)">{{ entry.type }}</button>
         </td>
         <td v-else>
@@ -141,7 +141,7 @@ export default {
     },
 
     getClass(entry) {
-      if (entry.isGettingHelp == true) {
+      if (entry.gettingHelp == true) {
         return "gettingHelp"
       } else if (entry.studentId === this.$store.state.user.emailAddress) {
         return "thisUser"
@@ -163,6 +163,11 @@ export default {
 </script>
 
 <style scoped>
+button {
+  margin: 20px;
+  padding: 10px;
+}
+
 .gettingHelp {
   background-color: lightgreen;
 }
@@ -179,6 +184,10 @@ table {
 
 }
 
+table button {
+  margin: 0;
+}
+
 th {
   background-color: lightgray;
 }
@@ -191,10 +200,6 @@ td {
 
 }
 
-button {
-  margin: 20px;
-  padding: 10px;
-}
 
 button:hover {
   cursor: pointer;

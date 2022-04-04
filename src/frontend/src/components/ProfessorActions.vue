@@ -1,36 +1,40 @@
 <template>
   <AddExercises
+      data-test="AddExercisesObject"
       v-if="showAddExercises"
       v-bind:subject="currentSubject"
       v-on:closeWindow="closeWindow"
   />
   <AddUserToSubject
+      data-test="AddUserObject"
       v-if="showAddSingleUser"
       v-bind:subject="currentSubject"
       v-on:closeWindow="closeWindow"
   />
   <AddMultipleUsersToSubject
+      data-test="AddMultipleUsersObject"
       v-if="showAddMultipleUsers"
       v-bind:subject="currentSubject"
       v-on:closeWindowMultipleUsers="closeWindow"
   />
 
   <AddAssistantToSubject
+      data-test="AdStudassObject"
       v-if="showAddAssistant"
       v-bind:subject="currentSubject"
       v-on:closeWindow="closeWindow"
   />
   <div class="button-group">
-    <button @click="showSingleUserWindow(subject.id, subject.subjectCode)">
+    <button data-test="AddUser" @click="showSingleUserWindow(subject.id, subject.subjectCode)">
       Add user
     </button>
-    <button @click="showMultipleUserWindow(subject.id, subject.subjectCode)">
+    <button data-test="AddMultipleUser" @click="showMultipleUserWindow(subject.id, subject.subjectCode)">
       Add multiple users
     </button>
-    <button @click="showAddExercisesWindow(subject.id, subject.subjectCode)">
+    <button data-test="AddExercises" @click="showAddExercisesWindow(subject.id, subject.subjectCode)">
       Add exercises
     </button>
-    <button @click="showSingleAssistantWindow(subject.id, subject.subjectCode)">
+    <button data-test="AddStudass" @click="showSingleAssistantWindow(subject.id, subject.subjectCode)">
       Add student assistant
     </button>
   </div>

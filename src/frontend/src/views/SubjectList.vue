@@ -102,4 +102,8 @@ export default {
   justify-content: center;
   gap: 30px;
 }
+
+.teacherToolbar {
+  margin-top: 20px;
+}
 </style>

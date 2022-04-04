@@ -89,7 +89,6 @@ public class SubjectController {
             if (authentication.isAuthenticated()) {
                 logger.info("subject: " + subjectCode + subjectName + " " + year);
                 try {
-
                     Subject newSubject = subjectRepository
                             .save(new Subject(subjectCode, subjectName, description, year));
                     queueController.createQueue(newSubject.getId(), true, subjectRepository, queueRepository);

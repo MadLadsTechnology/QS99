@@ -1,6 +1,6 @@
 <template>
   <router-link
-    :to="{
+      :to="{
       name: link,
       params: { id: subject.id },
     }"
@@ -8,9 +8,7 @@
     <div class="card">
       <h1>{{ subject.subjectCode }}</h1>
       {{ subject.subjectName }}
-
-      {{ subject.id }}
-      <br />
+      <br/>
     </div>
   </router-link>
 </template>
@@ -51,6 +49,7 @@ export default {
 .card h1 {
   margin: 0;
 }
+
 a {
   text-decoration: none;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="!!subject" class="container">
     <ProfessorActions v-if="!this.$store.getters.isStudent"
                       :subject="subject"
     />

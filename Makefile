@@ -9,7 +9,7 @@ backend_stop_service:
 
 backend_build:
 	mvn -B -DskipTests clean package spring-boot:repackage
-	-sudo docker build -t backend .
+	-docker build -t backend .
 
 backend_start_service:
 	@docker run -d --name backend -p 8001:8001 backend

@@ -47,6 +47,9 @@ public class QueueController {
     @Autowired
     ExerciseRepository exerciseRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     /**
      * Create a queue, is always called when a subject is created
      *
@@ -100,12 +103,28 @@ public class QueueController {
         if (authentication != null) {
             if (authentication.isAuthenticated()) {
                 Subject su;
-                if ((su = subjectRepository.findById(id)) != null) {
-                    Queue queue = queueRepository.findBySubject(su);
-                    queue.setActive(isActive);
-                    queueRepository.save(queue);
+                if(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Student) {
+                    Student student = studentRepository.findByEmailAddress(authentication.getName());
+                    if ((su = subjectRepository.findById(id)) != null) {
+                        if(student.getAssistantSubjects().contains(id)) {
+                            Queue queue = queueRepository.findBySubject(su);
+                            queue.setActive(isActive);
+                            queueRepository.save(queue);
+                            return new ResponseEntity<>(true, HttpStatus.OK);
+                        } else {
+                            return new ResponseEntity<>(false, HttpStatus.FORBIDDEN);
+                        }
+                    }
+                } else {
+                    if ((su = subjectRepository.findById(id)) != null) {
+                        Queue queue = queueRepository.findBySubject(su);
+                        queue.setActive(isActive);
+                        queueRepository.save(queue);
+                        return new ResponseEntity<>(true, HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
+                    }
                 }
-                return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
             }
         }
         return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);

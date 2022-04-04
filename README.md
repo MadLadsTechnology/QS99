@@ -35,13 +35,12 @@ compatible with a mobile.
 * Change Password
 * View all (and one) users from a subject
 * View all subjects participating in (or by ID)
-* Add entry to queue
+* Add and delete entry from queue
 * View all entries in a queue
 * View all exercises in their subjects (and by specific subject)
 ### Student assistant
 * All functionality of a student
 * Set a queue active/inactive
-* Delete an entry in a queue
 * Approve exercise for student
 * Set status of an entry
 ### Professor

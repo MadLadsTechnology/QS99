@@ -3,13 +3,10 @@
   <div>
 
     <table>
-      <tr>
-        <th>Number</th>
-        <th>Approved</th>
-      </tr>
       <tr v-for="assignment in assignments" :key="parseInt(assignment.id)">
         <td>{{ assignment.exerciseNumber }}</td>
-        <td>{{ assignment.isApproved }}</td>
+        <td v-if="assignment.isApproved">✅</td>
+        <td v-else>⛔️</td>
       </tr>
 
     </table>
@@ -72,6 +69,13 @@ export default {
 };
 </script>
 
-<table>
+<style scoped>
+table {
 
-</table>
+  width: 200px;
+  margin: auto;
+  font-size: 200%;
+}
+
+
+</style>

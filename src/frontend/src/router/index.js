@@ -18,11 +18,6 @@ import AllSubjects from "../views/admin/AllSubjects";
 import CreateSubject from "../views/professor/CreateSubject";
 import store from "../store";
 
-import AddMultipleUsersToSubject from "@/components/PopUps/AddMultipleUsersToSubject";
-import AddExercises from "@/components/PopUps/AddExercises";
-import AddAssistant from "@/components/PopUps/AddAssistantToSubject";
-import AddUserToSubject from "@/components/PopUps/AddUserToSubject";
-
 const routes = [
   {
     path: "/",
@@ -32,38 +27,6 @@ const routes = [
     path: "/subjects",
     name: "subjects",
     component: Subjects,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/addAssistant",
-    name: "addAssistant",
-    component: AddAssistant,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/addExercises",
-    name: "addExercises",
-    component: AddExercises,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/AddMultipleUsersToSubject",
-    name: "addMultipleUsersToSubject",
-    component: AddMultipleUsersToSubject,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/addUserToSubject",
-    name: "addUserToSubject",
-    component: AddUserToSubject,
     meta: {
       requiresAuth: true,
     },

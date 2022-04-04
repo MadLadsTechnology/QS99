@@ -1,17 +1,17 @@
 <template>
   <AddExercises
       v-if="showAddExercises"
-      v-bind:subject="subject"
+      v-bind:subject="currentSubject"
       v-on:closeWindow="closeWindow"
   />
   <AddUserToSubject
       v-if="showAddSingleUser"
-      v-bind:subject="subject"
+      v-bind:subject="currentSubject"
       v-on:closeWindow="closeWindow"
   />
   <AddMultipleUsersToSubject
       v-if="showAddMultipleUsers"
-      v-bind:subject="subject"
+      v-bind:subject="currentSubject"
       v-on:closeWindowMultipleUsers="closeWindow"
   />
 
@@ -72,6 +72,7 @@ export default {
       this.showAddSingleUser = true;
       this.showAddMultipleUsers = false;
       this.showAddAssistant = false;
+      this.showAddExercises = false;
 
     },
     showMultipleUserWindow(id, subjectCode) {
@@ -79,6 +80,7 @@ export default {
       this.showAddSingleUser = false;
       this.showAddAssistant = false;
       this.showAddMultipleUsers = true;
+      this.showAddExercises = false;
     },
     showAddExercisesWindow(id, subjectCode) {
       this.setCurrentSubject(id, subjectCode);

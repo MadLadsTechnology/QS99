@@ -2,7 +2,7 @@
   <div class="window">
     <button @click="closeWindow()">Close</button>
     <form class="loginForm" @submit.prevent="submit()">
-      <h1>Add user to {{ subject.code }}</h1>
+      <h3>Add user to {{ subject.code }}</h3>
 
       <BaseInput
           v-model.lazy="email"
@@ -91,13 +91,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.window {
-  position: absolute;
-  background-color: antiquewhite;
-  border: solid;
-  border-radius: 3px;
-  padding: 50px;
-  top: 123px;
-}
-</style>
+<style scoped src="@/styles/PopUp.css"/>
+

@@ -1,0 +1,19 @@
+.window {
+    position: absolute;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: lightgrey;
+    border: solid;
+    border-radius: 5px;
+    padding: 20px;
+
+}
+
+textarea {
+    width: 50%;
+    height: 200px;
+}

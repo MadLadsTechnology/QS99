@@ -2,13 +2,13 @@
   <div class="background">
     <div class="window">
       <button @click="closeWindow()">Close</button>
-      <h1>Add multiple users to {{ subject.code }}</h1>
+      <h3>Add multiple users to {{ subject.code }}</h3>
 
       <textarea
           v-model="users"
           placeholder="Paste emails separated by new lines"
       >
-      </textarea>
+      </textarea><br>
       <button :disabled="users == null" @click="submit">Submit</button>
     </div>
   </div>
@@ -39,7 +39,7 @@ export default {
     submit() {
       axios
           .post(
-              "/user/addUsers",
+              "/subject/addUsers",
               {data: this.users},
               {
                 params: {
@@ -64,19 +64,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.background {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-}
+<style scoped src="@/styles/PopUp.css"/>
 
-.window {
-  position: absolute;
-  background-color: antiquewhite;
-  border: solid;
-  border-radius: 3px;
-  padding: 50px;
-  top: 123px;
-}
-</style>

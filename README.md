@@ -52,10 +52,11 @@ JavaDoc: [JavaDoc](https://madladstechnology.github.io/QS99/)
 * See if subject is passed based on exercises
 ### Student assistant
 * All functionality of a student
-* View all users from a subject
+* View all users from a subject and their exercise status, from this view they can also approve/disapprove an exercise
 * Set a queue active/inactive
 * Approve exercise for student
 * Set status of an entry (help/approve)
+* Suspend or remove an entry in the queue
 ### Professor
 * All functionality of students and student assistants
 * Register and delete students and professors from subject
@@ -65,6 +66,8 @@ JavaDoc: [JavaDoc](https://madladstechnology.github.io/QS99/)
    * If a student doesnt exist a user is made and an email with password is sent.   
 * Add and remove student assistants from a subject
 * Add and remove exercises from a subject
+* Add sublists of exercises with different amounts of mandatory exercises
+
 ### Admin
 * All functionality of students, student assistants and professors
 * Register admin users
@@ -149,6 +152,9 @@ If a student is always located in the same spot on the same table (Which is quit
 
 ### Map of students
 Because of our severely limited time and resources we chose to not implement certain funcionality, the one that would have most impact especially for the Student Assistants would be to see where the student they are assisted is located. In the current implementation, an assistant can only read where they are located. 
+
+### Time in queue
+Implement the timestamps of entries in the queue to se duration waited.
 
 ### Performance
 The project evolved over time as we figured out what exact functionality we needed and because of our limited time. Therefore there are bound to be database lookups and server logic that is not particularly optimized. Some future work could therefore be to optimize these. We could see improvement in server-side performance

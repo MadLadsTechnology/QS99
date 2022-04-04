@@ -60,7 +60,7 @@ compatible with a mobile.
 
 
 ## ER-diagram
-<img src="https://github.com/MadLadsTechnology/QS99/blob/main/src/main/resources/QS99.jpeg"/>
+<img src="https://github.com/MadLadsTechnology/QS99/blob/main/src/main/resources/QS99.jpeg" alt="ER-Diagram"/>
 
 ## REST-API
 Link to api: [QS99API](qs.eivindharboe.no:8001/swagger-ui/index.html)
@@ -168,8 +168,3 @@ mvn clean test
 
 This will run all tests on the backend
 
-
-##
-
-
-🦕 🦑 Heyo letsgo - //TODO: write this readme

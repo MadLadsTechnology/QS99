@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: configure ssh and deploy app
-  
+        run: |
       - run: ssh app@192.168.1.232 rm -rf app/
       - run: scp -r QS99 app@192.168.1.232:~/
       - run: ssh app@localhost make -C QS99 deploy

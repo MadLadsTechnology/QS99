@@ -1,16 +1,18 @@
 <template>
   <h1> Currently assisting {{ object.firstName }}, {{ object.lastName }}</h1>
 
+  <h5>Click the exercise you want to approve</h5>
 
-  <div class="exercises">
-    <h3>Exercises</h3>
-    <h5>Click the exercise you want to approve</h5>
-    <ExerciseBox v-for="exercise in object.exercises" :key="exercise" :exercise="exercise" :studentId="studentId"
-                 :subjectId="subjectId" :student="object"/>
+  <div class="exerciseHolder">
+    <ExerciseBox v-for="exercise in object.exercises" :key="exercise" :exercise="exercise" :student="object"
+                 :studentId="studentId" :subjectId="subjectId"/>
   </div>
 
-  <button @click="suspend">Suspend</button>
-  <button @click="done">Done</button>
+
+  <div class="buttons">
+    <button @click="suspend">Suspend</button>
+    <button @click="done">Done</button>
+  </div>
 
 
 </template>
@@ -70,12 +72,22 @@ export default {
 </script>
 
 <style scoped>
-.exercises {
+
+.exerciseHolder {
   display: flex;
-  margin: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
   width: 100%;
   justify-content: center;
   gap: 20px;
-  padding: 20px
+
+  margin-top: 20px;
 }
 </style>

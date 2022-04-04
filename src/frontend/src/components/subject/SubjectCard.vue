@@ -5,8 +5,8 @@
       params: { id: subject.id },
     }"
   >
-    <div class="card">
-      <h1>{{ subject.subjectCode }}</h1>
+    <div class="card" data-test="Test" >
+      <h1 data-test="Test1" >{{ subject.subjectCode }}</h1>
       {{ subject.subjectName }}
       <br/>
     </div>

@@ -7,7 +7,8 @@
             @click="this.$router.push('JoinQueue')">
       Join queue
     </button>
-    <button v-if="this.$store.getters.isStudent && !subject.isStudAss && inQueue" @click="leaveQueue()">
+    <button v-if="this.$store.getters.isStudent && !subject.isStudAss && inQueue && subject.queueActive"
+            @click="leaveQueue()">
       Leave queue
     </button>
 

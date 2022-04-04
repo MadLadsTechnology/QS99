@@ -14,7 +14,7 @@
         label="Password"
         type="password"
     />
-    <button :disabled="!isValid" class="button" type="submit">Log in</button>
+    <button data-test="button" :disabled="!isValid" class="button" type="submit">Log in</button>
 
   </form>
 </template>

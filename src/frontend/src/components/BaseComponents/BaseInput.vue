@@ -11,6 +11,7 @@
         :placeholder="label"
         :value="modelValue"
         class="field"
+        data-testid="baseInputField"
         v-bind="$attrs"
         @input="$emit('update:modelValue', $event.target.value)"
     />

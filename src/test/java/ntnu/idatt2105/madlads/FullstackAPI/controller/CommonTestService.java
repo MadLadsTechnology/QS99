@@ -1,8 +1,14 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
 import ntnu.idatt2105.madlads.FullstackAPI.serviceOLD.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 
 public class CommonTestService {
 

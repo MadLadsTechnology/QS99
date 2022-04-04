@@ -1,16 +1,19 @@
 package ntnu.idatt2105.madlads.FullstackAPI.controller;
 
-import ntnu.idatt2105.madlads.FullstackAPI.FullstackApiApplication;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.json.JSONObject;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
+import java.io.IOException;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,21 +22,83 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class SubjectControllerTest {
 
-    static String tokenAdmin;
-    static String tokenStudent;
-    static String tokenProfessor;
+    static CommonTestService cts;
+    String tokenAdmin;
+    String tokenStudent;
+    String tokenProfessor;
+
+    String token;
+    String subjectId;
 
     @Autowired
     MockMvc mockMvc;
 
     @BeforeAll
-    static void before() {
-        CommonTestService cts = new CommonTestService();
+    static void beforeAll() throws IOException {
+        cts = new CommonTestService();
+        cts.deleteDatabase();
+    }
+
+    @AfterAll
+    static void afterAll() throws IOException {
+        cts.deleteDatabase();
+    }
+
+    @BeforeEach
+    void before() throws Exception{
         tokenAdmin = cts.getTokenAdmin();
         tokenStudent = cts.getTokenStudent();
         tokenProfessor = cts.getTokenProfessor();
+        mockMvc.perform(post("http://localhost:8001/user/registerStudentOLD")
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("firstname", "Ola")
+                .param("lastname", "Nordmann")
+                .param("email", "student@student.no")
+                .param("password", "password")).andReturn();
+
+
+        mockMvc.perform(post("http://localhost:8001/user/registerStudentOLD")
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("firstname", "Assist")
+                .param("lastname", "Ant")
+                .param("email", "assistant@student.no")
+                .param("password", "password")).andReturn();
+
+        MvcResult login = mockMvc.perform(post("http://localhost:8001/user/login")
+                .param("email", "student@student.no")
+                .param("password", "password")).andReturn();
+        String loginResponseString = login.getResponse().getContentAsString();
+        JSONObject loginResponse = new JSONObject(loginResponseString);
+        token = (String) loginResponse.get("token");
+
+        MvcResult subject = mockMvc.perform(post("http://localhost:8001/subject/create")
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("subjectName", "Fullstack")
+                .param("subjectDescription","description")
+                .param("year","2022")
+                .param("subjectCode", "IDATT2105")).andReturn();
+        String subjectString = subject.getResponse().getContentAsString();
+        JSONObject subjectJSON = new JSONObject(subjectString);
+        System.out.println(subjectJSON);
+        subjectId = String.valueOf(subjectJSON.get("id"));
+    }
+
+    @AfterEach
+    void after() throws Exception{
+        mockMvc.perform(delete("http://localhost:8001/user/")
+                .header("authorization", "Bearer " + tokenAdmin)
+                .param("email", "student@student.no"));
+        mockMvc.perform(delete("http://localhost:8001/user/")
+                .header("authorization", "Bearer " + tokenAdmin)
+                .param("email", "assistant@student.no"));
+        mockMvc.perform(delete("http://localhost:8001/subject/")
+                .header("authorization", "Bearer " + tokenAdmin)
+                .param("subjectId", subjectId));
     }
 
     /**
@@ -50,6 +115,16 @@ class SubjectControllerTest {
                 .param("subjectCode", "IDATT2105")).andExpect(status().isCreated());
     }
 
+    @Test
+    void createSubjectNegative() throws Exception {
+        mockMvc.perform(post("http://localhost:8001/subject/create")
+                .header("authorization", "Bearer " + tokenStudent)
+                .param("subjectName", "Fullstack")
+                .param("subjectDescription","description")
+                .param("year","2022")
+                .param("subjectCode", "IDATT2105")).andExpect(status().isForbidden());
+    }
+
     /**
      * Testing authentication for addUser
      * @throws Exception
@@ -58,8 +133,8 @@ class SubjectControllerTest {
     void addUser() throws Exception {
         mockMvc.perform(post("http://localhost:8001/subject/addUser")
                 .header("authorization", "Bearer " + tokenProfessor)
-                .param("subjectId", "1")
-                .param("email","test@email.com")).andExpect(status().isNotFound());
+                .param("subjectId", subjectId)
+                .param("email","student@student.no")).andExpect(status().isOk());
     }
 
     /**
@@ -70,8 +145,8 @@ class SubjectControllerTest {
     void addStudentAssistant() throws Exception {
         mockMvc.perform(post("http://localhost:8001/subject/addStudentAssistant")
                 .header("authorization", "Bearer " + tokenProfessor)
-                .param("subjectId", "1")
-                .param("email","test@email.com")).andExpect(status().isNotFound());
+                .param("subjectId", subjectId)
+                .param("email","assistant@student.no")).andExpect(status().isOk());
     }
 
     @Test
@@ -87,36 +162,37 @@ class SubjectControllerTest {
      */
     @Test
     void getSubjectsByUser() throws Exception {
+        mockMvc.perform(post("http://localhost:8001/subject/addUser")
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("subjectId", subjectId)
+                .param("email","student@student.no")).andExpect(status().isOk());
         mockMvc.perform(get("http://localhost:8001/subject/getByUser")
-                .header("authorization", "Bearer " + tokenStudent)).andExpect(status().isNotAcceptable());
+                .header("authorization", "Bearer " + token)).andExpect(status().isOk());
     }
 
     @Test
     void getSubject() throws Exception {
         mockMvc.perform(get("http://localhost:8001/subject/getSubject")
-                .header("authorization", "Bearer " + tokenStudent)
-                .param("subjectId", "1")).andExpect(status().isUnprocessableEntity());
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("subjectId", subjectId)).andExpect(status().isOk());
     }
 
     @Test
     void getAllSubject() throws Exception {
-        mockMvc.perform(get("http://localhost:8001/subject/getAllSubjects")
+        mockMvc.perform(get("http://localhost:8001/subject/getAllSubject")
                 .header("authorization", "Bearer " + tokenAdmin)).andExpect(status().isOk());
     }
 
     @Test
-    void deleteSubject() throws Exception {
-        mockMvc.perform(delete("http://localhost:8001/subject")
-                .header("authorization", "Bearer " + tokenAdmin)
-                .param("subjectId", "1")).andExpect(status().isNotFound());
-    }
-
-    @Test
     void removeUserFromSubject() throws Exception {
+        mockMvc.perform(post("http://localhost:8001/subject/addUser")
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("subjectId", subjectId)
+                .param("email","student@student.no")).andExpect(status().isOk());
         mockMvc.perform(delete("http://localhost:8001/subject/deleteUserFromSubject")
-                .header("authorization", "Bearer " + tokenStudent)
-                .param("subjectId", "1")
-                .param("emailAddress", "test@email.com")).andExpect(status().isNotFound());
+                .header("authorization", "Bearer " + tokenProfessor)
+                .param("subjectId", subjectId)
+                .param("emailAddress", "student@student.no")).andExpect(status().isOk());
     }
 
     @Test
@@ -126,10 +202,10 @@ class SubjectControllerTest {
                 .param("subjectName", "Fullstack")
                 .param("subjectDescription","description")
                 .param("year","2022")
-                .param("subjectCode", "IDATT2105")).andExpect(status().isUnauthorized());
+                .param("subjectCode", "IDATT2105")).andExpect(status().isForbidden());
         mockMvc.perform(post("http://localhost:8001/subject/addUser")
                 .header("authorization", "Bearer " + tokenStudent)
-                .param("subjectId", "1")
+                .param("subjectId", subjectId)
                 .param("email","test@email.com")).andExpect(status().isForbidden());
     }
 }

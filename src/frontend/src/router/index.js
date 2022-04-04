@@ -24,6 +24,9 @@ const routes = [
   {
     path: "/",
     redirect: "/subjects",
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/subjects",
@@ -83,11 +86,17 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: Profile,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/register",
     name: "register",
     component: RegisterUser,
+    meta: {
+      requiresAuth: true,
+    },
   },
 
   {
@@ -95,6 +104,9 @@ const routes = [
     name: "helpAndApprove",
     props: true,
     component: HelpAndApprove,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/admin",
@@ -121,6 +133,9 @@ const routes = [
     path: "/createSubject",
     name: "createSubject",
     component: CreateSubject,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -143,7 +158,7 @@ router.beforeEach((to, from, next) => {
   }
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!loggedIn) {
-      return next({ name: "login" });
+      return next("/login");
     } else if (publicPage && loggedIn && isAdmin) {
       return next("/subjects");
     } else if (adminPage && !isAdmin && loggedIn) {
@@ -152,7 +167,7 @@ router.beforeEach((to, from, next) => {
       (userPage && isAdmin && loggedIn) ||
       (publicPage && isAdmin && loggedIn)
     ) {
-      return next("/admin");
+      return next("/admin/users");
     } else {
       return next();
     }

@@ -1,7 +1,8 @@
 <template>
-  <div :class="getClass(exercise.approved)" class="box" @click="toggleApprove">
+  <div data-test="div" :class="getClass(exercise.approved)" class="box" @click="toggleApprove">
     {{ this.exercise.exerciseNumber }}
   </div>
+  <div data-test="product" v-if="this.exercise.approved"></div>
 
 </template>
 <script>

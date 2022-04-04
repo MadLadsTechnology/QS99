@@ -1,14 +1,14 @@
 <template>
-  <button v-if="this.$store.getters.isStudent && !subject.isStudAss && !inQueue"
+  <button v-if="this.$store.getters.isStudent && !subject.isStudAss && !inQueue && subject.queueActive"
           @click="this.$router.push('JoinQueue')">
     Join queue
   </button>
-  <button v-else @click="leaveQueue">
+  <button v-if="this.$store.getters.isStudent && !subject.isStudAss && inQueue" @click="leaveQueue()">
     Leave queue
   </button>
 
 
-  <button v-if="!this.$store.getters.isStudent" @click="toggleQueue">
+  <button v-if="!this.$store.getters.isStudent || subject.isStudAss" @click="toggleQueue">
     <text v-if="subject.queueActive">
       Deactivate queue
     </text>
@@ -31,9 +31,8 @@
       <td>{{ entry.lastName }}</td>
       <td>{{ entry.firstName }}</td>
       <td>
-        <text v-for="(assignment, index) in entry.exercises" v-bind:key="assignment">
-          <text v-if="index < entry.exercises.length">{{ assignment }},</text>
-          <text v-else>{{ assignment }}</text>
+        <text v-for="assignment in entry.exercises" v-bind:key="assignment">
+          {{ assignment }},
         </text>
       </td>
       <td v-if="subject.isStudAss">
@@ -46,12 +45,12 @@
     </tr>
   </table>
   <div v-else>
-    <text v-if="this.subject.queueActive">
+    <h3 v-if="this.subject.queueActive">
       Queue is empty
-    </text>
-    <text v-else>
+    </h3>
+    <h3 v-else>
       Queue is not active
-    </text>
+    </h3>
 
   </div>
 </template>
@@ -83,9 +82,10 @@ export default {
   methods: {
 
     leaveQueue() {
-      for (const entry in this.queue) {
+
+      this.queue.forEach((entry) => {
         if (entry.studentId === this.$store.state.user.emailAddress) {
-          axios.delete("/queue", {
+          axios.delete("/entry", {
             params: {
               entryId: entry.entryId,
             }
@@ -94,8 +94,11 @@ export default {
           }).catch(error => {
             alert(error)
           })
+        } else {
+          console.log(entry.studentId + "   " + this.$store.state.user.emailAddress)
         }
-      }
+      })
+
     },
     toggleQueue() {
       let toggle = true;

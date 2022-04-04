@@ -158,6 +158,7 @@ export default {
       showAddMultipleUsers: false,
       showAddAssistant: false,
       showAddExercises: false,
+
       currentSubject: null,
     };
   },

@@ -453,7 +453,7 @@ public class UserController {
             if (authentication.isAuthenticated()) {
                 Student student = studentRepository.findByEmailAddress(email);
                 Subject subject = subjectRepository.findById(subjectId);
-                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName())) || authentication.getAuthorities().contains("ROLE_ADMIN") || authentication.getAuthorities().contains("ROLE_PROFESSOR")) {
+                if (subject.getAssistants().contains(studentRepository.findByEmailAddress(authentication.getName()))  || !(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Student)) {
                     UserDTO user = new UserDTO(student, exerciseRepository.findExerciseBySubject(subjectRepository.findById(subjectId)));
                     return new ResponseEntity<>(user, HttpStatus.OK);
                 }
@@ -480,6 +480,7 @@ public class UserController {
     public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("oldPassword") String oldPassword, Authentication authentication) throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (authentication != null) {
             if (authentication.isAuthenticated()) {
+                logger.info("Changing password for " + authentication.getName());
                 QSUser user = userRepository.getDistinctByEmailAddress(authentication.getName());
                 if (PasswordHashing.validatePassword(oldPassword, user.getPassword())) {
                     user.setPassword(PasswordHashing.generatePasswordHash(newPassword));

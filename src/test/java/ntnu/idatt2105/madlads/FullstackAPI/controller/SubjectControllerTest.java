@@ -22,9 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class SubjectControllerTest {
 
     static CommonTestService cts;
@@ -49,6 +46,11 @@ class SubjectControllerTest {
         cts.deleteDatabase();
     }
 
+    /**
+     * Before each method create a student, subject and assistant (student).
+     * Using registerOLD because then we can access the password easier.
+     * @throws Exception
+     */
     @BeforeEach
     void before() throws Exception{
         tokenAdmin = cts.getTokenAdmin();
@@ -68,13 +70,6 @@ class SubjectControllerTest {
                 .param("lastname", "Ant")
                 .param("email", "assistant@student.no")
                 .param("password", "password")).andReturn();
-
-        MvcResult login = mockMvc.perform(post("http://localhost:8001/user/login")
-                .param("email", "student@student.no")
-                .param("password", "password")).andReturn();
-        String loginResponseString = login.getResponse().getContentAsString();
-        JSONObject loginResponse = new JSONObject(loginResponseString);
-        token = (String) loginResponse.get("token");
 
         MvcResult subject = mockMvc.perform(post("http://localhost:8001/subject/create")
                 .header("authorization", "Bearer " + tokenProfessor)
@@ -162,6 +157,12 @@ class SubjectControllerTest {
      */
     @Test
     void getSubjectsByUser() throws Exception {
+        MvcResult login = mockMvc.perform(post("http://localhost:8001/user/login")
+                .param("email", "student@student.no")
+                .param("password", "password")).andReturn();
+        String loginResponseString = login.getResponse().getContentAsString();
+        JSONObject loginResponse = new JSONObject(loginResponseString);
+        token = (String) loginResponse.get("token");
         mockMvc.perform(post("http://localhost:8001/subject/addUser")
                 .header("authorization", "Bearer " + tokenProfessor)
                 .param("subjectId", subjectId)

@@ -32,7 +32,6 @@ class ExerciseControllerTest {
         tokenProfessor = cts.getTokenProfessor();
         cts.deleteDatabase();
     }
-
     @Test
     void addExerciseSublistSuccessfully() throws Exception {
         mockMvc.perform(post("http://localhost:8001/exercise")

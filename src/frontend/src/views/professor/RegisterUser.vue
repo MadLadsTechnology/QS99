@@ -47,8 +47,13 @@
 import {useField, useForm} from "vee-validate";
 import {object, string} from "yup";
 import axios from "axios";
+import BaseInput from "@/components/BaseComponents/BaseInput";
 
 export default {
+
+  components: {
+    BaseInput,
+  },
   data() {
     return {
       error: null,
@@ -63,10 +68,10 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
-      let url = "http://localhost:8001/user/registerStudent";
+      let url = "/user/registerStudent";
       console.log(this.userType);
       if (this.userType === "Professor") {
-        url = "http://localhost:8001/user/registerProfessor";
+        url = "/user/registerProfessor";
       }
       axios
           .post(url, null, {

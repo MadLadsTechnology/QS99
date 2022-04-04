@@ -38,8 +38,12 @@
 import {useField, useForm} from "vee-validate";
 import {object, string} from "yup";
 import axios from "axios";
+import BaseInput from "@/components/BaseComponents/BaseInput";
 
 export default {
+  components: {
+    BaseInput
+  },
   data() {
     return {
       error: null,
@@ -56,7 +60,7 @@ export default {
     submit() {
 
       axios
-          .post("http://localhost:8001/user/changePassword", null, {
+          .post("/user/changePassword", null, {
             params: {
               newPassword: this.newPassword,
               oldPassword: this.oldPassword,

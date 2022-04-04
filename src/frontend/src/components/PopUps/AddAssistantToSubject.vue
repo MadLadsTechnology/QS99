@@ -2,7 +2,7 @@
   <div class="window">
     <button @click="closeWindow()">Close</button>
     <form class="loginForm" @submit.prevent="submit()">
-      <h1>Add user to {{ subject.code }}</h1>
+      <h1>Add student assistant to {{ subject.code }}</h1>
 
       <BaseInput
           v-model.lazy="email"
@@ -40,7 +40,7 @@ export default {
     //Method for submitting form
     submit() {
       axios
-          .post("http://localhost:8001/addUser", null, {
+          .post("/addStudentAssistant", null, {
             params: {
               subjectId: this.subject.id,
               email: this.email,

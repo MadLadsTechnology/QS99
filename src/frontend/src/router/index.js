@@ -1,22 +1,22 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Subjects from "../views/SubjectList.vue";
-import SubjectLayout from "../views/subject/SubjectView.vue";
+import SubjectLayout from "../views/subject/BaseSubjectView.vue";
 import SubjectDetails from "../views/subject/DetailsView.vue";
-import SubjectQueue from "../views/subject/QueueView.vue";
+import SubjectQueue from "../views/subject/Queue/QueueView.vue";
 import SubjectAssignments from "../views/subject/AssignmentsView.vue";
-import SubjectUsersView from "../views/subject/SubjectUsersView";
-import JoinQueue from "../views/subject/JoinQueue.vue";
+import SubjectUsersView from "../views/subject/UsersInSubject";
+import JoinQueue from "../views/subject/Queue/JoinQueue.vue";
 
-import RegisterUser from "../views/admin/RegisterUser.vue";
-import LoginUser from "../views/LoginUser.vue";
+import RegisterUser from "../views/professor/RegisterUser.vue";
+import LoginUser from "../views/LoginView.vue";
 import Profile from "../views/ProfilePage.vue";
-import HelpAndApprove from "../views/HelpAndApproval.vue";
-
+import HelpAndApprove from "../views/subject/Queue/HelpAndApprove.vue";
 
 import AdminDashboard from "../views/admin/DashboardView.vue";
 import AllUser from "../views/admin/AllUser";
 import AllSubjects from "../views/admin/AllSubjects";
-import CreateSubject from "../views/admin/CreateSubject";
+import CreateSubject from "../views/professor/CreateSubject";
+import store from "../store";
 
 const routes = [
   {
@@ -121,7 +121,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
-import store from "../store";
 
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login"];

@@ -34,7 +34,7 @@ export default {
 
   methods: {
     suspend() {
-      axios.post("http://localhost:8001/entry/setIsGettingHelp", null, {
+      axios.post("/entry/setIsGettingHelp", null, {
         params: {
           entryId: this.entryId,
           isGettingHelp: false,
@@ -42,7 +42,7 @@ export default {
       }).then(this.$router.push("/subjects/" + this.subjectId + "/queue"))
     },
     done() {
-      axios.delete("http://localhost:8001/entry", {
+      axios.delete("/entry", {
         params: {
           entryId: this.entryId,
         }
@@ -53,7 +53,7 @@ export default {
 
 
   async created() {
-    await axios.get("http://localhost:8001/user/getUserFromSubject", {
+    await axios.get("/user/getUserFromSubject", {
       params: {
         email: this.studentId,
         subjectId: this.subjectId,

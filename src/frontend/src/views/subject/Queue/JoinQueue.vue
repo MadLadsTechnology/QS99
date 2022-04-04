@@ -73,7 +73,7 @@ export default {
 
   created() {
     axios
-        .get("http://localhost:8001/exercise/qs/student/getByUser", {
+        .get("/exercise/getByUser", {
           params: {
             subjectId: parseInt(this.subject.id),
           },
@@ -93,7 +93,7 @@ export default {
       console.log(this.exercises);
       axios
           .post(
-              "http://localhost:8001/queue/addEntry",
+              "/queue/addEntry",
               {exercises: this.exercises},
               {
                 params: {

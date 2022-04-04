@@ -46,7 +46,7 @@ export default {
     //Method for submitting form
     submit() {
       axios
-          .post("http://localhost:8001/exercise", null, {
+          .post("/exercise", null, {
             params: {
               subjectId: this.subject.id,
               numberOfExercises: this.count,

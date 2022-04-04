@@ -13,7 +13,7 @@
     </text>
   </button>
 
-  <table v-if="!!queue && queue.length > 0">
+  <table v-if="!!queue && queue.length > 0 && subject.queueActive">
     <tr>
       <th>Place</th>
       <th>Last name</th>
@@ -21,7 +21,6 @@
       <th>Assignment</th>
       <th>Type</th>
       <th>Table</th>
-      <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
     <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry.gettingHelp)">
       <td>{{ index + 1 }}</td>
@@ -59,7 +58,7 @@ export default {
 
   async created() {
     await axios
-        .get("http://localhost:8001/queue", {
+        .get("/queue", {
           params: {
             subjectId: this.subject.id,
           },
@@ -85,7 +84,7 @@ export default {
         toggle = false;
       }
 
-      axios.post("http://localhost:8001/queue/setQueueStatus", null, {
+      axios.post("/queue/setQueueStatus", null, {
         params: {
           isActive: toggle,
           subjectId: this.subject.id
@@ -98,7 +97,7 @@ export default {
 
     },
     helpAndApprove(entry) {
-      axios.post("http://localhost:8001/entry/qs/student/setIsGettingHelp", null, {
+      axios.post("/entry/setIsGettingHelp", null, {
         params: {
           entryId: entry.entryId,
           isGettingHelp: true,

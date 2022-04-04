@@ -10,18 +10,39 @@ on:
     branches: [ main ]   
 
 jobs:     
-  test:
+#  test:
+#    runs-on: self-hosted
+#    steps:
+#    #- name: delete database
+#     # run: rm ~/data/test.mv.db ~/data/test.trace.db 
+#    - uses: actions/checkout@v2
+#    - name: setup java
+#      uses: actions/setup-java@v2
+#      with:
+#        java-version: '17'
+#        distribution: 'temurin'
+#        architecture: arm
+#        cache: maven
+#    - name: build artifact
+#      run: mvn test 
+
+  deploy:
+    env:
+      known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+      private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
     runs-on: self-hosted
     steps:
-    #- name: delete database
-     # run: rm ~/data/test.mv.db ~/data/test.trace.db 
-    - uses: actions/checkout@v2
-    - name: setup java
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        architecture: arm
-        cache: maven
-    - name: build artifact
-      run: mvn test 
+      - uses: actions/checkout@v2
+      - name: configure ssh and deploy app
+        run: |
+          rm -rf ~/.ssh
+          mkdir ~/.ssh
+          echo "$known_hosts" > ~/.ssh/known_hosts
+          echo "$private_key" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      - run: ssh app@192.168.1.232 rm -rf app/
+      - run: scp -r QS99 app@192.168.1.232:~/
+      - run: ssh app@localhost make -C QS99 deploy
+      
+      

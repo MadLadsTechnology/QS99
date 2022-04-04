@@ -73,10 +73,10 @@
   </table>
 </template>
 <script>
-import AddUserToSubject from "@/components/AddUserToSubject";
-import AddMultipleUsersToSubject from "@/components/AddMultipleUsersToSubject";
-import AddExercises from "@/components/AddExercises";
-import AddAssistantToSubject from "@/components/AddAssistantToSubject";
+import AddUserToSubject from "@/components/PopUps/AddUserToSubject";
+import AddMultipleUsersToSubject from "@/components/PopUps/AddMultipleUsersToSubject";
+import AddExercises from "@/components/PopUps/AddExercises";
+import AddAssistantToSubject from "@/components/PopUps/AddAssistantToSubject";
 import {authComputed} from "@/store/helpers";
 import axios from "axios";
 
@@ -133,7 +133,7 @@ export default {
     deleteSubject(subject) {
       let confirmAction = confirm("Are you sure to execute this action?");
       if (confirmAction) {
-        axios.delete("http://localhost:8001/subject", {
+        axios.delete("/subject", {
           params: {
             subjectId: subject.id,
           }
@@ -146,7 +146,7 @@ export default {
     document.title = "QS99 - Students";
     //getting subjects of the user
     await axios
-        .get("http://localhost:8001/subject/getAllSubject")
+        .get("/subject/getAllSubject")
         .then((response) => {
           this.subjects = response.data;
         });

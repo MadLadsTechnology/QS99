@@ -175,7 +175,7 @@ public class UserController {
      */
 
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
-    @PostMapping("registerStudent")
+    @PostMapping("/registerStudent")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Creates a new student", description = "Creates a new student")
     public ResponseEntity<Student> createStudent(@RequestParam("firstname") final String firstname,
@@ -380,7 +380,7 @@ public class UserController {
      * @return All users
      */
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/getAllUsers")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Get all users", description = "Gets all users that exist")

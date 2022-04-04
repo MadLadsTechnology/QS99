@@ -1,18 +1,24 @@
 <template>
   <div class="container">
     <router-link to="/">
-      <img src="../assets/logo.png" alt="Logo"
-    /></router-link>
+      <img alt="Logo" src="../assets/logo.png"
+      /></router-link>
 
     <div v-if="loggedIn">
-      <router-link
-        class="routerLink"
-        v-if="this.$store.getters.isAdmin"
-        to="/subjects"
-      >
-        <h3>Dashboard</h3></router-link
-      >
-      <router-link class="routerLink" v-else to="/subjects">
+
+      <div v-if="this.$store.getters.isAdmin" class="adminPanel">
+        <router-link :to="{ name: 'users' }">
+          <h3>Users</h3>
+
+        </router-link>
+
+        <h3>|</h3>
+        <router-link :to="{ name: 'allSubjects' }">
+          <h3>Subjects</h3>
+        </router-link>
+      </div>
+
+      <router-link v-else class="routerLink" to="/subjects">
         <h3>Subjects</h3></router-link
       >
     </div>
@@ -29,7 +35,7 @@
   </div>
 </template>
 <script>
-import { authComputed } from "@/store/helpers";
+import {authComputed} from "@/store/helpers";
 
 export default {
   methods: {
@@ -45,14 +51,20 @@ export default {
 </script>
 
 <style scoped>
+.adminPanel {
+  display: flex;
+  gap: 30px;
+}
 
-.profileLink{
+.profileLink {
   margin-left: auto;
 }
+
 .role {
   font-style: italic;
   margin-right: 0;
 }
+
 .container {
   display: flex;
   flex-direction: row;
@@ -65,16 +77,20 @@ export default {
   padding: 30px;
   text-decoration: none;
 }
+
 a {
   text-decoration: none;
   color: white;
 }
+
 .container img {
   width: 50px;
 }
+
 nav li.router-link-active {
   background-color: black;
 }
+
 .userInformation {
   display: flex;
   flex-direction: row;

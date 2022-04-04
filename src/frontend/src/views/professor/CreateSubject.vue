@@ -55,7 +55,7 @@ export default {
     //Method for submitting form
     submit() {
       axios
-          .post("http://localhost:8001/subject/create", null, {
+          .post("/subject/create", null, {
             params: {
               subjectName: this.name,
               subjectCode: this.code,

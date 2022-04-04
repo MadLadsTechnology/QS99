@@ -39,7 +39,7 @@ export default {
     submit() {
       axios
           .post(
-              "http://localhost:8001/addUsers",
+              "/addUsers",
               {data: this.users},
               {
                 params: {

@@ -39,7 +39,7 @@ export default {
   methods: {
     deleteUser(user) {
       axios
-          .delete("http://localhost:8001/user", {
+          .delete("/user", {
             params: {
               email: user.emailAddress,
             },
@@ -56,7 +56,7 @@ export default {
   created() {
     document.title = "QS99 - Students";
     //getting subjects of the user
-    axios.get("http://localhost:8001/user/getAllUsers").then((response) => {
+    axios.get("/user/getAllUsers").then((response) => {
       this.users = response.data;
     });
   },

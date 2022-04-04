@@ -1,11 +1,14 @@
 <template>
-  <NavigationMenu />
-  <router-view />
+  <NavigationMenu/>
+  <router-view/>
 </template>
 <script>
 import NavigationMenu from "@/components/NavigationMenu";
+import axios from "axios";
+
 export default {
   created() {
+    axios.defaults.baseURL = "http://localhost:8001";
     const userString = localStorage.getItem("user");
     if (userString) {
       const userData = JSON.parse(userString);
@@ -13,7 +16,7 @@ export default {
     }
     document.title = "QS99";
   },
-  components: { NavigationMenu },
+  components: {NavigationMenu},
   computed: {},
 };
 </script>

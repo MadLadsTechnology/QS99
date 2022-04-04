@@ -68,10 +68,10 @@ export default {
   methods: {
     //Method for submitting form
     submit() {
-      let url = "http://localhost:8001/user/registerStudent";
+      let url = "/user/registerStudent";
       console.log(this.userType);
       if (this.userType === "Professor") {
-        url = "http://localhost:8001/user/registerProfessor";
+        url = "/user/registerProfessor";
       }
       axios
           .post(url, null, {

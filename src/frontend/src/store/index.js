@@ -34,7 +34,7 @@ const store = createStore({
   actions: {
     login({ commit }, credentials) {
       return axios
-        .post("http://localhost:8001/user/login", null, {
+        .post("/user/login", null, {
           params: {
             email: credentials.email,
             password: credentials.password,

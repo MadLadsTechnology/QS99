@@ -56,7 +56,7 @@ export default {
   },
   async created() {
     await axios
-        .get("http://localhost:8001/subject/getSubject", {
+        .get("/subject/getSubject", {
           params: {
             subjectId: parseInt(this.id),
           },

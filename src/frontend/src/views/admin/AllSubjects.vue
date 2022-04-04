@@ -167,4 +167,4 @@ export default {
   },
 };
 </script>
-<style scoped src="@/styles/views/ProfessorActions.css"/>
+<style scoped src="@/styles/views/AllSubjects.css"/>

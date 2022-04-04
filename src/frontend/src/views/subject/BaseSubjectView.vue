@@ -36,7 +36,7 @@
 
 
       </div>
-      <router-view :subject="subject"/>
+      <router-view :subject="subject" class="router-view"/>
     </div>
   </div>
 </template>
@@ -88,12 +88,25 @@ export default {
   display: flex;
   flex-direction: row;
   margin: auto;
-  justify-content: space-around;
-  width: 50%;
+  justify-content: center;
+  width: 400px;
   min-width: 200px;
+  border-bottom: solid;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .nav div {
+  padding: 10px;
   width: 100px;
 }
+
+.router-link-active div {
+  background-color: #2c3e50;
+  color: white;
+}
+
 </style>

@@ -19,6 +19,9 @@ import java.security.Key;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Class for the JWT Authorization filter
+ */
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final String HEADER = "Authorization";
 

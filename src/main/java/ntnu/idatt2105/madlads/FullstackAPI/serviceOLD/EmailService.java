@@ -5,6 +5,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * Class for servies related to sending an email
+ */
 public class EmailService extends Thread{
 
     private final String toMail;
@@ -15,6 +18,10 @@ public class EmailService extends Thread{
         this.text = text;
     }
 
+    /**
+     * Generates an email, and sends it with wanted context
+     * Runs as an own thread to avoid extra waiting time for the user.
+     */
     public void run(){
         String from = "QS99Madlads@gmail.com";
         String host = "smtp.gmail.com";

@@ -7,8 +7,18 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * Class for hashing a password
+ */
 public class PasswordHashing {
 
+    /**
+     * Generates a password hash
+     * @param password the password of the user
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public static String generatePasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
@@ -21,6 +31,14 @@ public class PasswordHashing {
         return iterations+":"+toHex(salt)+":"+toHex(hash);
     }
 
+    /**
+     * Validates the password when trying to log in
+     * @param originalPassword
+     * @param storedPassword
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public static boolean validatePassword(String originalPassword, String storedPassword)
             throws NoSuchAlgorithmException, InvalidKeySpecException
     {

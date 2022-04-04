@@ -8,6 +8,9 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Class for configuring Swagger
+ */
 @Configuration
 public class SwaggerConfig {
 

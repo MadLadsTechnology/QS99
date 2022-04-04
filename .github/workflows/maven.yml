@@ -31,13 +31,17 @@ jobs:
       known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       private_key: ${{ secrets.SSH_PRIVATE_KEY }}
       
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: configure ssh and deploy app
         run: |
-      - run: ssh app@192.168.1.232 rm -rf app/
-      - run: scp -r QS99 app@192.168.1.232:~/
+          mkdir ~/.ssh
+          echo "$known_hosts" > ~/.ssh/known_hosts
+          echo "$private_key" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_r
+      - run: ssh app@46.9.75.116 rm -rf app/
+      - run: scp -r QS99 app@46.9.75.116:~/
       - run: ssh app@localhost make -C QS99 deploy
       
       

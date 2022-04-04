@@ -6,32 +6,31 @@
     </router-link>
 
 
-    <div v-if="loggedIn">
+    <div v-if="loggedIn" class="nav">
 
-      <div v-if="this.$store.getters.isAdmin" class="adminPanel">
-        <router-link :to="{ name: 'users' }">
-          <h3>Users</h3>
+      <router-link v-if="this.$store.getters.isAdmin" :to="{ name: 'users' }">
+        <h3>Users</h3>
 
-        </router-link>
+      </router-link>
 
-        <router-link :to="{ name: 'allSubjects' }">
-          <h3>Subjects</h3>
-        </router-link>
-      </div>
+      <router-link v-if="this.$store.getters.isAdmin" :to="{ name: 'allSubjects' }">
+        <h3>Subjects</h3>
+      </router-link>
 
       <router-link v-else to="/subjects">
         <h3>Subjects</h3></router-link
       >
+
+      <router-link class="profileLink" to="/Profile">
+        <h3 class="role">Profile</h3>
+      </router-link>
+
+
+      <button v-if="loggedIn" class="logOutBtn" @click="logOut()">Log out</button>
+
     </div>
-
-    <router-link class="profileLink" to="/Profile">
-      <div v-if="loggedIn" class="userInformation">
-        <h3 class="role">Settings</h3>
-      </div>
-    </router-link>
-    <button v-if="loggedIn" class="logOutBtn" @click="logOut()">Log out</button>
-
   </div>
+
 </template>
 <script>
 import {authComputed} from "@/store/helpers";
@@ -53,30 +52,38 @@ export default {
 
 .router-link-active {
   background-color: white;
+  height: 100%;
   color: black;
 }
 
-.pageSelection {
-  display: flex;
-  height: 70px;
+.router-link-active h3 {
+  color: black;
 }
 
-.pageSelection h3 {
-  width: 80px;
-  padding: 5px
+router-link:hover {
+  background-color: green;
+}
 
+h3 {
+  width: 100px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 10px;
 }
 
 .container {
   display: flex;
   flex-direction: row;
-  align-items: right;
+  align-items: center;
   gap: 30px;
   height: 70px;
   background-color: #2c3e50;
   color: white;
-  margin: 0;
-
   text-decoration: none;
 }
 
@@ -90,13 +97,13 @@ a {
 }
 
 .container img {
-  width: 50px;
+  width: 60px;
+  margin: 10px;
 }
 
 .logOutBtn {
   text-align: center;
   text-decoration: none;
-  margin-left: 30px;
 }
 
 .logOutBtn:hover {

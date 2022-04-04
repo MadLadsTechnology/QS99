@@ -58,10 +58,26 @@ compatible with a mobile.
 
 
 ## ER-diagram
+<img src="https://github.com/MadLadsTechnology/QS99/blob/main/src/main/resources/QS99.jpeg"/>
+
 ## REST-API
 ## Security
 ## CI/CD
 ## Dependencies
+- Maven
+  - Build automation tool used for building the Java backend.
+- Spring Boot
+  - Used to create stand-alone, production grade Spring based applications with Java.
+- Spring Security
+  - Powerful and highly customizable authentication and access-control framework.
+- Spring Boot JPA
+  - Makes it easier to implement JPA based repositories. Deals with enhanced support for JPA based data access layers.
+- JUnit 
+  - Testing framework for Java.
+- H2database
+  - H2 is a relational database management system written in Java. It can be embedded in Java applications or run in client-server mode.
+- JWT
+  - 
 ## Future Work
 ## Installation Manual
 ## Running Tests

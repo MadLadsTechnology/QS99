@@ -39,7 +39,7 @@ jobs:
           mkdir ~/.ssh
           echo "$known_hosts" > ~/.ssh/known_hosts
           echo "$private_key" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_r
+          chmod 600 ~/.ssh/id_rsa
       - run: ssh app@46.9.75.116 rm -rf app/
       - run: scp -r QS99 app@46.9.75.116:~/
       - run: ssh app@localhost make -C QS99 deploy

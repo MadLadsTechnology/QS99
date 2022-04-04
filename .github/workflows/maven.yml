@@ -10,7 +10,7 @@ on:
     branches: [ main ]   
 
 jobs:
-  test:
+  test-backend:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -23,9 +23,20 @@ jobs:
     - name: test
       run: mvn test
       
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      working-directory: cd/src/frontend
+      run: yarn
+    - name: Run tests
+      working-directory: cd/src/frontend
+      run: yarn test
+      
   publish:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test-backend, test-frontend]
     steps:
     - uses: actions/checkout@v2
     - name: setup java
@@ -44,7 +55,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test-backend, test-frontend]
     steps:
       - uses: actions/checkout@v2
       - name: Install SSH key

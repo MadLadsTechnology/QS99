@@ -13,7 +13,7 @@
     </text>
   </button>
 
-  <table v-if="!!queue && queue.length > 0">
+  <table v-if="!!queue && queue.length > 0 && subject.queueActive">
     <tr>
       <th>Place</th>
       <th>Last name</th>
@@ -21,7 +21,6 @@
       <th>Assignment</th>
       <th>Type</th>
       <th>Table</th>
-      <th v-if="!this.$store.getters.isStudent">Actions</th>
     </tr>
     <tr v-for="(entry, index) in queue" :key="entry.lastname" :class="getClass(entry.gettingHelp)">
       <td>{{ index + 1 }}</td>

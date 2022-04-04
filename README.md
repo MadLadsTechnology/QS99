@@ -123,6 +123,8 @@ Javadoc is also published to github pages via its a github runner.
   - Used for formatting in development
 - Yup
   - Used for form validation
+- Jest
+  - Used for testing the frontend
 - Vuex
   - Used for state management
 - Router 

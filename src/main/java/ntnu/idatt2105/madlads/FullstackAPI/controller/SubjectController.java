@@ -317,7 +317,7 @@ public class SubjectController {
                     student = (Student) user;
                 }
                 Subject subject;
-
+                //If you are a student, you must be a student in the subject to get access.
                 if ((subject = subjectRepository.findById(subjectId)) != null) {
                     if (student == null) {
                         Queue queue = queueRepository.findBySubject(subject);

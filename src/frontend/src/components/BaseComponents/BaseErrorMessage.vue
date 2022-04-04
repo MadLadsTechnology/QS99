@@ -1,6 +1,6 @@
 <template>
-  <p aria-live="assertive" class="errorMessage" :id="id">
-    <slot />
+  <p :id="id" aria-live="assertive" class="errorMessage">
+    <slot/>
   </p>
 </template>
 
@@ -21,5 +21,6 @@ p {
   max-height: 20px;
   text-align: left;
   color: red;
+  width: 100%;
 }
 </style>

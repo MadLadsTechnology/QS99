@@ -417,8 +417,12 @@ public class UserController {
                 Subject subject = subjectRepository.findById(subjectId);
                 ArrayList<UserDTO> userDTOs = new ArrayList<>();
                 ArrayList<QSUser> usersInSubject = new ArrayList<>(subject.getStudents());
+                usersInSubject.addAll(subject.getProfessors());
+                usersInSubject.addAll(subject.getAssistants());
                 for (QSUser user : usersInSubject) {
-                    if (user instanceof Student) {
+                    if (subject.getAssistants().contains(user)) {
+                        userDTOs.add(new UserDTO(user, true));
+                    } else if (user instanceof Student) {
                         Student student = studentRepository.findByEmailAddress(user.getEmailAddress());
                         userDTOs.add(new UserDTO(student, exerciseRepository.findExerciseBySubject(subject)));
                     } else {

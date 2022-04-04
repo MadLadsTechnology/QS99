@@ -66,9 +66,9 @@ export default {
   width: 20px;
   height: 20px;
   text-align: center;
-  border: solid black;
+  border: solid black 1px;
   color: white;
-  padding: 5px
+  padding: 5px;
 
 }
 

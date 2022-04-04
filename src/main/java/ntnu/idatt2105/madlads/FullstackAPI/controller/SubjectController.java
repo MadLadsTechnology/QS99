@@ -92,6 +92,13 @@ public class SubjectController {
                     Subject newSubject = subjectRepository
                             .save(new Subject(subjectCode, subjectName, description, year));
                     queueController.createQueue(newSubject.getId(), true, subjectRepository, queueRepository);
+
+                    //If a professor creates the subject, add the professor to the subject.
+                    if(userRepository.getDistinctByEmailAddress(authentication.getName()) instanceof Professor){
+                        Professor professor = professorRepository.findByEmailAddress(authentication.getName());
+                        subjectRepository.findById(newSubject.getId()).addProfessor(professor);
+                    }
+
                     return new ResponseEntity<>(newSubject, HttpStatus.CREATED);
                 } catch (Exception e) {
                     logger.info(e.getMessage());

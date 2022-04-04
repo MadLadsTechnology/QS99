@@ -110,7 +110,8 @@ export default {
               }
           )
           .then(() => {
-            this.$router.push("/subjects/:id/queue");
+            this.$router.push("/subjects/"+this.subject.id+"/queue");
+            console.log(this.exercises);
           })
 
           .catch((err) => {

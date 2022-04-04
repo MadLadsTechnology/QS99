@@ -6,7 +6,7 @@
     <h3>Exercises</h3>
     <h5>Click the exercise you want to approve</h5>
     <ExerciseBox v-for="exercise in object.exercises" :key="exercise" :exercise="exercise" :studentId="studentId"
-                 :subjectId="subjectId"/>
+                 :subjectId="subjectId" :student="object"/>
   </div>
 
   <button @click="suspend">Suspend</button>

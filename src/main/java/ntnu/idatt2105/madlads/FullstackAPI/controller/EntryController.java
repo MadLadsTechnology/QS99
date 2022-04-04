@@ -31,7 +31,7 @@ public class EntryController {
     UserRepository userRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'STUDENT')")
-    @PostMapping("/qs/student/setIsGettingHelp")
+    @PostMapping("/setIsGettingHelp")
     @ResponseStatus(value = HttpStatus.CREATED)
     @Transactional
     @Operation(summary = "Set wheteher student isGettingHelp", description = "Needs the entry id and what you want to set it to")

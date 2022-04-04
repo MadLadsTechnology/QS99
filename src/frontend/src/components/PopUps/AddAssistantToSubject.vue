@@ -18,6 +18,7 @@
 import {useField, useForm} from "vee-validate";
 import {object, string} from "yup";
 import axios from "axios";
+import BaseInput from "@/components/BaseComponents/BaseInput";
 
 export default {
   props: {
@@ -25,6 +26,9 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  components: {
+    BaseInput,
   },
   data() {
     return {
@@ -40,7 +44,7 @@ export default {
     //Method for submitting form
     submit() {
       axios
-          .post("/addStudentAssistant", null, {
+          .post("/subject/addStudentAssistant", null, {
             params: {
               subjectId: this.subject.id,
               email: this.email,

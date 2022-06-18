@@ -8,11 +8,7 @@ import axios from "axios";
 
 export default {
   created() {
-    let ip = "localhost"
-    console.log(process.env.IP)
-    if (process.env.IP){
-        ip = process.env.IP
-    }
+    let ip = "eivindharboe.no"
     axios.defaults.baseURL = "http://"+ip+":8001";
     const userString = localStorage.getItem("user");
     if (userString) {

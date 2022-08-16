@@ -2,10 +2,8 @@
 
 
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Jf3ZFgpMh5k/0.jpg)](https://www.youtube.com/watch?v=Jf3ZFgpMh5k)
+[![Video showcase](https://img.youtube.com/vi/Jf3ZFgpMh5k/0.jpg)](https://www.youtube.com/watch?v=Jf3ZFgpMh5k)
 
-
-// Last build: ![example workflow](https://github.com/MadLadsTechnology/QS99/actions/workflows/maven.yml/badge.svg)
 
 **Application:** [**QS99**](http://qs.eivindharboe.no)
 

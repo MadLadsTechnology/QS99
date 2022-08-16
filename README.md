@@ -7,7 +7,9 @@
 
 **Application:** [**QS99**](http://qs.eivindharboe.no)
 
-Voluntary project in the subject IDATT2105 to improve our grade.
+Voluntary project in the subject IDATT2105. 
+
+Grade: A
 
 ## Content
 1. [Introduction](#introduction)

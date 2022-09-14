@@ -9,7 +9,7 @@ import axios from "axios";
 export default {
   created() {
     let ip = "eivindharboe.no"
-    axios.defaults.baseURL = "http://"+ip+":8001";
+    axios.defaults.baseURL = "http://"+ip+":8002";
     const userString = localStorage.getItem("user");
     if (userString) {
       const userData = JSON.parse(userString);
